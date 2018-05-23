@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_menu_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenu">
@@ -25,7 +26,7 @@
         android:layout_gravity="center"
         android:text="Orders"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@color/White"
+        android:textColor="@color/colorWhite"
         android:textSize="30sp"
         android:typeface="sans"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
@@ -35,16 +36,19 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.8" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/orderlist"
-        android:layout_width="360dp"
-        android:layout_height="507dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 </android.support.constraint.ConstraintLayout>

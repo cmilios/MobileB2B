@@ -9,21 +9,23 @@ import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity {
 
-    private ArrayList<String> itemnames = new ArrayList<>();
-    private ArrayList<String> itemq = new ArrayList<>();
+    private ArrayList<String> finums = new ArrayList<>();
+    private ArrayList<String> dts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        initRecyclerView();
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.main_menu_list_adapter);
+        RecyclerView recyclerView = findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
-        MainMenuAdapter adapter = new MainMenuAdapter( itemnames, itemq,this);
+        MainMenuAdapter adapter = new MainMenuAdapter(this, finums, dts);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
     }
 }

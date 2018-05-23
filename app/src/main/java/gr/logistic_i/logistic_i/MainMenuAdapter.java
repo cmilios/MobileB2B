@@ -17,25 +17,25 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<String> mItemNames = new ArrayList<>();
-    private ArrayList<String> mItemQ = new ArrayList<>();
+    private ArrayList<String> mfinum = new ArrayList<>();
+    private ArrayList<String> mdate = new ArrayList<>();
     private Context mContext;
 
-    public MainMenuAdapter(ArrayList<String> mItemNames, ArrayList<String> mItemQ, Context mContext) {
-        this.mItemNames = mItemNames;
-        this.mItemQ = mItemQ;
+    public MainMenuAdapter(Context mContext, ArrayList<String> mfinum, ArrayList<String> mdate) {
+        this.mfinum = mfinum;
+        this.mdate = mdate;
         this.mContext = mContext;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_menu_list_adapter, parent , false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_menu_list_adapter, parent ,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,final int position) {
         // TODO: 5/22/2018  
 
     }
@@ -56,7 +56,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
             super(itemView);
             parnum = itemView.findViewById(R.id.finum);
             dt = itemView.findViewById(R.id.findate);
-            parent_layout = itemView.findViewById(R.id.parent_layout);
+            parent_layout = itemView.findViewById(R.id.main_menu_parent);
         }
     }
 }

@@ -11,6 +11,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String name = new String();
     String pass = new String();
+    String curl = new String();
 
 
 
@@ -24,11 +25,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText n = (EditText)findViewById(R.id.username);
                 EditText p = (EditText)findViewById(R.id.password);
+                EditText c = (EditText)findViewById(R.id.connectionurl);
                 name = n.getText().toString();
                 pass = n.getText().toString();
+                curl = n.getText().toString();
 
-                Creds c = new Creds(name,pass);
-
+                Creds c1 = new Creds(name, pass, curl);
+                c1.initLogin();
                 Intent i = new Intent(LoginActivity.this, MainMenu.class);
                 startActivity(i);
 
