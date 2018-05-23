@@ -19,7 +19,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_home_screen);
+        RecyclerView recyclerView = findViewById(R.id.main_menu_list_adapter);
 
         recyclerView.setHasFixedSize(true);
         MainMenuAdapter adapter = new MainMenuAdapter( itemnames, itemq,this);
