@@ -57,6 +57,8 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
             parnum = itemView.findViewById(R.id.finum);
             dt = itemView.findViewById(R.id.findate);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
+
+
         }
     }
 }

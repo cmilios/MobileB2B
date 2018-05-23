@@ -1,5 +1,10 @@
 package gr.logistic_i.logistic_i;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class Creds {
 
     String name = new String();
@@ -12,7 +17,24 @@ public class Creds {
         this.curl = curl;
     }
 
-    public void initLogin(){
+    public void initLogin() throws MalformedURLException {
         //todo make login dialog with db
+//        URL url = new URL(curl);
+//        HttpURLConnection httpurl = new HttpURLConnection(url) {
+//            @Override
+//            public void disconnect() {
+//
+//            }
+//
+//            @Override
+//            public boolean usingProxy() {
+//                return false;
+//            }
+//
+//            @Override
+//            public void connect() throws IOException {
+//
+//            }
+//        };
     }
 }

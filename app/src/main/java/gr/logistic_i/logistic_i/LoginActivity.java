@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
                 curl = n.getText().toString();
 
                 Creds c1 = new Creds(name, pass, curl);
-                c1.initLogin();
+                //c1.initLogin();
                 Intent i = new Intent(LoginActivity.this, MainMenu.class);
                 startActivity(i);
 
