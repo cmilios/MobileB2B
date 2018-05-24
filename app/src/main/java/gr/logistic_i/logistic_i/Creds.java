@@ -1,15 +1,24 @@
 package gr.logistic_i.logistic_i;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Creds {
+public class Creds  implements Serializable {
 
-    String name = new String();
-    String pass = new String();
-    String curl = new String();
+    String name;
+    String pass;
+    String curl;
+
+    JSONObject json = new JSONObject();
 
     public Creds(String name, String pass, String curl) {
         this.name = name;
@@ -17,24 +26,39 @@ public class Creds {
         this.curl = curl;
     }
 
-    public void initLogin() throws MalformedURLException {
-        //todo make login dialog with db
-//        URL url = new URL(curl);
-//        HttpURLConnection httpurl = new HttpURLConnection(url) {
-//            @Override
-//            public void disconnect() {
-//
-//            }
-//
-//            @Override
-//            public boolean usingProxy() {
-//                return false;
-//            }
-//
-//            @Override
-//            public void connect() throws IOException {
-//
-//            }
-//        };
+    public JSONObject serObj(){
+        try {
+            json.put("Service", "login");
+            json.put("Username", name);
+            json.put("Password", pass);
+            json.put("AppId", "1100");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getCurl() {
+        return curl;
+    }
+
+    public void setCurl(String curl) {
+        this.curl = curl;
     }
 }

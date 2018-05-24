@@ -27,13 +27,20 @@ public class LoginActivity extends AppCompatActivity {
                 EditText p = (EditText)findViewById(R.id.password);
                 EditText c = (EditText)findViewById(R.id.connectionurl);
                 name = n.getText().toString();
-                pass = n.getText().toString();
-                curl = n.getText().toString();
+                pass = p.getText().toString();
+                curl = c.getText().toString();
+                APICalls a = new APICalls();
+                UserData us = new UserData(false,null,null,null,null,null);
 
                 Creds c1 = new Creds(name, pass, curl);
-                //c1.initLogin();
-                Intent i = new Intent(LoginActivity.this, MainMenu.class);
-                startActivity(i);
+                us = a.initLogin(c1);
+                boolean flag = us.getSuccess();
+                if(flag == true){
+                    Intent i = new Intent(LoginActivity.this, MainMenu.class);
+                    startActivity(i);
+
+                }
+
 
 
 
