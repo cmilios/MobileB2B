@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,12 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 public class LoginActivity extends AppCompatActivity {
 
-    String name = new String();
-    String pass = new String();
-    String curl = new String();
-
+    String name;
+    String pass;
+    String curl;
 
 
     @Override
@@ -30,11 +33,12 @@ public class LoginActivity extends AppCompatActivity {
                 pass = p.getText().toString();
                 curl = c.getText().toString();
                 APICalls a = new APICalls();
-                UserData us = new UserData(false,null,null,null,null,null);
+                UserData us;
 
                 Creds c1 = new Creds(name, pass, curl);
-                us = a.initLogin(c1);
-                boolean flag = us.getSuccess();
+                a.execute(c1);
+
+                boolean flag = false;
                 if(flag == true){
                     Intent i = new Intent(LoginActivity.this, MainMenu.class);
                     startActivity(i);

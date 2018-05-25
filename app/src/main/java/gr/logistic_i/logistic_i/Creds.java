@@ -26,7 +26,7 @@ public class Creds  implements Serializable {
         this.curl = curl;
     }
 
-    public JSONObject serObj(){
+    public String serObj(){
         try {
             json.put("Service", "login");
             json.put("Username", name);
@@ -35,7 +35,7 @@ public class Creds  implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json;
+        return json.toString();
     }
 
     public String getName() {
