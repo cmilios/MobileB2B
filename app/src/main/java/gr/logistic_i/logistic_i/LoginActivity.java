@@ -10,6 +10,10 @@ import android.widget.EditText;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,32 +26,26 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText n = (EditText)findViewById(R.id.username);
-                EditText p = (EditText)findViewById(R.id.password);
-                EditText c = (EditText)findViewById(R.id.connectionurl);
+                EditText n = findViewById(R.id.username);
+                EditText p = findViewById(R.id.password);
+                EditText c = findViewById(R.id.connectionurl);
                 name = n.getText().toString();
                 pass = p.getText().toString();
                 curl = c.getText().toString();
-                APICalls a = new APICalls();
-                UserData us;
-
+                JSONObject json = new JSONObject();
+                WebDial w = new WebDial(getApplicationContext());
                 Creds c1 = new Creds(name, pass, curl);
-                a.execute(c1);
-
-                boolean flag = false;
-                if(flag == true){
-                    Intent i = new Intent(LoginActivity.this, MainMenu.class);
-                    startActivity(i);
-
+                String serObj = c1.serObj();
+                String res = null;
+                try {
+                    json = new JSONObject(serObj);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-
-
-
+                w.execute(c1.getCurl(), "login", json,res);
 
             }
         });

@@ -14,23 +14,5 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        final Button button = findViewById(R.id.button3);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-
-
-
-
-
-
-                Intent i = new Intent(DetailsActivity.this, DetailsActivity.class);
-                startActivity(i);
-
-
-
-
-            }
-        });
     }
 }
