@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -22,10 +27,11 @@ import javax.net.ssl.HttpsURLConnection;
 public class WebDial extends AsyncTask<Object,Void,Void> {
 
     private StringBuilder responseItem = new StringBuilder();
-    String service = new String();
+    private String service;
+    private JSONObject json = new JSONObject();
 
-    Context context;
-    public WebDial(Context context) {
+    private Context context;
+    WebDial(Context context) {
         this.context = context.getApplicationContext();
     }
 
@@ -93,6 +99,17 @@ public class WebDial extends AsyncTask<Object,Void,Void> {
 //            }
 //
         }
+        try {
+            json = new JSONObject(responseItem.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        if(obj[1]== "authenticate"){
+
+        }
 
 
         return null;
@@ -101,12 +118,12 @@ public class WebDial extends AsyncTask<Object,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (responseItem!=null && service == "login"){
+        if (responseItem!=null && service.equals("login")){
             context.startActivity(new Intent(context, MainMenu.class));
         }
     }
 
-    public String makeLogin(String url, String jsonData){
+    private String makeLogin(String url, String jsonData){
 
         service = "login";
 
@@ -119,22 +136,22 @@ public class WebDial extends AsyncTask<Object,Void,Void> {
 
 
         // Make a connection with the API
-        URL furl = null;
+        URL furl;
         try {
             furl = new URL(finalURL.toString());
             con = (HttpURLConnection) furl.openConnection();
             con.setRequestMethod("POST");
             con.addRequestProperty("Accept", "application/json");
-            con.addRequestProperty("Content-Type", "application/json; charset=win1253");
+            con.addRequestProperty("Content-Type", "application/json; charset=windows-1253");
             con.setDoInput(true);
 
             //Request Parameters you want to send
-            String urlParameters = jsonData.toString();
+
 
             // Send post request
             con.setDoOutput(true);// Should be part of code only for .Net web-services else no need for PHP
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(urlParameters);
+            wr.writeBytes(jsonData.toString());
             wr.flush();
             wr.close();
 
