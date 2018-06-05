@@ -42,7 +42,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 15;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

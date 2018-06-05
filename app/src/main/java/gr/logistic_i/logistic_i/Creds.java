@@ -14,11 +14,11 @@ import java.net.URL;
 
 public class Creds  implements Serializable {
 
-    String name;
-    String pass;
-    String curl;
+    private String name;
+    private String pass;
+    private String curl;
 
-    JSONObject json = new JSONObject();
+    private JSONObject json = new JSONObject();
 
     public Creds(String name, String pass, String curl) {
         this.name = name;
@@ -26,7 +26,7 @@ public class Creds  implements Serializable {
         this.curl = curl;
     }
 
-    public String serObj(){
+    public String serObjLogin(){
         try {
             json.put("Service", "login");
             json.put("Username", name);

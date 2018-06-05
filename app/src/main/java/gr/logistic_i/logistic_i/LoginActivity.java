@@ -1,16 +1,10 @@
 package gr.logistic_i.logistic_i;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,17 +30,15 @@ public class LoginActivity extends AppCompatActivity {
                 pass = p.getText().toString();
                 curl = c.getText().toString();
                 JSONObject json = new JSONObject();
-                WebDial w = new WebDial(getApplicationContext());
+                LoginAuthenticateTask w = new LoginAuthenticateTask(getApplicationContext());
                 Creds c1 = new Creds(name, pass, curl);
-                String serObj = c1.serObj();
-                String res = null;
+                String serObj = c1.serObjLogin();
                 try {
                     json = new JSONObject(serObj);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                w.execute(c1.getCurl(), "login", json,res);
-
+                w.execute(c1.getCurl(), "login", json);
             }
         });
     }

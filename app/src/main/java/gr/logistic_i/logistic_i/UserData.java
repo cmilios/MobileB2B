@@ -3,7 +3,12 @@ package gr.logistic_i.logistic_i;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class UserData implements Serializable {
 
@@ -15,32 +20,25 @@ public class UserData implements Serializable {
     @Expose
     private String clientID;
 
-    @SerializedName("COMPANY")
+    @SerializedName("objs")
     @Expose
-    private String COMPANY;
+    private ArrayList<String> objs = new ArrayList<>();
 
-    @SerializedName("BRANCH")
-    @Expose
-    private String BRANCH;
+    private JSONObject json = new JSONObject();
 
-    @SerializedName("MODULE")
-    @Expose
-    private String MODULE;
-
-    @SerializedName("REFID")
-    @Expose
-    private String REFID;
-
-    public UserData(boolean success, String clientID, String COMPANY, String BRANCH, String MODULE, String REFID) {
+    public UserData(boolean success, String clientID, ArrayList<String> objs) {
         this.success = success;
         this.clientID = clientID;
-        this.COMPANY = COMPANY;
-        this.BRANCH = BRANCH;
-        this.MODULE = MODULE;
-        this.REFID = REFID;
+        this.objs = objs;
     }
 
-    public boolean getSuccess() {
+
+
+    public UserData() {
+
+    }
+
+    public boolean isSuccess() {
         return success;
     }
 
@@ -56,35 +54,59 @@ public class UserData implements Serializable {
         this.clientID = clientID;
     }
 
-    public String getCOMPANY() {
-        return COMPANY;
+    public ArrayList<String> getObjs() {
+        return objs;
     }
 
-    public void setCOMPANY(String COMPANY) {
-        this.COMPANY = COMPANY;
+    public void setObjs(ArrayList<String> objs) {
+        this.objs = objs;
     }
 
-    public String getBRANCH() {
-        return BRANCH;
+    public void appendObjs(String s){
+        objs.add(s);
+
     }
 
-    public void setBRANCH(String BRANCH) {
-        this.BRANCH = BRANCH;
+    public UserData desirializeJsonStr(String jsonStr){
+        UserData usa = new UserData();
+        try {
+            JSONObject obj = new JSONObject(jsonStr);
+            JSONArray objsArray = obj.getJSONArray("objs");
+
+            boolean jstate = obj.getBoolean("success");
+            String jaccessid = obj.getString("clientID");
+
+            usa.setSuccess(jstate);
+            usa.setClientID(jaccessid);
+            usa.appendObjs(objsArray.getJSONObject(0).getString("COMPANY"));
+            usa.appendObjs(objsArray.getJSONObject(0).getString("BRANCH"));
+            usa.appendObjs(objsArray.getJSONObject(0).getString("MODULE"));
+            usa.appendObjs(objsArray.getJSONObject(0).getString("REFID"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return usa;
+
+
     }
 
-    public String getMODULE() {
-        return MODULE;
-    }
+    public String serObj(){
+        try {
+            json.put("Service", "authenticate");
+            json.put("clientID", clientID);
+            json.put("COMPANY", objs.get(0));
+            json.put("BRANCH", objs.get(1));
+            json.put("MODULE", objs.get(2));
+            json.put("REFID", objs.get(3));
 
-    public void setMODULE(String MODULE) {
-        this.MODULE = MODULE;
-    }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
 
-    public String getREFID() {
-        return REFID;
-    }
 
-    public void setREFID(String REFID) {
-        this.REFID = REFID;
     }
 }
