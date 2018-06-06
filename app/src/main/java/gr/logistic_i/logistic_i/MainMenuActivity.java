@@ -15,9 +15,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private ArrayList<String> finums = new ArrayList<>();
     private ArrayList<String> dts = new ArrayList<>();
-    private String url = new String();
-    private String clientID = new String();
-    private String sourceDate = new String();
+    private String url;
+    private String clientID;
+    private String sourceDate;
 
 
     @Override
