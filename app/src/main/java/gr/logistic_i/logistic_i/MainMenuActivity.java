@@ -1,11 +1,15 @@
 package gr.logistic_i.logistic_i;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -13,14 +17,17 @@ public class MainMenuActivity extends AppCompatActivity {
     private ArrayList<String> dts = new ArrayList<>();
     private String url = new String();
     private String clientID = new String();
+    private String sourceDate = new String();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         GetSqlDataTask g = new GetSqlDataTask(getApplicationContext());
+        storeParams();
         //todo might need improvement on params to set date pickers
-        g.execute(url, "SqlData", clientID, "1100", "Orders");
+        g.execute(url, "SqlData", clientID, "1100", "Orders", sourceDate);
 
         initRecyclerView();
     }
@@ -35,9 +42,18 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
-    public void storeParam(String url, String clientID){
-        this.url = url;
-        this.clientID = clientID;
+    private void storeParams(){
+        Intent intent = getIntent();
+        url = intent.getExtras().getString("url");
+        clientID = intent.getExtras().getString("clID");
+    }
+
+    public void getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat mdformat = new SimpleDateFormat("dd / MM / yyyy ");
+        sourceDate = mdformat.format(calendar.getTime());
 
     }
+
+
 }

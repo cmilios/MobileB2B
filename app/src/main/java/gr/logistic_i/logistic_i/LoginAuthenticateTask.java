@@ -14,11 +14,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
     private StringBuilder responseItem = new StringBuilder();
     private String service = new String();
+    private String url = new String();
+    private String clientID = new String();
     private Boolean authState = false;
     private Context context;
 
@@ -30,6 +33,8 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
     @Override
     protected Void doInBackground(Object... obj) {
+        url = (String)obj[0];
+        service = (String)obj[1];
         if (obj[1] == "login"){
             String authToken = makeLogin((String)obj[0], obj[2].toString());
             responseItem = new StringBuilder();
@@ -44,11 +49,14 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         if (authState){
+            Intent i = new Intent(context, MainMenuActivity.class);
+            i.putExtra("url", url);
+            i.putExtra("clID", clientID);
             context.startActivity(new Intent(context, MainMenuActivity.class));
+
         }
         else{
-            //todo needs improvement doesn't work
-            Toast.makeText(context, "Wrong Credentials!", Toast.LENGTH_LONG);
+            Toast.makeText(context, "Wrong Credentials!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -101,13 +109,21 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
                 responseItem.append(line);
             }
 
-            UserData us = new UserData();
-            us = us.desirializeJsonStr(responseItem.toString());
-            String authUser = us.serObj();
+            //makes sure not to create any exception on deserialization
+            if(responseItem.toString() != null){
+                UserData us = new UserData();
+                us = us.desirializeJsonStr(responseItem.toString());
+                clientID = us.getClientID();
+                String authUser = us.serObj();
+                return  authUser;
+
+            }
+            else return null;
 
 
 
-            return  authUser;
+
+
         } catch (Exception e) {
             return null;
         }
@@ -183,6 +199,13 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
 
 
+    }
+
+    public ArrayList<String> getValues(){
+        ArrayList<String> lista = new ArrayList<>();
+        lista.add(url);
+        lista.add(clientID);
+        return lista;
     }
 
 }
