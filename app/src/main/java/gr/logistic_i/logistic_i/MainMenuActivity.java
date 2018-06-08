@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,16 +20,19 @@ public class MainMenuActivity extends AppCompatActivity {
     private String url;
     private String clientID;
     private String sourceDate;
+    private LoginActivity loginActivity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        GetSqlDataTask g = new GetSqlDataTask(getApplicationContext());
         storeParams();
+
+        GetSqlDataTask g = new GetSqlDataTask(getApplicationContext());
         //todo might need improvement on params to set date pickers
         g.execute(url, "SqlData", clientID, "1100", "Orders", sourceDate);
+
 
         initRecyclerView();
     }
@@ -42,10 +47,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
-    private void storeParams(){
+    public void storeParams(){
         Intent intent = getIntent();
-        url = intent.getExtras().getString("url");
-        clientID = intent.getExtras().getString("clID");
+        url = intent.getStringExtra("url");
+        clientID = intent.getStringExtra("clID");
     }
 
     public void getCurrentDate() {
@@ -55,5 +60,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, LoginActivity.class);
+        this.startActivity(i);
+    }
 }

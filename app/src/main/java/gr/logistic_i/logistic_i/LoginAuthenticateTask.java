@@ -1,8 +1,11 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -24,11 +27,22 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     private String clientID = new String();
     private Boolean authState = false;
     private Context context;
+    LoginActivity activity = new LoginActivity();
+    MainMenuActivity mActivity;
 
-    //constructor for changing activities on post execute
-    public LoginAuthenticateTask(Context context) {
-        this.context = context.getApplicationContext();
+
+    //constructor for changing activities and sharing data on post execute
+
+    public LoginAuthenticateTask(Context context, LoginActivity activity) {
+        this.context = context;
+        this.activity = activity;
     }
+
+    public LoginAuthenticateTask(Context context, MainMenuActivity mActivity){
+        this.context = context;
+        this.mActivity = mActivity;
+    }
+
 
 
     @Override
@@ -52,11 +66,18 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
             Intent i = new Intent(context, MainMenuActivity.class);
             i.putExtra("url", url);
             i.putExtra("clID", clientID);
-            context.startActivity(new Intent(context, MainMenuActivity.class));
+
+            context.startActivity(i);
+
+
+
+
+
 
         }
         else{
             Toast.makeText(context, "Wrong Credentials!", Toast.LENGTH_LONG).show();
+            activity.setAllToNormal();
         }
     }
 
