@@ -30,6 +30,7 @@
         android:textColor="@color/colorWhite"
         android:textSize="30sp"
         android:typeface="sans"
+        app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -93,26 +94,6 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         app:layout_constraintVertical_bias="1.0" />
 
-    <EditText
-        android:id="@+id/editText2"
-        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
-        android:layout_width="143dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="toDate"
-        android:inputType="date"
-        app:layout_constraintBottom_toTopOf="@+id/orderlist"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.684"
-        app:layout_constraintStart_toStartOf="@+id/toolbar2"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="1.0" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="66dp"
@@ -120,12 +101,14 @@
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
+        android:tint="@color/colorTextBold"
+        app:backgroundTint="@color/colorPrimary"
         app:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/orderlist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.979"
         app:srcCompat="@drawable/add_icon" />
 
     <ImageButton
@@ -137,11 +120,28 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/editText2"
         app:layout_constraintEnd_toEndOf="@+id/toolbar2"
         app:layout_constraintStart_toEndOf="@+id/editText2"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2"
+        app:layout_constraintTop_toTopOf="@+id/editText2"
         app:srcCompat="@drawable/search_icon" />
+
+    <EditText
+        android:id="@+id/editText2"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="143dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="toDate"
+        android:inputType="date"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.635"
+        app:layout_constraintStart_toStartOf="@+id/toolbar2"
+        app:layout_constraintTop_toTopOf="@+id/editText" />
 
 </android.support.constraint.ConstraintLayout>
