@@ -3,6 +3,8 @@ package gr.logistic_i.logistic_i;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -62,21 +64,23 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (authState){
-            Intent i = new Intent(context, MainMenuActivity.class);
-            i.putExtra("url", url);
-            i.putExtra("clID", clientID);
+        //checks if phone is connected to network
+        if (isOnline()) {
+            if (authState) {
+                Intent i = new Intent(context, MainMenuActivity.class);
+                i.putExtra("url", url);
+                i.putExtra("clID", clientID);
 
-            context.startActivity(i);
-
-
-
-
+                context.startActivity(i);
 
 
+            } else {
+                Toast.makeText(context, "Wrong Credentials!", Toast.LENGTH_LONG).show();
+                activity.setAllToNormal();
+            }
         }
         else{
-            Toast.makeText(context, "Wrong Credentials!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context,"No Internet Connection Detected", Toast.LENGTH_LONG).show();
             activity.setAllToNormal();
         }
     }
@@ -228,5 +232,13 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
         lista.add(clientID);
         return lista;
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 
 }

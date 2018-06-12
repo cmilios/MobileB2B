@@ -2,17 +2,18 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailsActivity">
+    tools:context=".AddVoucherActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="0dp"
         android:layout_height="62dp"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:background="@color/colorPrimary"
+        android:minHeight="?android:attr/actionBarSize"
+        android:theme="@style/AppTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,6 +26,7 @@
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
         android:textSize="30sp"
+        android:theme="@style/AppTheme"
         android:typeface="normal"
         app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar3"
@@ -35,8 +37,8 @@
         app:layout_constraintVertical_bias="0.761" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="384dp"
+        android:id="@+id/details_list"
+        android:layout_width="0dp"
         android:layout_height="505dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
