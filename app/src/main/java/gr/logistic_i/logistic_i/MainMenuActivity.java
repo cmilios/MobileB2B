@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,11 +35,23 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FloatingActionButton fab  = findViewById(R.id.fab);
+
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         storeParams();
         setUpDatePickers();
+
+
+
+
+
+
+
+
+
+
 
         GetSqlDataTask g = new GetSqlDataTask(getApplicationContext());
         //todo might need improvement on params to set date pickers
@@ -56,6 +69,31 @@ public class MainMenuActivity extends AppCompatActivity {
         MainMenuAdapter adapter = new MainMenuAdapter(this, finums, dts);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        final FloatingActionButton fab = findViewById(R.id.fab);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (dy > 0 ||dy<0 && fab.isShown())
+                {
+                    fab.hide();
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                {
+                    fab.show();
+                }
+
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
 
 
 
