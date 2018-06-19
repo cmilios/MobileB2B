@@ -13,7 +13,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FloatingActionButton fab  = findViewById(R.id.fab);
+
 
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
@@ -43,17 +45,11 @@ public class MainMenuActivity extends AppCompatActivity {
         storeParams();
         setUpDatePickers();
 
+        RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
+        focuslayout.requestFocus();
 
 
-
-
-
-
-
-
-
-
-        GetSqlDataTask g = new GetSqlDataTask(getApplicationContext());
+        GetSqlDataTask g = new GetSqlDataTask(this);
         //todo might need improvement on params to set date pickers
         g.execute(url, "SqlData", clientID, "1100", "Orders", sourceDate);
 
@@ -69,33 +65,6 @@ public class MainMenuActivity extends AppCompatActivity {
         MainMenuAdapter adapter = new MainMenuAdapter(this, finums, dts);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        final FloatingActionButton fab = findViewById(R.id.fab);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (dy > 0 ||dy<0 && fab.isShown())
-                {
-                    fab.hide();
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                {
-                    fab.show();
-                }
-
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-
-
-
 
 
 
@@ -114,7 +83,6 @@ public class MainMenuActivity extends AppCompatActivity {
         url = intent.getStringExtra("url");
         clientID = intent.getStringExtra("clID");
     }
-
     public void getCurrentDate() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("dd/MM/yyyy");
@@ -138,6 +106,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void initSearch(View view){
         //todo make search between @fromDate and @toDate
+    }
+
+    public void initDetailsIntent(View view){
+        Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
     }
 
 

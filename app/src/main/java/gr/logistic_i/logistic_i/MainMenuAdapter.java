@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,12 +51,18 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         TextView parnum;
         TextView dt;
+        TextView trdr;
+        TextView sumamnt;
+        Button btn;
         ConstraintLayout parent_layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            parnum = itemView.findViewById(R.id.finum);
-            dt = itemView.findViewById(R.id.findate);
+            parnum = itemView.findViewById(R.id.fincode);
+            dt = itemView.findViewById(R.id.trndate);
+            trdr = itemView.findViewById(R.id.trdr);
+            sumamnt = itemView.findViewById(R.id.sumamnt);
+            btn = itemView.findViewById(R.id.details);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
 
 

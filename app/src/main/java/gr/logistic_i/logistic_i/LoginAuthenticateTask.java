@@ -40,11 +40,6 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
         this.activity = activity;
     }
 
-    public LoginAuthenticateTask(Context context, MainMenuActivity mActivity){
-        this.context = context;
-        this.mActivity = mActivity;
-    }
-
 
 
     @Override
