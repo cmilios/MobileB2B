@@ -32,7 +32,7 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
     @Override
     protected Void doInBackground(Object... obj) {
         if(obj[1] == "SqlData"){
-            if (obj[4] == "Orders"){
+            if (obj[4] == "GetMobileOrders"){
                 makeJson(obj[1].toString(), obj[2].toString(), obj[3].toString(), obj[4].toString(),obj[5].toString(), obj[6].toString());
                 makeSqlReq(obj[0].toString(), json);
 
@@ -56,10 +56,15 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
         HttpURLConnection con = null;
 
 
-        // Make a connection with the API
-        URL furl = null;
+        StringBuilder finalURL = new StringBuilder("https://");
+        finalURL.append(url);
+        finalURL.append("/s1services");
+
+
+
+       URL furl;
         try {
-            furl = new URL(url);
+            furl = new URL(finalURL.toString());
             con = (HttpURLConnection) furl.openConnection();
             con.setRequestMethod("POST");
             con.addRequestProperty("Accept", "application/json");

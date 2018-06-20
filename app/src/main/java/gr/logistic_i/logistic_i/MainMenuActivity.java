@@ -30,6 +30,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private String sourceDate;
     private EditText fromDate;
     private EditText toDate;
+    private Calendar calendar = Calendar.getInstance();
+    SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
 
 
 
@@ -51,7 +53,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         GetSqlDataTask g = new GetSqlDataTask(this);
         //todo might need improvement on params to set date pickers
-        g.execute(url, "SqlData", clientID, "1100", "Orders", sourceDate);
+        g.execute(url, "SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(calendar.getTime()), sqlformat.format(calendar.getTime()));
 
 
 
@@ -74,6 +76,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void setUpDatePickers(){
         getCurrentDate();
+        SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+        sourceDate = dpformat.format(calendar.getTime());
         fromDate.setText(sourceDate);
         toDate.setText(sourceDate);
 
@@ -84,9 +88,7 @@ public class MainMenuActivity extends AppCompatActivity {
         clientID = intent.getStringExtra("clID");
     }
     public void getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("dd/MM/yyyy");
-        sourceDate = mdformat.format(calendar.getTime());
+        sourceDate = sqlformat.format(calendar.getTime());
 
     }
 

@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
@@ -27,8 +28,10 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     private String service = new String();
     private String url = new String();
     private String clientID = new String();
+    private String authClientID = new String();
     private Boolean authState = false;
     private Context context;
+    private StringBuilder finalURL = new StringBuilder();
     LoginActivity activity = new LoginActivity();
     MainMenuActivity mActivity;
 
@@ -81,6 +84,7 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     }
 
     public String makeLogin(String url, String jsonData){
+
 
         service = "login";
 
@@ -207,6 +211,7 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
             JSONObject obj = new JSONObject(responseItem.toString());
             authState = obj.getBoolean("success");
+            authClientID = obj.getString("clientID");
             return authState;
 
         } catch (Exception e) {
@@ -214,6 +219,7 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
         }
         finally {
             con.disconnect();
+
         }
 
 
