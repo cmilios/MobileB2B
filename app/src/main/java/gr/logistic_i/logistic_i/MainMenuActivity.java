@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,11 +28,13 @@ public class MainMenuActivity extends AppCompatActivity {
     private ArrayList<String> dts = new ArrayList<>();
     private String url;
     private String clientID;
+    private String refid;
     private String sourceDate;
     private EditText fromDate;
     private EditText toDate;
     private Calendar calendar = Calendar.getInstance();
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
+    private ArrayList<Order> orders = new ArrayList<>();
 
 
 
@@ -51,22 +54,28 @@ public class MainMenuActivity extends AppCompatActivity {
         focuslayout.requestFocus();
 
 
-        GetSqlDataTask g = new GetSqlDataTask(this);
+        GetSqlDataTask g = new GetSqlDataTask(this,this);
+
+
+
         //todo might need improvement on params to set date pickers
-        g.execute(url, "SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(calendar.getTime()), sqlformat.format(calendar.getTime()));
-
-
-
+       // g.execute(url, "SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(calendar.getTime()), sqlformat.format(calendar.getTime()), refid);
         initRecyclerView();
+
+
+
+
+
     }
 
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
-        MainMenuAdapter adapter = new MainMenuAdapter(this, finums, dts);
+        MainMenuAdapter adapter = new MainMenuAdapter(this, orders);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
 
 
 
@@ -86,6 +95,8 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         clientID = intent.getStringExtra("clID");
+        refid = intent.getStringExtra("refid");
+
     }
     public void getCurrentDate() {
         sourceDate = sqlformat.format(calendar.getTime());
@@ -112,6 +123,17 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void initDetailsIntent(View view){
         Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
+    }
+
+    public void setRecyclerTiles(){
+        Intent in = getIntent();
+        orders = in.getParcelableArrayListExtra("orderlist");
+        if (orders!=null){
+            initRecyclerView();
+        }
+
+
+
     }
 
 

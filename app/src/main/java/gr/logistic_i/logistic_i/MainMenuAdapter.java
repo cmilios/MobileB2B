@@ -13,18 +13,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHolder> {
 
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<String> mfinum = new ArrayList<>();
-    private ArrayList<String> mdate = new ArrayList<>();
+    private ArrayList<Order> orderlist = new ArrayList<>();
     private Context mContext;
 
-    public MainMenuAdapter(Context mContext, ArrayList<String> mfinum, ArrayList<String> mdate) {
-        this.mfinum = mfinum;
-        this.mdate = mdate;
+    public MainMenuAdapter(Context mContext, ArrayList<Order> orderlist) {
         this.mContext = mContext;
     }
 
@@ -36,10 +33,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,final int position) {
-        // TODO: 5/22/2018  
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        holder.parnum.setText(orderlist.get(position).getFincode());
+//        holder.dt.setText(orderlist.get(position).getTrndate());
+//        holder.sumamnt.setText((orderlist.get(position).getSumamnt()));
 
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -51,7 +52,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         TextView parnum;
         TextView dt;
-        TextView trdr;
         TextView sumamnt;
         Button btn;
         ConstraintLayout parent_layout;
@@ -60,7 +60,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<ViewHolder> {
             super(itemView);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);
-            trdr = itemView.findViewById(R.id.trdr);
             sumamnt = itemView.findViewById(R.id.sumamnt);
             btn = itemView.findViewById(R.id.details);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);

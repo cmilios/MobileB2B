@@ -30,7 +30,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Αριθμός"
+        android:text="Αριθμός Παραγγελίας"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="@+id/details"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,24 +63,6 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/trdr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Πελάτης"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toBottomOf="@+id/fincode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.776"
-        app:layout_constraintStart_toEndOf="@+id/fincode"
-        app:layout_constraintTop_toTopOf="@+id/fincode"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
         android:id="@+id/sumamnt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,8 +87,10 @@
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/divider" />
 
 </android.support.constraint.ConstraintLayout>

@@ -109,4 +109,8 @@ public class UserData implements Serializable {
 
 
     }
+
+    public String getRefId(){
+        return objs.get(3);
+    }
 }
