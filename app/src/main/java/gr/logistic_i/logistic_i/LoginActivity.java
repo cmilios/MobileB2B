@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +62,17 @@ public class LoginActivity extends AppCompatActivity {
 //        JSONObject json = new JSONObject();
 //        LoginAuthenticateTask w = new LoginAuthenticateTask(this, this);
        Creds c1 = new Creds(name, pass, curl);
+        Handler h = new Handler() {
+            public void handleMessage(Message msg){
+                if(msg.what == 0){
+                    Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();
+                }
+                if (msg.what == 1){
+                    Toast.makeText(getApplicationContext(), "No Network Connection Detected", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        };
 //        String serObj = c1.serObjLogin();
 //        try {
 //            json = new JSONObject(serObj);
@@ -73,22 +86,29 @@ public class LoginActivity extends AppCompatActivity {
             if (isOnline()){
                 if (gson.getAuthenticationFlag()){
                     Intent i = new Intent(this, MainMenuActivity.class);
+                    i.putExtra("url", gson.getUrl());
+                    i.putExtra("clID", gson.getAuthenticateClID());
+                    i.putExtra("refid", gson.getRefID());
                     this.startActivity(i);
+                    runOnUiThread(()->setAllToNormal());
                 }
                 else{
+                    h.sendEmptyMessage(0);
+                    runOnUiThread(() -> setAllToNormal());
 
-
-                    setAllToNormal();
                 }
             }
             else{
 
-                setAllToNormal();
+                h.sendEmptyMessage(1);
+                runOnUiThread(() -> setAllToNormal());
             }
 
 
 
         }).start();
+
+
 
 
 
@@ -106,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
         button.setVisibility(View.VISIBLE);
 
     }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -131,5 +150,7 @@ public class LoginActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+
 
 }

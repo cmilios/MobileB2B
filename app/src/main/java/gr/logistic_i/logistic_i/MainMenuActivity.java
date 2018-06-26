@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,11 +26,16 @@ public class MainMenuActivity extends AppCompatActivity {
     private String url;
     private String clientID;
     private String refid;
-    private String sourceDate;
+    private String toDateString;
+    private String fromDateString;
     private EditText fromDate;
     private EditText toDate;
-    private Calendar calendar = Calendar.getInstance();
+    private TextView results_section;
+    private Calendar fromCalendar = Calendar.getInstance();
+    private Calendar toCalendar = Calendar.getInstance();
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+    private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
 
 
@@ -47,20 +49,40 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
+        results_section = findViewById(R.id.results_section);
         storeParams();
+
         setUpDatePickers();
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
 
-        GetSqlDataTask g = new GetSqlDataTask(this,this);
 
-
-
-        //todo might need improvement on params to set date pickers
-       // g.execute(url, "SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(calendar.getTime()), sqlformat.format(calendar.getTime()), refid);
+        GsonWorker g = new GsonWorker(url);
         initRecyclerView();
+        new Thread(() -> {
+
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
+            g.getSqlOrders(sqlRequest);
+            orders = g.getSqlResponse();
+            if(!orders.isEmpty()){
+                adapter.replaceList(orders);
+                runOnUiThread((adapter::notifyDataSetChanged));
+                if(orders.size() == 1){
+                    runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
+                }
+                else{
+                    runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
+                }
+
+            }
+            else{
+                runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
+            }
+
+
+        }).start();
 
 
 
@@ -69,26 +91,23 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.orderlist);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
-        MainMenuAdapter adapter = new MainMenuAdapter(this, orders);
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
-
-
-
-
+        adapter = new MainMenuAdapter(this, orders);
+        recyclerView.setAdapter(adapter);
     }
 
 
     private void setUpDatePickers(){
-        getCurrentDate();
-        SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
-        sourceDate = dpformat.format(calendar.getTime());
-        fromDate.setText(sourceDate);
-        toDate.setText(sourceDate);
+        fromCalendar.add(Calendar.MONTH, -3);
+
+        toDateString = dpformat.format(toCalendar.getTime());
+        fromDateString = dpformat.format(fromCalendar.getTime());
+        fromDate.setText(fromDateString);
+        toDate.setText(toDateString);
+
 
     }
     public void storeParams(){
@@ -98,17 +117,6 @@ public class MainMenuActivity extends AppCompatActivity {
         refid = intent.getStringExtra("refid");
 
     }
-    public void getCurrentDate() {
-        sourceDate = sqlformat.format(calendar.getTime());
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(this, LoginActivity.class);
-        this.startActivity(i);
-    }
-
 
 
     public void initAddIntent(View view){
@@ -125,16 +133,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
     }
 
-    public void setRecyclerTiles(){
-        Intent in = getIntent();
-        orders = in.getParcelableArrayListExtra("orderlist");
-        if (orders!=null){
-            initRecyclerView();
-        }
 
-
-
-    }
 
 
 

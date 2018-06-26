@@ -1,8 +1,7 @@
 package gr.logistic_i.logistic_i;
 
-import android.net.sip.SipSession;
 
-import com.google.gson.JsonObject;
+import java.nio.charset.StandardCharsets;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +17,14 @@ import java.util.ArrayList;
 
 public class GsonWorker {
 
-    String url = new String();
-    String jsonData = new String();
-    Boolean state = false;
-    String loginClID = new String();
-    String authenticateClID = new String();
-    String refID = new String();
-    Boolean authenticationFlag = false;
+    private String url;
+    private String jsonData = new String();
+    private Boolean state = false;
+    private String loginClID = new String();
+    private String authenticateClID = new String();
+    private String refID = new String();
+    private Boolean authenticationFlag = false;
+    private ArrayList<Order> sqlResponse = new ArrayList<>();
 
     public GsonWorker(String url) {
         this.url = url;
@@ -33,7 +33,7 @@ public class GsonWorker {
     public void makeLogin(Creds creds){
 
         jsonData = creds.serObjLogin();
-        String loginResponse = getJSON(url, jsonData);
+        String loginResponse = getJSON(url, jsonData, "windows-1253");
         try {
             JSONObject resObj = new JSONObject(loginResponse);
                 if (state){
@@ -58,7 +58,7 @@ public class GsonWorker {
 
         String authUser = us.serObj();
         refID = us.getRefId();
-        String authenticateResponse = getJSON(url, authUser);
+        String authenticateResponse = getJSON(url, authUser, "windows-1253");
         try {
             JSONObject resObj = new JSONObject(authenticateResponse);
                 if(state){
@@ -73,7 +73,25 @@ public class GsonWorker {
 
     }
 
-    public String getJSON(String furl, String jsonData) {
+
+
+    public void getSqlOrders(SqlRequest sqlRequest){
+        String sqlOrders = getJSON(url, sqlRequest.serSqlData(), "windows-1253");
+        try {
+            JSONObject resObj = new JSONObject(sqlOrders);
+            if(state){
+                sqlResponse = sqlRequest.parseResponse(resObj);
+
+
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String getJSON(String furl, String jsonData,String standardCharsets ) {
         state = false;
         HttpURLConnection conn = null;
 
@@ -93,7 +111,7 @@ public class GsonWorker {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.addRequestProperty("Accept", "application/json");
-            conn.addRequestProperty("Content-Type", "application/json; charset=windows-1253");
+            conn.addRequestProperty("Content-Type", "application/json; charset="+standardCharsets);
             conn.setDoInput(true);
 
             String urlParameters = jsonData.toString();
@@ -106,7 +124,7 @@ public class GsonWorker {
 
             // Begin streaming the JSON
             InputStream in = new BufferedInputStream(conn.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, "windows-1253"));
 
             // Read the first line
             String line = reader.readLine();
@@ -156,5 +174,13 @@ public class GsonWorker {
 
     public Boolean getAuthenticationFlag() {
         return authenticationFlag;
+    }
+
+    public ArrayList<Order> getSqlResponse() {
+        return sqlResponse;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }
