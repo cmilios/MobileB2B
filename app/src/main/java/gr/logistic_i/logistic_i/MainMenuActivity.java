@@ -15,9 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private Calendar toCalendar = Calendar.getInstance();
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+    private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
 
@@ -59,23 +62,22 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
 
-        GsonWorker g = new GsonWorker(url);
+        gson = new GsonWorker(url);
         initRecyclerView();
         new Thread(() -> {
 
             SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
-            g.getSqlOrders(sqlRequest);
-            orders = g.getSqlResponse();
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
             if(!orders.isEmpty()){
-                adapter.replaceList(orders);
-                runOnUiThread((adapter::notifyDataSetChanged));
                 if(orders.size() == 1){
                     runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
                 }
                 else{
                     runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
                 }
-
             }
             else{
                 runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
@@ -126,7 +128,41 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void initSearch(View view){
-        //todo make search between @fromDate and @toDate
+
+        fromDateString = fromDate.getText().toString();
+        toDateString = toDate.getText().toString();
+        Date fDate = null;
+        Date tDate = null;
+        try {
+            fDate = dpformat.parse(fromDateString);
+            tDate = dpformat.parse(toDateString);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date finalFDate = fDate;
+        Date finalTDate = tDate;
+        new Thread(()->{
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(finalFDate), sqlformat.format(finalTDate), refid);
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
+            if(!orders.isEmpty()){
+                if(orders.size() == 1){
+                    runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
+                }
+                else{
+                    runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
+                }
+            }
+            else{
+                runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
+            }
+
+
+
+        }).start();
     }
 
     public void initDetailsIntent(View view){

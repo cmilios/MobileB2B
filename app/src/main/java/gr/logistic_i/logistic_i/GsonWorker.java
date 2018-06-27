@@ -81,9 +81,6 @@ public class GsonWorker {
             JSONObject resObj = new JSONObject(sqlOrders);
             if(state){
                 sqlResponse = sqlRequest.parseResponse(resObj);
-
-
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -128,9 +125,6 @@ public class GsonWorker {
 
             // Read the first line
             String line = reader.readLine();
-
-
-
 
             // Append the first line to the builder
             result.append(line);

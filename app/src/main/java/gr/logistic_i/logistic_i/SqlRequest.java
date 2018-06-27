@@ -35,7 +35,7 @@ public class SqlRequest {
             jsonData.put( "SqlName", sqlName);
             jsonData.put("param1", fromDate);
             jsonData.put("param2", toDate);
-            jsonData.put("param3", refid);
+            jsonData.put("param3", /*refid*/ "2243");
         } catch (JSONException e) {
             e.printStackTrace();
         }
