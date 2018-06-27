@@ -1,6 +1,8 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -10,14 +12,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -33,8 +39,10 @@ public class MainMenuActivity extends AppCompatActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+    private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
 
@@ -59,23 +67,22 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
 
-        GsonWorker g = new GsonWorker(url);
+        gson = new GsonWorker(url);
         initRecyclerView();
         new Thread(() -> {
 
             SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
-            g.getSqlOrders(sqlRequest);
-            orders = g.getSqlResponse();
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
             if(!orders.isEmpty()){
-                adapter.replaceList(orders);
-                runOnUiThread((adapter::notifyDataSetChanged));
                 if(orders.size() == 1){
                     runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
                 }
                 else{
                     runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
                 }
-
             }
             else{
                 runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
@@ -83,6 +90,43 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
         }).start();
+
+
+
+
+        DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateFromLabel();
+        };
+
+        DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateToLabel();
+        };
+
+
+        fromDate.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            new DatePickerDialog(MainMenuActivity.this, fDateListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        toDate.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            new DatePickerDialog(MainMenuActivity.this, tDateListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+
+
 
 
 
@@ -126,15 +170,46 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void initSearch(View view){
-        //todo make search between @fromDate and @toDate
+
+        fromDateString = fromDate.getText().toString();
+        toDateString = toDate.getText().toString();
+        Date fDate = null;
+        Date tDate = null;
+        try {
+            fDate = dpformat.parse(fromDateString);
+            tDate = dpformat.parse(toDateString);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date finalFDate = fDate;
+        Date finalTDate = tDate;
+        new Thread(()->{
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(finalFDate), sqlformat.format(finalTDate), refid);
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
+            if(!orders.isEmpty()){
+                if(orders.size() == 1){
+                    runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
+                }
+                else{
+                    runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
+                }
+            }
+            else{
+                runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
+            }
+
+
+
+        }).start();
     }
 
     public void initDetailsIntent(View view){
         Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
     }
-
-
-
 
 
     //method that implements right cursor behavior on focused mode or not
@@ -153,6 +228,19 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    private void updateFromLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        fromDate.setText(sdf.format(myCalendar.getTime()));
+    }
+    private void updateToLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        toDate.setText(sdf.format(myCalendar.getTime()));
     }
 
 

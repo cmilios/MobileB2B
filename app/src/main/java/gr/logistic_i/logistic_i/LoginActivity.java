@@ -82,8 +82,9 @@ public class LoginActivity extends AppCompatActivity {
 //        w.execute(c1.getCurl(), "login", json);
 
         new Thread(() -> {
-            gson.makeLogin(c1);
+
             if (isOnline()){
+                gson.makeLogin(c1);
                 if (gson.getAuthenticationFlag()){
                     Intent i = new Intent(this, MainMenuActivity.class);
                     i.putExtra("url", gson.getUrl());
