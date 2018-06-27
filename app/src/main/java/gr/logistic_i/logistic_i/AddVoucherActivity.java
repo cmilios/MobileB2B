@@ -1,11 +1,10 @@
 package gr.logistic_i.logistic_i;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public class AddVoucherActivity extends AppCompatActivity {
+public class AddVoucherActivity extends PortraitActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

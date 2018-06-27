@@ -1,11 +1,7 @@
 package gr.logistic_i.logistic_i;
 
-
-import java.nio.charset.StandardCharsets;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -72,8 +68,6 @@ public class GsonWorker {
         }
 
     }
-
-
 
     public void getSqlOrders(SqlRequest sqlRequest){
         String sqlOrders = getJSON(url, sqlRequest.serSqlData(), "windows-1253");
@@ -152,7 +146,6 @@ public class GsonWorker {
         // Return the JSON string
         return result.toString();
     }
-
 
     public String getLoginClID() {
         return loginClID;

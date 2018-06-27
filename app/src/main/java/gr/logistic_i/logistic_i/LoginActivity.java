@@ -1,6 +1,5 @@
 package gr.logistic_i.logistic_i;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -9,28 +8,20 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends PortraitActivity {
 
     String name;
     String pass;
     String curl;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         pass = p.getText().toString();
         curl = c.getText().toString();
         GsonWorker gson = new GsonWorker(curl);
-//        JSONObject json = new JSONObject();
-//        LoginAuthenticateTask w = new LoginAuthenticateTask(this, this);
+
        Creds c1 = new Creds(name, pass, curl);
         Handler h = new Handler() {
             public void handleMessage(Message msg){
@@ -118,7 +108,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
 
     public void setAllToNormal(){
         Button button = findViewById(R.id.loginButton);

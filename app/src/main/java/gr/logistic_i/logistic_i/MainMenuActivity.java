@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,10 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends PortraitActivity {
 
-    private ArrayList<String> finums = new ArrayList<>();
-    private ArrayList<String> dts = new ArrayList<>();
     private String url;
     private String clientID;
     private String refid;
@@ -46,13 +45,9 @@ public class MainMenuActivity extends AppCompatActivity {
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
@@ -64,8 +59,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
-
-
 
         gson = new GsonWorker(url);
         initRecyclerView();
@@ -91,11 +84,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         }).start();
 
-
-
-
         DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            // TODO Auto-generated method stub
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -103,35 +92,23 @@ public class MainMenuActivity extends AppCompatActivity {
         };
 
         DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            // TODO Auto-generated method stub
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateToLabel();
         };
 
-
         fromDate.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
             new DatePickerDialog(MainMenuActivity.this, fDateListener, myCalendar
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         toDate.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
             new DatePickerDialog(MainMenuActivity.this, tDateListener, myCalendar
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
-
-
-
-
-
-
-
-
     }
 
     private void initRecyclerView(){
@@ -143,7 +120,6 @@ public class MainMenuActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-
     private void setUpDatePickers(){
         fromCalendar.add(Calendar.MONTH, -3);
 
@@ -154,6 +130,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
     }
+
     public void storeParams(){
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
@@ -161,7 +138,6 @@ public class MainMenuActivity extends AppCompatActivity {
         refid = intent.getStringExtra("refid");
 
     }
-
 
     public void initAddIntent(View view){
         Intent intent = new Intent(this, AddVoucherActivity.class);
@@ -211,7 +187,6 @@ public class MainMenuActivity extends AppCompatActivity {
         Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
     }
 
-
     //method that implements right cursor behavior on focused mode or not
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -236,6 +211,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         fromDate.setText(sdf.format(myCalendar.getTime()));
     }
+
     private void updateToLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -243,6 +219,23 @@ public class MainMenuActivity extends AppCompatActivity {
         toDate.setText(sdf.format(myCalendar.getTime()));
     }
 
+    public void onBackPressed() {
+
+        // do something when the button is clicked
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
+
+                    finish();
+                    //close();
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+    }
 
 
 }
