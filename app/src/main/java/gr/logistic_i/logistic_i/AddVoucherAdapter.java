@@ -41,7 +41,7 @@ public class AddVoucherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return 15;
+        return 20;
     }
 
 
@@ -60,7 +60,6 @@ public class AddVoucherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);
-            trdr = itemView.findViewById(R.id.trdr);
             sumamnt = itemView.findViewById(R.id.sumamnt);
             btn = itemView.findViewById(R.id.details);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);

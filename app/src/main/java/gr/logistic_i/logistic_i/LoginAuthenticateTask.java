@@ -31,6 +31,7 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
     private String authClientID = new String();
     private Boolean authState = false;
     private Context context;
+   private UserData us = new UserData();
     private StringBuilder finalURL = new StringBuilder();
     LoginActivity activity = new LoginActivity();
     MainMenuActivity mActivity;
@@ -67,7 +68,8 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
             if (authState) {
                 Intent i = new Intent(context, MainMenuActivity.class);
                 i.putExtra("url", url);
-                i.putExtra("clID", clientID);
+                i.putExtra("clID", authClientID);
+                i.putExtra("refid", us.getRefId());
 
                 context.startActivity(i);
 
@@ -135,7 +137,7 @@ public class LoginAuthenticateTask extends AsyncTask<Object,Void,Void> {
 
             //makes sure not to create any exception on deserialization
             if(responseItem.toString() != null){
-                UserData us = new UserData();
+
                 us = us.desirializeJsonStr(responseItem.toString());
                 clientID = us.getClientID();
                 String authUser = us.serObj();

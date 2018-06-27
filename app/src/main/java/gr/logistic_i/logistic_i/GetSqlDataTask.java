@@ -1,10 +1,16 @@
 package gr.logistic_i.logistic_i;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
 
@@ -23,23 +30,26 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
     JSONObject json  = new JSONObject();
     JSONObject jsonResponse = new JSONObject();
     StringBuilder responseItem = new StringBuilder();
+    ArrayList<Order> orderlist = new ArrayList<>();
+    MainMenuActivity activity = new MainMenuActivity();
 
 
-    public GetSqlDataTask(Context context) {
+    public GetSqlDataTask(Context context, MainMenuActivity activity) {
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
     protected Void doInBackground(Object... obj) {
         if(obj[1] == "SqlData"){
             if (obj[4] == "GetMobileOrders"){
-                makeJson(obj[1].toString(), obj[2].toString(), obj[3].toString(), obj[4].toString(),obj[5].toString(), obj[6].toString());
+                makeJson(obj[1].toString(), obj[2].toString(), obj[3].toString(), obj[4].toString(),obj[5].toString(), obj[6].toString(), obj[7].toString());
                 makeSqlReq(obj[0].toString(), json);
 
 
             }
         }
-        return null;
+       return null;
     }
 
     @Override
@@ -47,7 +57,20 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
         super.onPostExecute(aVoid);
         if (stateToken){
             // todo return response to obj to bind on adapter
+            if (orderlist!=null){
+                Intent in = new Intent(context, MainMenuActivity.class);
+                in.putParcelableArrayListExtra("orderlist", orderlist);
+                context.startActivity(in);
 
+
+
+
+            }
+
+
+        }
+        else {
+            Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -100,6 +123,10 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
 
             //makes parceable json the response request
             jsonResponse = new JSONObject(responseItem.toString());
+            parseResponse(jsonResponse);
+
+
+
 
 
 
@@ -120,28 +147,46 @@ public class GetSqlDataTask extends AsyncTask<Object,Void,Void> {
 
     }
 
-    public void makeJson(String service, String clientID, String appID, String sqlName, String fromDate, String toDate){
+    public void makeJson(String service, String clientID, String appID, String sqlName, String fromDate, String toDate, String refid){
 
         try {
             json.put("service", service);
             json.put("clientID", clientID);
             json.put("appId", appID);
             json.put( "SqlName", sqlName);
-            json.put("param1", fromDate);
+            json.put("param1", /*fromDate*/"20180425");
             json.put("param2", toDate);
+            json.put("param3", refid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
     public void parseResponse(JSONObject jsonRes){
         try {
+            stateToken = jsonRes.getBoolean("success");
             int size = jsonRes.getInt("totalcount");
             if(size>0){
                 //todo parse json as gmaps project
+                JSONArray resarray = jsonRes.getJSONArray("rows");
+                for(int i=0; i<resarray.length();i++){
+                    orderlist.add(new Order(resarray.getJSONObject(i).getString("code"),
+                            resarray.getJSONObject(i).getString("FINDOC"),
+                            resarray.getJSONObject(i).getString("fincode"),
+                            resarray.getJSONObject(i).getString("TRNDATE"),
+                            resarray.getJSONObject(i).getString("NAME"),
+                            resarray.getJSONObject(i).getString("SUMAMNT")
+                    ));
+                }
+
+
+
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
+
 
 }

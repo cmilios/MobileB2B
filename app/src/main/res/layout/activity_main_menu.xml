@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenuActivity">
+
     <RelativeLayout
         android:id="@+id/RequestFocusLayout"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:layout_width="0px"
-        android:layout_height="0px"/>
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -33,7 +34,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:text="Orders"
+        android:layout_marginTop="8dp"
+        android:text="My Orders"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/colorWhite"
         android:textSize="30sp"
@@ -43,8 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.941" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -141,20 +142,6 @@
         app:srcCompat="@drawable/search_icon" />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/orderlist"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
-
-
-    </android.support.v7.widget.RecyclerView>
-
     <ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
@@ -170,6 +157,41 @@
         app:layout_constraintTop_toTopOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/add_item_button" />
+
+    <TextView
+        android:id="@+id/results_section"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:text="results"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/orderlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/results_section"
+        app:srcCompat="@drawable/divider" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/orderlist"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6">
+
+
+    </android.support.v7.widget.RecyclerView>
 
 
 </android.support.constraint.ConstraintLayout>
