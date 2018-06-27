@@ -1,6 +1,8 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -35,6 +39,7 @@ public class MainMenuActivity extends AppCompatActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private GsonWorker gson = new GsonWorker(null);
@@ -85,6 +90,43 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
         }).start();
+
+
+
+
+        DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateFromLabel();
+        };
+
+        DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateToLabel();
+        };
+
+
+        fromDate.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            new DatePickerDialog(MainMenuActivity.this, fDateListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        toDate.setOnClickListener(v -> {
+            // TODO Auto-generated method stub
+            new DatePickerDialog(MainMenuActivity.this, tDateListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+
+
 
 
 
@@ -170,9 +212,6 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
 
-
-
-
     //method that implements right cursor behavior on focused mode or not
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -189,6 +228,19 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    private void updateFromLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        fromDate.setText(sdf.format(myCalendar.getTime()));
+    }
+    private void updateToLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        toDate.setText(sdf.format(myCalendar.getTime()));
     }
 
 
