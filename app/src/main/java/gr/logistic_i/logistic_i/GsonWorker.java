@@ -21,6 +21,7 @@ public class GsonWorker {
     private String refID = new String();
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
+    private ArrayList<MtrLine> mtrLines = new ArrayList<>();
 
     public GsonWorker(String url) {
         this.url = url;
@@ -75,6 +76,20 @@ public class GsonWorker {
             JSONObject resObj = new JSONObject(sqlOrders);
             if(state){
                 sqlResponse = sqlRequest.parseResponse(resObj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getMtrLines(MtrLinesReq mtrLinesReq){
+        String lines = getJSON(url, mtrLinesReq.serObj(), "windows-1253");
+        try {
+            JSONObject resObj = new JSONObject(lines);
+            if (state){
+                mtrLines = mtrLinesReq.parseResponse(resObj);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -169,5 +184,9 @@ public class GsonWorker {
 
     public String getUrl() {
         return url;
+    }
+
+    public ArrayList<MtrLine> getMtrLines() {
+        return mtrLines;
     }
 }

@@ -1,6 +1,7 @@
 package gr.logistic_i.logistic_i;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +23,17 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     private ArrayList<Order> orderlist = new ArrayList<>();
     private Context mContext;
+    private String url;
+    private String clientId;
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sqlResFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Date formattedDate = new Date();
 
 
-    public MainMenuAdapter(Context mContext, ArrayList<Order> orderlist) {
+    public MainMenuAdapter(Context mContext, ArrayList<Order> orderlist, String url, String clientId) {
         this.mContext = mContext;
+        this.url = url;
+        this.clientId = clientId;
     }
 
     @Override
@@ -47,7 +52,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             e.printStackTrace();
         }
         holder.dt.setText(dpformat.format(formattedDate));
-        holder.sumamnt.setText(orderlist.get(position).getSumamnt()+",00");
+        holder.sumamnt.setText(orderlist.get(position).getSumamnt());
+        holder.detailsButton.setOnClickListener(v -> {
+            Intent i = new Intent(mContext, VoucherDetailsActivity.class);
+            i.putExtra("order", orderlist.get(position));
+            i.putExtra("url", url);
+            i.putExtra("clID", clientId);
+            mContext.startActivity(i);
+        });
 
     }
 
@@ -69,12 +81,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
         protected TextView parnum;
         protected TextView dt;
         protected TextView sumamnt;
+        protected  Button detailsButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);
             sumamnt = itemView.findViewById(R.id.sumamnt);
+            detailsButton = itemView.findViewById(R.id.details);
 
 
         }
