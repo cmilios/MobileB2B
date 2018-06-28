@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/transparent"
-        android:onClick="initDetailsIntent"
+        android:clickable="true"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,16 +59,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:gravity="center_vertical|center_horizontal|center"
+        android:clickable="false"
+        android:gravity="right|center_vertical"
+        android:inputType="number"
         android:text="Συνολική Αξία"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorTextBold"
+        app:fontFamily="@font/roboto"
         app:layout_constraintBottom_toBottomOf="@+id/trndate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toEndOf="@+id/trndate"
-        app:layout_constraintTop_toTopOf="@+id/trndate"
-        app:layout_constraintVertical_bias="0.384" />
+        app:layout_constraintTop_toTopOf="@+id/trndate" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -98,5 +100,7 @@
         app:layout_constraintBottom_toTopOf="@+id/trndate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </android.support.constraint.ConstraintLayout>

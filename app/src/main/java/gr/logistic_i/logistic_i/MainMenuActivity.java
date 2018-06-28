@@ -1,22 +1,19 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,12 +22,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends PortraitActivity {
 
-    private ArrayList<String> finums = new ArrayList<>();
-    private ArrayList<String> dts = new ArrayList<>();
     private String url;
-    private String clientID;
+    private String clientId;
     private String refid;
     private String toDateString;
     private String fromDateString;
@@ -39,20 +34,16 @@ public class MainMenuActivity extends AppCompatActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
-    private Calendar myCalendar = Calendar.getInstance();
+
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
@@ -65,13 +56,11 @@ public class MainMenuActivity extends AppCompatActivity {
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
-
-
         gson = new GsonWorker(url);
         initRecyclerView();
         new Thread(() -> {
 
-            SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
             gson.getSqlOrders(sqlRequest);
             orders = gson.getSqlResponse();
             adapter.replaceList(orders);
@@ -91,47 +80,29 @@ public class MainMenuActivity extends AppCompatActivity {
 
         }).start();
 
-
-
-
         DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            fromCalendar.set(Calendar.YEAR, year);
+            fromCalendar.set(Calendar.MONTH, monthOfYear);
+            fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateFromLabel();
         };
 
         DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            toCalendar.set(Calendar.YEAR, year);
+            toCalendar.set(Calendar.MONTH, monthOfYear);
+            toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateToLabel();
         };
 
-
-        fromDate.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            new DatePickerDialog(MainMenuActivity.this, fDateListener, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
+                .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         toDate.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-            new DatePickerDialog(MainMenuActivity.this, tDateListener, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                    toCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
-
-
-
-
-
-
-
-
     }
 
     private void initRecyclerView(){
@@ -139,10 +110,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MainMenuAdapter(this, orders);
+        adapter = new MainMenuAdapter(this, orders, url,clientId);
         recyclerView.setAdapter(adapter);
     }
-
 
     private void setUpDatePickers(){
         fromCalendar.add(Calendar.MONTH, -3);
@@ -154,14 +124,14 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
     }
+
     public void storeParams(){
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
-        clientID = intent.getStringExtra("clID");
+        clientId = intent.getStringExtra("clID");
         refid = intent.getStringExtra("refid");
 
     }
-
 
     public void initAddIntent(View view){
         Intent intent = new Intent(this, AddVoucherActivity.class);
@@ -185,7 +155,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Date finalFDate = fDate;
         Date finalTDate = tDate;
         new Thread(()->{
-            SqlRequest sqlRequest = new SqlRequest("SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(finalFDate), sqlformat.format(finalTDate), refid);
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(finalFDate), sqlformat.format(finalTDate), refid);
             gson.getSqlOrders(sqlRequest);
             orders = gson.getSqlResponse();
             adapter.replaceList(orders);
@@ -205,10 +175,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
         }).start();
-    }
-
-    public void initDetailsIntent(View view){
-        Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
     }
 
 
@@ -234,15 +200,34 @@ public class MainMenuActivity extends AppCompatActivity {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        fromDate.setText(sdf.format(myCalendar.getTime()));
+        fromDate.setText(sdf.format(fromCalendar.getTime()));
     }
+
     private void updateToLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        toDate.setText(sdf.format(myCalendar.getTime()));
+        toDate.setText(sdf.format(toCalendar.getTime()));
     }
 
+    @Override
+    public void onBackPressed() {
+
+        // do something when the button is clicked
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
+
+                    finish();
+                    //close();
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+    }
 
 
 }
