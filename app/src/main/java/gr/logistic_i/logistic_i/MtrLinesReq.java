@@ -46,7 +46,8 @@ public class MtrLinesReq {
 
                 JSONArray resarray = jsonRes.getJSONArray("rows");
                 for (int i = 0; i < resarray.length(); i++) {
-                    lines.add(new MtrLine(resarray.getJSONObject(i).getString("code"),
+                    lines.add(new MtrLine(
+                            resarray.getJSONObject(i).getString("code"),
                             resarray.getJSONObject(i).getString("descr"),
                             resarray.getJSONObject(i).getString("qty"),
                             resarray.getJSONObject(i).getString("qty1"),
