@@ -34,6 +34,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
         this.mContext = mContext;
         this.url = url;
         this.clientId = clientId;
+        this.orderlist = orderlist;
     }
 
     @Override

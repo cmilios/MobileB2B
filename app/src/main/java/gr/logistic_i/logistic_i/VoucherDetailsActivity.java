@@ -67,6 +67,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrdrName.setText(o.getTrdrName());
         dsumamnt.setText(o.getSumamnt());
 
+        //TODO Grid layout to display mtrlines
     }
     //method that implements right cursor behavior on focused mode or not
     @Override

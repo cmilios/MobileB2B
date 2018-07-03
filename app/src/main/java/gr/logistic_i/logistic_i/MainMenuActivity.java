@@ -134,7 +134,11 @@ public class MainMenuActivity extends PortraitActivity {
     }
 
     public void initAddIntent(View view){
-        Intent intent = new Intent(this, AddVoucherActivity.class);
+        Intent intent = new Intent(this, MostOrderedItems.class);
+        intent.putExtra("url", url);
+        intent.putExtra("refid", refid);
+        intent.putExtra("clid", clientId);
+
         startActivity(intent);
 
     }
@@ -176,7 +180,6 @@ public class MainMenuActivity extends PortraitActivity {
 
         }).start();
     }
-
 
     //method that implements right cursor behavior on focused mode or not
     @Override

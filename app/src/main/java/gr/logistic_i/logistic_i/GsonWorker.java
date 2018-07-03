@@ -1,5 +1,7 @@
 package gr.logistic_i.logistic_i;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -22,6 +24,7 @@ public class GsonWorker {
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
+    private ArrayList<Mtrl> mtrList = new ArrayList<>();
 
     public GsonWorker(String url) {
         this.url = url;
@@ -95,6 +98,19 @@ public class GsonWorker {
             e.printStackTrace();
         }
 
+    }
+
+    public void getFOI(MtrlReq mtrlReq){
+        String lines = getJSON(url, mtrlReq.serMtrlOrders(), "windows-1253");
+        try{
+            JSONObject resObj = new JSONObject(lines);
+            if(state){
+                mtrList = mtrlReq.parseResponse(resObj);
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     public String getJSON(String furl, String jsonData,String standardCharsets ) {
@@ -188,5 +204,9 @@ public class GsonWorker {
 
     public ArrayList<MtrLine> getMtrLines() {
         return mtrLines;
+    }
+
+    public ArrayList<Mtrl> getMtrList() {
+        return mtrList;
     }
 }
