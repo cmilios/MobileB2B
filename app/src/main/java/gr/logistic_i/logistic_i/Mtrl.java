@@ -1,58 +1,42 @@
 package gr.logistic_i.logistic_i;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Base64;
-
-
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 public class Mtrl implements Parcelable {
-    String img;
+
+    String imgURL;
     String code;
     String name;
     String sales;
     String manufacturer;
     String price;
+    Drawable image;
+    String correspondingBase;
 
-    public Mtrl(String img, String code, String name, String sales, String manufacturer) {
-        this.img = img;
+    public Mtrl(String imgURL, String code, String name, String sales, String manufacturer, String correspondingBase) {
+        this.imgURL = imgURL;
         this.code = code;
         this.name = name;
         this.sales = sales;
         this.manufacturer = manufacturer;
+        this.correspondingBase = correspondingBase;
     }
 
-    public Bitmap makeStringToBitmap(){
-        img = img.replace("0x", "");
+    public void loadImage(){
+        GsonWorker gsonWorker = new GsonWorker(correspondingBase);
+        image = gsonWorker.getImage(correspondingBase, imgURL);
 
-        Bitmap bmp = StringToBitMap(img);
-        return bmp;
-    }
 
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
 
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
+
     }
 
 
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
+    public Drawable getImage() {
+        return image;
     }
 
     public String getCode() {
@@ -98,7 +82,7 @@ public class Mtrl implements Parcelable {
 
 
     protected Mtrl(Parcel in) {
-        img = in.readString();
+        imgURL = in.readString();
         code = in.readString();
         name = in.readString();
         sales = in.readString();
@@ -113,7 +97,7 @@ public class Mtrl implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(img);
+        dest.writeString(imgURL);
         dest.writeString(code);
         dest.writeString(name);
         dest.writeString(sales);

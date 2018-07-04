@@ -14,13 +14,15 @@ public class MtrlReq {
     String appID;
     String sqlName;
     String refid;
+    String url;
 
-    public MtrlReq(String service, String clientID, String appID, String sqlName, String refid) {
+    public MtrlReq(String service, String clientID, String appID, String sqlName, String refid, String url) {
         this.service = service;
         this.clientID = clientID;
         this.appID = appID;
         this.sqlName = sqlName;
         this.refid = refid;
+        this.url = url;
     }
 
     public String serMtrlOrders(){
@@ -49,7 +51,8 @@ public class MtrlReq {
                             resarray.getJSONObject(i).getString("mtrcode"),
                             resarray.getJSONObject(i).getString("mtrname"),
                             resarray.getJSONObject(i).getString("sales"),
-                            resarray.getJSONObject(i).getString("manufacturer")
+                            resarray.getJSONObject(i).getString("manufacturer"),
+                            url
                     ));
                 }
 

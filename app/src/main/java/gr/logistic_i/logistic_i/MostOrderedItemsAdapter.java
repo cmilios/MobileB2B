@@ -1,6 +1,7 @@
 package gr.logistic_i.logistic_i;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -42,7 +45,10 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.itemName.setText(mmtrList.get(position).getName());
-        holder.img.setImageBitmap(mmtrList.get(position).makeStringToBitmap());
+        holder.img.setImageDrawable(mmtrList.get(position).getImage());
+        holder.btn.setOnClickListener(v -> Toast.makeText(mContext, "On progress", Toast.LENGTH_LONG).show());
+
+
 
     }
 
@@ -70,7 +76,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         public ViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.item_picture);
-            btn = itemView.findViewById(R.id.confirm_button);
+            btn = itemView.findViewById(R.id.button);
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
 

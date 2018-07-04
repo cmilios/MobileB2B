@@ -53,7 +53,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             e.printStackTrace();
         }
         holder.dt.setText(dpformat.format(formattedDate));
-        holder.sumamnt.setText(orderlist.get(position).getSumamnt());
+        holder.sumamnt.setText(orderlist.get(position).getSumamnt()+ "€");
         holder.detailsButton.setOnClickListener(v -> {
             Intent i = new Intent(mContext, VoucherDetailsActivity.class);
             i.putExtra("order", orderlist.get(position));

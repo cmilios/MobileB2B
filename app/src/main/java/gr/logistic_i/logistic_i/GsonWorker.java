@@ -1,5 +1,8 @@
 package gr.logistic_i.logistic_i;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -138,6 +141,7 @@ public class GsonWorker {
 
             String urlParameters = jsonData.toString();
 
+
             conn.setDoOutput(true);// Should be part of code only for .Net web-services else no need for PHP
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
             wr.writeBytes(urlParameters);
@@ -177,6 +181,48 @@ public class GsonWorker {
         // Return the JSON string
         return result.toString();
     }
+
+    public Drawable getImage(String furl, String imgURL){
+        state = false;
+        HttpURLConnection conn = null;
+
+        // Create a StringBuilder for the final URL
+        StringBuilder finalURL = new StringBuilder("https://");
+        // Append API URL
+        finalURL.append(furl);
+        // Append endpoint
+        finalURL.append("/s1services");
+        finalURL.append("/?filename=");
+        finalURL.append(imgURL);
+
+
+        // Create a StringBuilder to store the JSON string
+        StringBuilder result = new StringBuilder();
+        try {
+            // Make a connection with the API
+            URL url = new URL(finalURL.toString());
+            conn = (HttpURLConnection) url.openConnection();
+
+
+            // Begin streaming the JSON
+            InputStream in = (InputStream) url.getContent();
+            Drawable d = Drawable.createFromStream(in, "src name");
+            return d;
+
+
+        } catch (Exception e) {
+            // Usually indicates a lack of Internet connection
+            return null;
+        } finally {
+            // Close connection
+            if (conn != null)
+                conn.disconnect();
+        }
+
+
+    }
+
+
 
     public String getLoginClID() {
         return loginClID;

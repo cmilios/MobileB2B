@@ -28,9 +28,15 @@ public class MostOrderedItems extends PortraitActivity {
         GsonWorker gsonWorker = new GsonWorker(url);
         initRecyclerView();
         new Thread(()->{
-            MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid);
+            MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
             gsonWorker.getFOI(mtrlReq);
             mtrList = gsonWorker.getMtrList();
+            //double dataset replace  in order to display interface earlier
+            adapter.replaceList(mtrList);
+            runOnUiThread((adapter::notifyDataSetChanged));
+            for (Mtrl m:mtrList){
+                   m.loadImage();
+            }
             adapter.replaceList(mtrList);
             runOnUiThread((adapter::notifyDataSetChanged));
 

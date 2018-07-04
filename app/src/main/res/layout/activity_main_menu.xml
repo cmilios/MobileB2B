@@ -113,28 +113,28 @@
         android:textColor="#FF2C2C2C"
         android:typeface="sans"
         app:layout_constraintBottom_toBottomOf="@+id/fromDate"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/search_button"
         app:layout_constraintStart_toEndOf="@+id/fromDate"
         app:layout_constraintTop_toTopOf="@+id/fromDate"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/search_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:onClick="initSearch"
         app:layout_constraintBottom_toBottomOf="@+id/toDate"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton3"
+        app:layout_constraintEnd_toEndOf="@+id/add_button"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/imageButton3"
+        app:layout_constraintStart_toStartOf="@+id/add_button"
         app:layout_constraintTop_toTopOf="@+id/toDate"
         app:layout_constraintVertical_bias="0.166"
         app:srcCompat="@drawable/search_icon" />
 
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/add_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
@@ -162,7 +162,7 @@
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/orderlist"
         app:layout_constraintEnd_toEndOf="parent"
