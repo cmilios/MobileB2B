@@ -1,10 +1,6 @@
 package gr.logistic_i.logistic_i;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-
-import com.google.gson.JsonObject;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;

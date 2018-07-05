@@ -10,8 +10,7 @@ import java.util.ArrayList;
 
 public class MostOrderedItems extends PortraitActivity {
 
-    ArrayList<String> selectedMtrl = new ArrayList<>();
-    ArrayList<String> selectedQty = new ArrayList<>();
+    private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     String url = new String();
     String refid = new String();
     String clientid = new String();
@@ -51,15 +50,15 @@ public class MostOrderedItems extends PortraitActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid);
+        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, mtrLines);
         recyclerView.setAdapter(adapter);
 
     }
 
     public void confirmVoucher(View view){
         Intent i = new Intent(this, ConfirmVoucher.class);
-        i.putStringArrayListExtra("mtrls", selectedMtrl);
-        i.putStringArrayListExtra("qtys", selectedQty);
+
+        i.putParcelableArrayListExtra("lines", mtrLines);
 
         this.startActivity(i);
 

@@ -55,6 +55,7 @@ public class MtrlReq {
                                 resarray.getJSONObject(i).getString("mtrname"),
                                 resarray.getJSONObject(i).getString("sales"),
                                 resarray.getJSONObject(i).getString("manufacturer"),
+                                resarray.getJSONObject(i).getString("mtrunits"),
                                 url
                         ));
                     }
@@ -64,6 +65,7 @@ public class MtrlReq {
                                 resarray.getJSONObject(i).getString("mtrname"),
                                 resarray.getJSONObject(i).getString("sales"),
                                 resarray.getJSONObject(i).getString("manufacturer"),
+                                resarray.getJSONObject(i).getString("mtrunits"),
                                 url
                         ));
 

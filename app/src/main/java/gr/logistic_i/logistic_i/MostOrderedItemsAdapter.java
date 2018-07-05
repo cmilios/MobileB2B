@@ -2,8 +2,6 @@ package gr.logistic_i.logistic_i;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +23,14 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private Context mContext;
     private String clientID;
     private String url;
+    private ArrayList<MtrLine> mtrLines;
 
-    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId) {
+    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
         this.clientID = clientId;
+        this.mtrLines = mtrLines;
 
     }
 
@@ -64,7 +63,17 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
 
         //TODO make button to define qty for mtrl in order to add to findoc list
-        holder.btn.setOnClickListener(v -> Toast.makeText(mContext, "On progress", Toast.LENGTH_LONG).show());
+        holder.btn.setOnClickListener(v -> {
+            Intent i = new Intent(mContext, AddProductActivity.class);
+            i.putParcelableArrayListExtra("lines", mtrLines);
+            i.putExtra("mtrl",mmtrList.get(holder.getAdapterPosition()));
+            i.putExtra("id", mContext.getClass().getSimpleName());
+
+
+            mContext.startActivity(i);
+
+        });
+
 
 
 
@@ -90,6 +99,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         protected TextView itemName;
         protected Button btn;
         protected RelativeLayout pbar_layout;
+        protected TextView selected_qty;
         protected ConstraintLayout parent_layout;
 
         public ViewHolder(View itemView) {
@@ -99,7 +109,9 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             pbar_layout = itemView.findViewById(R.id.pbar_layout);
-            pbar_layout.setVisibility(View.VISIBLE);
+            selected_qty = itemView.findViewById(R.id.selected_qty);
+
+
 
 
         }
