@@ -1,39 +1,54 @@
 package gr.logistic_i.logistic_i;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Mtrl implements Parcelable {
 
-    String imgURL;
-    String code;
-    String name;
-    String sales;
-    String manufacturer;
-    String price;
-    Drawable image;
-    String correspondingBase;
+    private String imgURL;
+    private String code;
+    private String name;
+    private String sales;
+    private String manufacturer;
+    private String price;
+    private Drawable image;
+    private String mtrunit;
+    private String correspondingBase;
 
-    public Mtrl(String imgURL, String code, String name, String sales, String manufacturer, String correspondingBase) {
+
+    public String getMtrunit() {
+        return mtrunit;
+    }
+
+    public void setMtrunit(String mtrunit) {
+        this.mtrunit = mtrunit;
+    }
+
+    public Mtrl(String imgURL, String code, String name, String sales, String manufacturer, String mtrunit, String correspondingBase) {
         this.imgURL = imgURL;
         this.code = code;
         this.name = name;
         this.sales = sales;
         this.manufacturer = manufacturer;
         this.correspondingBase = correspondingBase;
+        this.mtrunit = mtrunit;
+
     }
 
     public void loadImage(){
         GsonWorker gsonWorker = new GsonWorker(correspondingBase);
-        image = gsonWorker.getImage(correspondingBase, imgURL);
+        if (imgURL!=null){
+            image = gsonWorker.getImage(correspondingBase, imgURL);
 
-
+        }
 
 
     }
 
+    public String getImgURL() {
+        return imgURL;
+    }
 
     public Drawable getImage() {
         return image;
@@ -88,6 +103,8 @@ public class Mtrl implements Parcelable {
         sales = in.readString();
         manufacturer = in.readString();
         price = in.readString();
+        mtrunit = in.readString();
+        correspondingBase = in.readString();
     }
 
     @Override
@@ -103,6 +120,8 @@ public class Mtrl implements Parcelable {
         dest.writeString(sales);
         dest.writeString(manufacturer);
         dest.writeString(price);
+        dest.writeString(mtrunit);
+        dest.writeString(correspondingBase);
     }
 
     @SuppressWarnings("unused")

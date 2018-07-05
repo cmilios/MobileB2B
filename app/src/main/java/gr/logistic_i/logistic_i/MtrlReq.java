@@ -47,13 +47,29 @@ public class MtrlReq {
 
                 JSONArray resarray = jsonRes.getJSONArray("rows");
                 for(int i=0; i<resarray.length();i++){
-                    mtrList.add(new Mtrl(resarray.getJSONObject(i).getString("img"),
-                            resarray.getJSONObject(i).getString("mtrcode"),
-                            resarray.getJSONObject(i).getString("mtrname"),
-                            resarray.getJSONObject(i).getString("sales"),
-                            resarray.getJSONObject(i).getString("manufacturer"),
-                            url
-                    ));
+                    if (resarray.getJSONObject(i).has("img")) {
+
+
+                        mtrList.add(new Mtrl(resarray.getJSONObject(i).getString("img"),
+                                resarray.getJSONObject(i).getString("mtrcode"),
+                                resarray.getJSONObject(i).getString("mtrname"),
+                                resarray.getJSONObject(i).getString("sales"),
+                                resarray.getJSONObject(i).getString("manufacturer"),
+                                resarray.getJSONObject(i).getString("mtrunits"),
+                                url
+                        ));
+                    }
+                    else{
+                        mtrList.add(new Mtrl(null,
+                                resarray.getJSONObject(i).getString("mtrcode"),
+                                resarray.getJSONObject(i).getString("mtrname"),
+                                resarray.getJSONObject(i).getString("sales"),
+                                resarray.getJSONObject(i).getString("manufacturer"),
+                                resarray.getJSONObject(i).getString("mtrunits"),
+                                url
+                        ));
+
+                    }
                 }
 
 
