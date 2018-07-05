@@ -27,13 +27,17 @@ public class Mtrl implements Parcelable {
 
     public void loadImage(){
         GsonWorker gsonWorker = new GsonWorker(correspondingBase);
-        image = gsonWorker.getImage(correspondingBase, imgURL);
+        if (imgURL!=null){
+            image = gsonWorker.getImage(correspondingBase, imgURL);
 
-
+        }
 
 
     }
 
+    public String getImgURL() {
+        return imgURL;
+    }
 
     public Drawable getImage() {
         return image;
