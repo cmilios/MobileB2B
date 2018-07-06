@@ -24,13 +24,15 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private String clientID;
     private String url;
     private ArrayList<MtrLine> mtrLines;
+    private String refid;
 
-    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, ArrayList<MtrLine> mtrLines) {
+    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
         this.clientID = clientId;
         this.mtrLines = mtrLines;
+        this.refid = refid;
 
     }
 
@@ -60,14 +62,31 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             holder.img.setVisibility(View.VISIBLE);
 
         }
+        if (mtrLines !=null){
+            for(MtrLine m : mtrLines){
+                if (m.getCode().equals(mmtrList.get(position).getCode())){
+                    if ((!m.getQty().equals("")) && !m.getQty().equals("0")){
+                        holder.qty_not.setText("x"+m.getQty());
+                        holder.qty_not.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+            }
+
+        }
 
 
-        //TODO make button to define qty for mtrl in order to add to findoc list
+
+
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
             i.putParcelableArrayListExtra("lines", mtrLines);
             i.putExtra("mtrl",mmtrList.get(holder.getAdapterPosition()));
             i.putExtra("id", mContext.getClass().getSimpleName());
+            i.putExtra("url", url);
+            i.putExtra("refid", refid);
+            i.putExtra("clid", clientID);
 
 
             mContext.startActivity(i);
@@ -101,6 +120,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         protected RelativeLayout pbar_layout;
         protected TextView selected_qty;
         protected ConstraintLayout parent_layout;
+        protected TextView qty_not;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -109,8 +129,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             pbar_layout = itemView.findViewById(R.id.pbar_layout);
-            selected_qty = itemView.findViewById(R.id.selected_qty);
-
+            qty_not = itemView.findViewById(R.id.quantities_notation);
 
 
 

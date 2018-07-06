@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/item_name"
-        android:layout_width="210dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
@@ -78,17 +78,21 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/selected_qty"
+        android:id="@+id/quantities_notation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:textAllCaps="true"
-        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="QTY"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/item_name"
-        app:layout_constraintEnd_toEndOf="@+id/button"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintStart_toEndOf="@+id/item_name"
         app:layout_constraintTop_toTopOf="@+id/item_name" />
 
 </android.support.constraint.ConstraintLayout>
