@@ -23,6 +23,7 @@ public class LoginActivity extends PortraitActivity {
     String pass;
     String curl;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,7 @@ public class LoginActivity extends PortraitActivity {
         GsonWorker gson = new GsonWorker(curl);
 
        Creds c1 = new Creds(name, pass, curl);
-        Handler h = new Handler() {
+         Handler h = new Handler() {
             public void handleMessage(Message msg){
                 if(msg.what == 0){
                     Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();

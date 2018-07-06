@@ -15,6 +15,7 @@ public class MostOrderedItems extends PortraitActivity {
     String refid = new String();
     String clientid = new String();
     ArrayList<Mtrl> mtrList = new ArrayList<>();
+    private Intent i;
 
     private MostOrderedItemsAdapter adapter;
 
@@ -22,6 +23,7 @@ public class MostOrderedItems extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.most_ordered_items);
+        i = getIntent();
         storeParams();
 
         GsonWorker gsonWorker = new GsonWorker(url);
@@ -50,7 +52,7 @@ public class MostOrderedItems extends PortraitActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, mtrLines);
+        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid,refid, mtrLines);
         recyclerView.setAdapter(adapter);
 
     }
@@ -59,16 +61,22 @@ public class MostOrderedItems extends PortraitActivity {
         Intent i = new Intent(this, ConfirmVoucher.class);
 
         i.putParcelableArrayListExtra("lines", mtrLines);
+//        i.putExtra("url", url);
+//        i.putExtra("refid", refid);
+//        i.putExtra("clid", clientid);
+
 
         this.startActivity(i);
 
     }
 
     private void storeParams(){
-        Intent i = getIntent();
+
+        mtrLines = i.getParcelableArrayListExtra("lines");
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
         clientid = i.getStringExtra("clid");
+
 
     }
 

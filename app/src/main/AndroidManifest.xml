@@ -24,7 +24,8 @@
         <activity android:name=".MostOrderedItems" />
         <activity android:name=".VoucherDetailsActivity" />
         <activity android:name=".ConfirmVoucher" />
-        <activity android:name=".AddProductActivity"></activity>
+        <activity android:name=".AddProductActivity" />
+        <activity android:name=".ShowImage"></activity>
     </application>
 
 </manifest>
