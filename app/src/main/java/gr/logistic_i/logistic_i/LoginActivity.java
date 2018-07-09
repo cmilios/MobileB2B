@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -142,6 +143,29 @@ public class LoginActivity extends PortraitActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Η εφαρμογή θα τερματιστεί. Θέλετε να συνεχίσετε;")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
+
+
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                    System.exit(0);
+
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+
+    }
 
 
 }

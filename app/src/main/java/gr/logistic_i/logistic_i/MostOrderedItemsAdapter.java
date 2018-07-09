@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -64,7 +65,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         }
         if (mtrLines !=null){
             for(MtrLine m : mtrLines){
-                if (m.getCode().equals(mmtrList.get(position).getCode())){
+                if (m.getCode().equals(mmtrList.get(holder.getAdapterPosition()).getCode())){
                     if ((!m.getQty().equals("")) && !m.getQty().equals("0")){
                         holder.qty_not.setText("x"+m.getQty());
                         holder.qty_not.setVisibility(View.VISIBLE);
@@ -87,9 +88,8 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             i.putExtra("url", url);
             i.putExtra("refid", refid);
             i.putExtra("clid", clientID);
-
-
             mContext.startActivity(i);
+
 
         });
 

@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
@@ -25,14 +27,14 @@ import java.util.ArrayList;
 public class AddProductActivity extends PortraitActivity {
 
 
-
     ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    Mtrl mtrl = new Mtrl(null,null,null,null,null,null, null);
+    Mtrl mtrl = new Mtrl(null, null, null, null, null, null, null, null, null, null);
     TextView title;
     ImageView mtrlIcon;
     TextView code;
     TextView manufacturer;
     TextView mtrunit;
+    Spinner qtysp;
     EditText qty;
     String cameFrom;
     String url;
@@ -48,8 +50,8 @@ public class AddProductActivity extends PortraitActivity {
         manufacturer = findViewById(R.id.manufacturer);
         code = findViewById(R.id.mtrlcode);
         mtrlIcon = findViewById(R.id.image_icon1);
-        mtrunit = findViewById(R.id.mtrunit);
         qty = findViewById(R.id.selected_qty);
+        qtysp = findViewById(R.id.unitspn);
 
 
         storeVariables();
@@ -58,7 +60,7 @@ public class AddProductActivity extends PortraitActivity {
         mtrlIcon.setOnClickListener(v -> {
 
             Drawable d = mtrl.getImage();
-            Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] b = baos.toByteArray();
@@ -67,13 +69,15 @@ public class AddProductActivity extends PortraitActivity {
             intent.putExtra("picture", b);
             startActivity(intent);
 
+
+
         });
 
 
     }
 
 
-    private void storeVariables(){
+    private void storeVariables() {
         Intent i = getIntent();
         cameFrom = i.getStringExtra("id");
 
@@ -85,8 +89,8 @@ public class AddProductActivity extends PortraitActivity {
 
     }
 
-    public void setViews(){
-        new Thread( ()->{
+    public void setViews() {
+        new Thread(() -> {
             mtrl.loadImage();
             runOnUiThread(() -> mtrlIcon.setImageDrawable(mtrl.getImage()));
         }).start();
@@ -94,16 +98,46 @@ public class AddProductActivity extends PortraitActivity {
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
         manufacturer.setText(mtrl.getManufacturer());
-        mtrunit.setText(mtrl.getMtrunit());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, mtrl.getUnitList());
+        qtysp.setAdapter(adapter);
+        if (mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(1)) && mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(2)) && mtrl.getUnitList().get(1).equals(mtrl.getUnitList().get(2))) {
+            qtysp.setClickable(false);
+            qtysp.setFocusable(false);
+            qtysp.setEnabled(false);
+
+        }
+
+        if (mtrLines != null) {
+            int index;
+            String setQ = new String();
+            for (MtrLine m : mtrLines) {
+                if (mtrl.getName().equals(m.getDescription())) {
+                    setQ =m.getQty();
+                    qty.setText(setQ);
+                    qtysp.setSelection(m.getmUnit());
+
+                }
+            }
 
 
+        } else {
+            qtysp.setSelection(mtrl.getUnitList().indexOf(0));
+
+        }
     }
 
 
 
 
     public void addMtrline(View view){
-        MtrLine line = new MtrLine(mtrl.getCode(),mtrl.getName(),qty.getText().toString(),qty.getText().toString(), null,null,null,null);
+        int index = -1;
+        String unit = qtysp.getSelectedItem().toString();
+        for (String s:mtrl.getUnitList()){
+            if (s.equals(unit)){
+                index = mtrl.getUnitList().indexOf(s);
+            }
+        }
+        MtrLine line = new MtrLine(mtrl.getCode(),mtrl.getName(),qty.getText().toString(),qty.getText().toString(), null,null,null,null, index);
 
         if (mtrLines == null){
             mtrLines = new ArrayList<>();
@@ -122,6 +156,13 @@ public class AddProductActivity extends PortraitActivity {
             e.printStackTrace();
         }
         startActivity(i);
+
+
+
+
+
+
+
 
 
 
