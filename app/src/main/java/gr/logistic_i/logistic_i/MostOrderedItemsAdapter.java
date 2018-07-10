@@ -43,6 +43,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.most_ordered_items_adapter, parent ,false);
+
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -50,10 +51,11 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
-        if (mmtrList.get(holder.getAdapterPosition()).getImgURL()!=null){
-            if (mmtrList.get(holder.getAdapterPosition()).getImage()!=null){
-                holder.img.setImageDrawable(mmtrList.get(holder.getAdapterPosition()).getImage());
+
+        holder.itemName.setText(mmtrList.get(position).getName());
+        if (mmtrList.get(position).getImgURL()!=null){
+            if (mmtrList.get(position).getImage()!=null){
+                holder.img.setImageDrawable(mmtrList.get(position).getImage());
                 holder.pbar_layout.setVisibility(View.INVISIBLE);
                 holder.img.setVisibility(View.VISIBLE);
 
@@ -65,6 +67,21 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             holder.img.setVisibility(View.VISIBLE);
 
         }
+
+        if (mtrLines !=null){
+            for(MtrLine m : mtrLines){
+
+                if (m.getCode().equals(mmtrList.get(holder.getAdapterPosition()).getCode())) {
+                    if ((!m.getQty().equals("")) && !m.getQty().equals("0")) {
+                        holder.qty_not.setText("x" + m.getQty());
+                        holder.qty_not.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+
+
+
 
 
 
@@ -105,8 +122,12 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     }
 
     public void replaceList(ArrayList<Mtrl> mtrList) {
-        mmtrList.clear();
-        mmtrList.addAll(mtrList);
+        ArrayList<Mtrl> ml = new ArrayList<>();
+        ml.clear();
+        ml.addAll(mtrList);
+        mmtrList = ml;
+
+
     }
 
 

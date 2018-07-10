@@ -17,6 +17,7 @@ public class MostOrderedItems extends PortraitActivity {
     String clientid = new String();
     ArrayList<Mtrl> mtrList = new ArrayList<>();
     private Intent i;
+    RecyclerView rv;
 
     private MostOrderedItemsAdapter adapter;
 
@@ -33,28 +34,38 @@ public class MostOrderedItems extends PortraitActivity {
             MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
             gsonWorker.getFOI(mtrlReq);
             mtrList = gsonWorker.getMtrList();
-            //double dataset replace  in order to display interface earlier
-            adapter.replaceList(mtrList);
-            runOnUiThread((adapter::notifyDataSetChanged));
+
+
+
             for (Mtrl m:mtrList){
-                   m.loadImage();
+                 new Thread(()->{
+                    m.loadImage();
+                    adapter.replaceList(mtrList);
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                }).start();
+
+
+
             }
-            adapter.replaceList(mtrList);
-            runOnUiThread((adapter::notifyDataSetChanged));
+
+
+
 
 
 
 
         }).start();
+
+
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.details_list);
+        rv = findViewById(R.id.details_list);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid,refid, mtrLines);
-        recyclerView.setAdapter(adapter);
+        rv.setAdapter(adapter);
 
     }
 

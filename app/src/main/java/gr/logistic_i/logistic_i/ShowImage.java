@@ -10,7 +10,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+
 
 public class ShowImage extends PortraitActivity {
 

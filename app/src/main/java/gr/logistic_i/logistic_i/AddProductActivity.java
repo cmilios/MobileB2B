@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -131,6 +130,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
     public void addMtrline(View view){
+        // index showing on which index is combobox selected so we know if it is Primary, Secondary or Byiong mtrunit
         int index = -1;
         String unit = qtysp.getSelectedItem().toString();
         for (String s:mtrl.getUnitList()){
@@ -161,12 +161,6 @@ public class AddProductActivity extends PortraitActivity {
 
 
 
-
-
-
-
-
-
     }
 
     @Override
@@ -186,5 +180,21 @@ public class AddProductActivity extends PortraitActivity {
         return super.dispatchTouchEvent( event );
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = null;
+        try {
+            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
+            i.putExtra("id", this.getClass().getSimpleName());
+            i.putParcelableArrayListExtra("lines", mtrLines);
+            i.putExtra("url", url);
+            i.putExtra("refid", refid);
+            i.putExtra("clid", clientid);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        startActivity(i);
+        finish();
 
+    }
 }

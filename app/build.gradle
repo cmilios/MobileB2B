@@ -43,7 +43,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
 
     android.defaultConfig.vectorDrawables.useSupportLibrary = true
 
