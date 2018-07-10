@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,5 +81,32 @@ public class MostOrderedItems extends PortraitActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Θέλετε να ακυωσετε την καταχώρηση νέου παραστατικού")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 
+
+                    if(mtrLines!= null){
+                        mtrLines.clear();
+
+
+                    }
+                    Intent i = new Intent(this, MainMenuActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.putExtra("clID", clientid);
+                    i.putExtra("url", url);
+                    i.putExtra("refid", refid);
+                    this.startActivity(i);
+                    finish();
+
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+    }
 }

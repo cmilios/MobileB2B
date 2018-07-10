@@ -46,8 +46,23 @@ public class MtrlReq {
             if(size>0){
 
                 JSONArray resarray = jsonRes.getJSONArray("rows");
+
                 for(int i=0; i<resarray.length();i++){
+                    ArrayList<String> units = new ArrayList<>();
+
+                    units.add(resarray.getJSONObject(i).getString("unit1"));
+                    units.add(resarray.getJSONObject(i).getString("unit2"));
+                    units.add(resarray.getJSONObject(i).getString("unit3"));
+
+
+
+
+
+
+
                     if (resarray.getJSONObject(i).has("img")) {
+
+
 
 
                         mtrList.add(new Mtrl(resarray.getJSONObject(i).getString("img"),
@@ -56,7 +71,8 @@ public class MtrlReq {
                                 resarray.getJSONObject(i).getString("sales"),
                                 resarray.getJSONObject(i).getString("manufacturer"),
                                 resarray.getJSONObject(i).getString("mtrunits"),
-                                url
+                                url,units, resarray.getJSONObject(i).getString("c21"),
+                                resarray.getJSONObject(i).getString("c31")
                         ));
                     }
                     else{
@@ -66,7 +82,8 @@ public class MtrlReq {
                                 resarray.getJSONObject(i).getString("sales"),
                                 resarray.getJSONObject(i).getString("manufacturer"),
                                 resarray.getJSONObject(i).getString("mtrunits"),
-                                url
+                                url,units, resarray.getJSONObject(i).getString("c21"),
+                                resarray.getJSONObject(i).getString("c31")
                         ));
 
                     }

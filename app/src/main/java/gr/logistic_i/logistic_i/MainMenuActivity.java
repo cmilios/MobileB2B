@@ -141,6 +141,7 @@ public class MainMenuActivity extends PortraitActivity {
 
         startActivity(intent);
 
+
     }
 
     public void initSearch(View view){
@@ -221,8 +222,10 @@ public class MainMenuActivity extends PortraitActivity {
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 
-                    finish();
+
                     //close();
+                    finish();
+
 
 
                 })
@@ -230,7 +233,9 @@ public class MainMenuActivity extends PortraitActivity {
                 })
                 .show();
 
+
     }
+
 
 
 }

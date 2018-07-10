@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Mtrl implements Parcelable {
 
     private String imgURL;
@@ -15,6 +17,10 @@ public class Mtrl implements Parcelable {
     private Drawable image;
     private String mtrunit;
     private String correspondingBase;
+    private ArrayList<String> unitList;
+    private String mu21;
+    private String mu31;
+
 
 
     public String getMtrunit() {
@@ -25,7 +31,8 @@ public class Mtrl implements Parcelable {
         this.mtrunit = mtrunit;
     }
 
-    public Mtrl(String imgURL, String code, String name, String sales, String manufacturer, String mtrunit, String correspondingBase) {
+    public Mtrl(String imgURL, String code, String name, String sales, String manufacturer, String mtrunit,
+                String correspondingBase, ArrayList<String> unitList, String mu21, String mu31) {
         this.imgURL = imgURL;
         this.code = code;
         this.name = name;
@@ -33,6 +40,10 @@ public class Mtrl implements Parcelable {
         this.manufacturer = manufacturer;
         this.correspondingBase = correspondingBase;
         this.mtrunit = mtrunit;
+        this.unitList = unitList;
+        this.mu21 = mu21;
+        this.mu31 = mu31;
+
 
     }
 
@@ -105,11 +116,29 @@ public class Mtrl implements Parcelable {
         price = in.readString();
         mtrunit = in.readString();
         correspondingBase = in.readString();
+        if (in.readByte() == 0x01) {
+            unitList = new ArrayList<String>();
+            in.readList(unitList, String.class.getClassLoader());
+        } else {
+            unitList = null;
+        }
+        mu21 = in.readString();
+        mu31 = in.readString();
+
+
     }
 
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ArrayList<String> getUnitList() {
+        return unitList;
+    }
+
+    public void setUnitList(ArrayList<String> unitList) {
+        this.unitList = unitList;
     }
 
     @Override
@@ -122,6 +151,15 @@ public class Mtrl implements Parcelable {
         dest.writeString(price);
         dest.writeString(mtrunit);
         dest.writeString(correspondingBase);
+        if (unitList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(unitList);
+        }
+        dest.writeString(mu21);
+        dest.writeString(mu31);
+
     }
 
     @SuppressWarnings("unused")
