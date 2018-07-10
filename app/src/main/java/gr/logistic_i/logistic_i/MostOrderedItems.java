@@ -94,10 +94,12 @@ public class MostOrderedItems extends PortraitActivity {
 
                     }
                     Intent i = new Intent(this, MainMenuActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.putExtra("clID", clientid);
                     i.putExtra("url", url);
                     i.putExtra("refid", refid);
                     this.startActivity(i);
+                    finish();
 
 
 

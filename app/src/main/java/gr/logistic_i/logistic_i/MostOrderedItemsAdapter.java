@@ -27,6 +27,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private ArrayList<MtrLine> mtrLines;
     private String refid;
 
+
     public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
@@ -48,6 +49,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
         if (mmtrList.get(holder.getAdapterPosition()).getImgURL()!=null){
             if (mmtrList.get(holder.getAdapterPosition()).getImage()!=null){
@@ -63,19 +65,13 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             holder.img.setVisibility(View.VISIBLE);
 
         }
-        if (mtrLines !=null){
-            for(MtrLine m : mtrLines){
-                if (m.getCode().equals(mmtrList.get(holder.getAdapterPosition()).getCode())){
-                    if ((!m.getQty().equals("")) && !m.getQty().equals("0")){
-                        holder.qty_not.setText("x"+m.getQty());
-                        holder.qty_not.setVisibility(View.VISIBLE);
-                    }
 
-                }
 
-            }
 
-        }
+
+
+
+
 
 
 
@@ -89,6 +85,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             i.putExtra("refid", refid);
             i.putExtra("clid", clientID);
             mContext.startActivity(i);
+            ((Activity)mContext).finish();
 
 
         });
@@ -96,7 +93,11 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
 
 
+
+
     }
+
+
 
     @Override
     public int getItemCount() {

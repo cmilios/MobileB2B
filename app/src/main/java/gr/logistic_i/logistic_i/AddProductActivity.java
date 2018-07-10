@@ -71,6 +71,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
 
+
         });
 
 
@@ -156,7 +157,7 @@ public class AddProductActivity extends PortraitActivity {
             e.printStackTrace();
         }
         startActivity(i);
-
+        finish();
 
 
 
