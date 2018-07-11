@@ -68,13 +68,20 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
         }
 
+
+        int index = -1;
         if (mtrLines !=null){
             for(MtrLine m : mtrLines){
+                for(Mtrl mt:mmtrList) {
 
-                if (m.getCode().equals(mmtrList.get(holder.getAdapterPosition()).getCode())) {
-                    if ((!m.getQty().equals("")) && !m.getQty().equals("0")) {
-                        holder.qty_not.setText("x" + m.getQty());
-                        holder.qty_not.setVisibility(View.VISIBLE);
+                    if (m.getCode().equals(mt.getCode())) {
+                        index = mmtrList.indexOf(mt);
+                        if (position == index) {
+                            if ((!m.getQty().equals("")) && !m.getQty().equals("0")) {
+                                holder.qty_not.setText("x" + m.getQty());
+                                holder.qty_not.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 }
             }

@@ -1,11 +1,22 @@
 package gr.logistic_i.logistic_i;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.mancj.slideup.SlideUp;
+import com.mancj.slideup.SlideUpBuilder;
 
 import java.util.ArrayList;
 
@@ -34,27 +45,46 @@ public class MostOrderedItems extends PortraitActivity {
             MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
             gsonWorker.getFOI(mtrlReq);
             mtrList = gsonWorker.getMtrList();
-
-
-
             for (Mtrl m:mtrList){
                  new Thread(()->{
                     m.loadImage();
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
                 }).start();
-
-
-
             }
-
-
-
-
-
-
-
         }).start();
+
+        View slideView = findViewById(R.id.slideView);
+        FloatingActionButton fab = findViewById(R.id.fabsee);
+        View dim = findViewById(R.id.dim);
+
+        SlideUp slideUp = new SlideUpBuilder(slideView)
+                .withStartState(SlideUp.State.HIDDEN)
+                .withStartGravity(Gravity.BOTTOM)
+                .withListeners(new SlideUp.Listener.Events() {
+                    @Override
+                    public void onSlide(float percent) {
+                        dim.setAlpha(1 - (percent / 100));
+                    }
+                    @Override
+                    public void onVisibilityChanged(int visibility) {
+                        if (visibility == View.GONE && fab.getVisibility() == View.GONE){
+                            fab.show();
+                        }
+                    }
+                })
+                .build();
+        slideUp.hideImmediately();
+        fab.setOnClickListener(v -> {
+            fab.hide();
+            slideUp.show();
+
+        });
+
+
+
+
+
 
 
     }
@@ -120,4 +150,5 @@ public class MostOrderedItems extends PortraitActivity {
                 .show();
 
     }
+
 }
