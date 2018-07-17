@@ -6,14 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainMenuActivity extends PortraitActivity {
+public class MainMenuActivity extends AppCompatActivity {
 
     private String url;
     private String clientId;
@@ -34,7 +38,7 @@ public class MainMenuActivity extends PortraitActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
-
+    android.support.v7.widget.Toolbar toolbarmain;
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private GsonWorker gson = new GsonWorker(null);
@@ -44,8 +48,13 @@ public class MainMenuActivity extends PortraitActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main_menu);
+        toolbarmain = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbarmain);
+        getSupportActionBar().setTitle("My Orders");
+
+        
+
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         results_section = findViewById(R.id.results_section);
@@ -55,6 +64,7 @@ public class MainMenuActivity extends PortraitActivity {
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
+        
 
         gson = new GsonWorker(url);
         initRecyclerView();
@@ -236,6 +246,32 @@ public class MainMenuActivity extends PortraitActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        String msg=" ";
+        switch (item.getItemId()){
+            case R.id.settings:
+                msg = "Settings";
+                break;
+            case R.id.user:
+                msg = "User";
+                break;
+            case R.id.login:
+                msg = "Login";
+                break;
+            case R.id.logout:
+                msg = "Logout";
+                break;
+        }
+        Toast.makeText(this,msg+" Checked", Toast.LENGTH_LONG).show();
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }
