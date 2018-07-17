@@ -1,120 +1,186 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends PortraitActivity {
 
-    private ArrayList<String> finums = new ArrayList<>();
-    private ArrayList<String> dts = new ArrayList<>();
     private String url;
-    private String clientID;
-    private String sourceDate;
+    private String clientId;
+    private String refid;
+    private String toDateString;
+    private String fromDateString;
     private EditText fromDate;
     private EditText toDate;
-    private Calendar calendar = Calendar.getInstance();
+    private TextView results_section;
+    private Calendar fromCalendar = Calendar.getInstance();
+    private Calendar toCalendar = Calendar.getInstance();
+
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
-
-
-
+    SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+    private GsonWorker gson = new GsonWorker(null);
+    private MainMenuAdapter adapter;
+    private ArrayList<Order> orders = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main_menu);
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
+        results_section = findViewById(R.id.results_section);
         storeParams();
+
         setUpDatePickers();
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
-
-        GetSqlDataTask g = new GetSqlDataTask(this);
-        //todo might need improvement on params to set date pickers
-        g.execute(url, "SqlData", clientID, "1100", "GetMobileOrders", sqlformat.format(calendar.getTime()), sqlformat.format(calendar.getTime()));
-
-
-
+        gson = new GsonWorker(url);
         initRecyclerView();
+        new Thread(() -> {
+
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
+            if(!orders.isEmpty()){
+                if(orders.size() == 1){
+                    runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
+                }
+                else{
+                    runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
+                }
+            }
+            else{
+                runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
+            }
+
+
+        }).start();
+
+        DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            fromCalendar.set(Calendar.YEAR, year);
+            fromCalendar.set(Calendar.MONTH, monthOfYear);
+            fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateFromLabel();
+        };
+
+        DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+            toCalendar.set(Calendar.YEAR, year);
+            toCalendar.set(Calendar.MONTH, monthOfYear);
+            toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateToLabel();
+        };
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
+                .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> {
+            new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                    toCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = findViewById(R.id.orderlist);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
-        MainMenuAdapter adapter = new MainMenuAdapter(this, finums, dts);
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
-
-
-
+        adapter = new MainMenuAdapter(this, orders, url,clientId);
+        recyclerView.setAdapter(adapter);
     }
-
 
     private void setUpDatePickers(){
-        getCurrentDate();
-        SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
-        sourceDate = dpformat.format(calendar.getTime());
-        fromDate.setText(sourceDate);
-        toDate.setText(sourceDate);
+        fromCalendar.add(Calendar.MONTH, -3);
+
+        toDateString = dpformat.format(toCalendar.getTime());
+        fromDateString = dpformat.format(fromCalendar.getTime());
+        fromDate.setText(fromDateString);
+        toDate.setText(toDateString);
+
 
     }
+
     public void storeParams(){
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
-        clientID = intent.getStringExtra("clID");
-    }
-    public void getCurrentDate() {
-        sourceDate = sqlformat.format(calendar.getTime());
+        clientId = intent.getStringExtra("clID");
+        refid = intent.getStringExtra("refid");
 
     }
-
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(this, LoginActivity.class);
-        this.startActivity(i);
-    }
-
-
 
     public void initAddIntent(View view){
-        Intent intent = new Intent(this, AddVoucherActivity.class);
+        Intent intent = new Intent(this, MostOrderedItems.class);
+        intent.putExtra("url", url);
+        intent.putExtra("refid", refid);
+        intent.putExtra("clid", clientId);
+
         startActivity(intent);
+
 
     }
 
     public void initSearch(View view){
-        //todo make search between @fromDate and @toDate
+
+        fromDateString = fromDate.getText().toString();
+        toDateString = toDate.getText().toString();
+        Date fDate = null;
+        Date tDate = null;
+        try {
+            fDate = dpformat.parse(fromDateString);
+            tDate = dpformat.parse(toDateString);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date finalFDate = fDate;
+        Date finalTDate = tDate;
+        new Thread(()->{
+            SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(finalFDate), sqlformat.format(finalTDate), refid);
+            gson.getSqlOrders(sqlRequest);
+            orders = gson.getSqlResponse();
+            adapter.replaceList(orders);
+            runOnUiThread((adapter::notifyDataSetChanged));
+            if(!orders.isEmpty()){
+                if(orders.size() == 1){
+                    runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
+                }
+                else{
+                    runOnUiThread(()->results_section.setText("Βρέθηκαν "+orders.size()+" αποτελέσματα."));
+                }
+            }
+            else{
+                runOnUiThread(()->results_section.setText("Δεν βρέθηκαν αποτελέσματα."));
+            }
+
+
+
+        }).start();
     }
-
-    public void initDetailsIntent(View view){
-        Toast.makeText(this, "on process", Toast.LENGTH_LONG).show();
-    }
-
-
 
     //method that implements right cursor behavior on focused mode or not
     @Override
@@ -132,6 +198,42 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    private void updateFromLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        fromDate.setText(sdf.format(fromCalendar.getTime()));
+    }
+
+    private void updateToLabel() {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        toDate.setText(sdf.format(toCalendar.getTime()));
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        // do something when the button is clicked
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
+
+
+                    //close();
+                    finish();
+
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+
     }
 
 

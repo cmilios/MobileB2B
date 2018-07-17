@@ -1,27 +1,28 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends PortraitActivity {
 
     String name;
     String pass;
     String curl;
-
 
 
     @Override
@@ -50,16 +51,57 @@ public class LoginActivity extends AppCompatActivity {
         name = n.getText().toString();
         pass = p.getText().toString();
         curl = c.getText().toString();
-        JSONObject json = new JSONObject();
-        LoginAuthenticateTask w = new LoginAuthenticateTask(this, this);
-        Creds c1 = new Creds(name, pass, curl);
-        String serObj = c1.serObjLogin();
-        try {
-            json = new JSONObject(serObj);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        w.execute(c1.getCurl(), "login", json);
+        GsonWorker gson = new GsonWorker(curl);
+
+       Creds c1 = new Creds(name, pass, curl);
+         Handler h = new Handler() {
+            public void handleMessage(Message msg){
+                if(msg.what == 0){
+                    Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();
+                }
+                if (msg.what == 1){
+                    Toast.makeText(getApplicationContext(), "No Network Connection Detected", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        };
+//        String serObj = c1.serObjLogin();
+//        try {
+//            json = new JSONObject(serObj);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        w.execute(c1.getCurl(), "login", json);
+
+        new Thread(() -> {
+
+            if (isOnline()){
+                gson.makeLogin(c1);
+                if (gson.getAuthenticationFlag()){
+                    Intent i = new Intent(this, MainMenuActivity.class);
+                    i.putExtra("url", gson.getUrl());
+                    i.putExtra("clID", gson.getAuthenticateClID());
+                    i.putExtra("refid", gson.getRefID());
+                    this.startActivity(i);
+                    runOnUiThread(()->setAllToNormal());
+                }
+                else{
+                    h.sendEmptyMessage(0);
+                    runOnUiThread(() -> setAllToNormal());
+
+                }
+            }
+            else{
+
+                h.sendEmptyMessage(1);
+                runOnUiThread(() -> setAllToNormal());
+            }
+
+
+
+        }).start();
+
+
 
 
 
@@ -68,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
 
     public void setAllToNormal(){
         Button button = findViewById(R.id.loginButton);
@@ -77,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
         button.setVisibility(View.VISIBLE);
 
     }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -95,5 +135,37 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent( event );
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog alertbox = new AlertDialog.Builder(this)
+                .setMessage("Η εφαρμογή θα τερματιστεί. Θέλετε να συνεχίσετε;")
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
+
+
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                    System.exit(0);
+
+
+
+                })
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
+                })
+                .show();
+
+
+    }
+
 
 }

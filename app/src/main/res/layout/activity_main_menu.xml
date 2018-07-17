@@ -9,11 +9,10 @@
 
     <RelativeLayout
         android:id="@+id/RequestFocusLayout"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:layout_width="0px"
-        android:layout_height="0px"/>
-
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,32 +24,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="Orders"
+        android:layout_width="185dp"
+        android:layout_height="43dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="My Orders"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/colorWhite"
         android:textSize="30sp"
         android:typeface="sans"
-        app:fontFamily="@font/roboto"/>
-
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@android:color/transparent"
-            android:onClick="initAddIntent"
-            app:srcCompat="@drawable/addcross" />
-
-    </android.support.v7.widget.Toolbar>
-
-
+        app:fontFamily="@font/roboto"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -63,56 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" >
-
-        <EditText
-            android:id="@+id/fromDate"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
-            android:layout_width="143dp"
-            android:layout_height="48dp"
-            android:clickable="true"
-            android:cursorVisible="true"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="fromDate"
-            android:inputType="date"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="3dp" />
-
-        <EditText
-            android:id="@+id/toDate"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
-            android:layout_width="143dp"
-            android:layout_height="48dp"
-            android:clickable="true"
-            android:cursorVisible="true"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:hint="toDate"
-            android:inputType="date"
-            android:textColor="#FFFFFF"
-            android:textColorHighlight="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF"
-            tools:layout_editor_absoluteX="159dp"
-            tools:layout_editor_absoluteY="3dp" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@android:color/transparent"
-            android:layout_margin="10dp"
-            app:srcCompat="@drawable/search" />
-
-
-    </android.support.v7.widget.Toolbar>
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -124,7 +70,105 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <EditText
+        android:id="@+id/fromDate"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="110dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="64dp"
+        android:clickable="true"
+        android:cursorVisible="true"
+        android:ellipsize="end"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:hint="Ημ/νία απο:"
+        android:inputType="date"
+        android:textColor="@color/colorTextBold"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="@+id/textView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.0" />
 
+    <EditText
+        android:id="@+id/toDate"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="110dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:clickable="true"
+        android:cursorVisible="true"
+        android:ellipsize="end"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="true"
+        android:hint="Ημ/νία εώς:"
+        android:inputType="date"
+        android:textColor="#FF2C2C2C"
+        android:typeface="sans"
+        app:layout_constraintBottom_toBottomOf="@+id/fromDate"
+        app:layout_constraintEnd_toStartOf="@+id/search_button"
+        app:layout_constraintStart_toEndOf="@+id/fromDate"
+        app:layout_constraintTop_toTopOf="@+id/fromDate"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/search_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="initSearch"
+        app:layout_constraintBottom_toBottomOf="@+id/toDate"
+        app:layout_constraintEnd_toEndOf="@+id/add_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/add_button"
+        app:layout_constraintTop_toTopOf="@+id/toDate"
+        app:layout_constraintVertical_bias="0.166"
+        app:srcCompat="@drawable/search_icon" />
+
+
+    <ImageButton
+        android:id="@+id/add_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="initAddIntent"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/add_item_button" />
+
+    <TextView
+        android:id="@+id/results_section"
+        android:layout_width="0dp"
+        android:layout_height="26dp"
+        android:text="Περιμένετε..."
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/orderlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/results_section"
+        app:srcCompat="@drawable/divider" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/orderlist"
@@ -133,13 +177,12 @@
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+        app:layout_constraintTop_toBottomOf="@+id/imageView6">
 
 
     </android.support.v7.widget.RecyclerView>
-
 
 
 </android.support.constraint.ConstraintLayout>

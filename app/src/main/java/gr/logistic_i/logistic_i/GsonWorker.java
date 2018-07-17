@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.graphics.drawable.Drawable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -22,6 +23,7 @@ public class GsonWorker {
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
+    private ArrayList<Mtrl> mtrList = new ArrayList<>();
 
     public GsonWorker(String url) {
         this.url = url;
@@ -97,6 +99,19 @@ public class GsonWorker {
 
     }
 
+    public void getFOI(MtrlReq mtrlReq){
+        String lines = getJSON(url, mtrlReq.serMtrlOrders(), "windows-1253");
+        try{
+            JSONObject resObj = new JSONObject(lines);
+            if(state){
+                mtrList = mtrlReq.parseResponse(resObj);
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
     public String getJSON(String furl, String jsonData,String standardCharsets ) {
         state = false;
         HttpURLConnection conn = null;
@@ -121,6 +136,7 @@ public class GsonWorker {
             conn.setDoInput(true);
 
             String urlParameters = jsonData.toString();
+
 
             conn.setDoOutput(true);// Should be part of code only for .Net web-services else no need for PHP
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -162,6 +178,48 @@ public class GsonWorker {
         return result.toString();
     }
 
+    public Drawable getImage(String furl, String imgURL){
+        state = false;
+        HttpURLConnection conn = null;
+
+        // Create a StringBuilder for the final URL
+        StringBuilder finalURL = new StringBuilder("https://");
+        // Append API URL
+        finalURL.append(furl);
+        // Append endpoint
+        finalURL.append("/s1services");
+        finalURL.append("/?filename=");
+        finalURL.append(imgURL);
+
+
+        // Create a StringBuilder to store the JSON string
+        StringBuilder result = new StringBuilder();
+        try {
+            // Make a connection with the API
+            URL url = new URL(finalURL.toString());
+            conn = (HttpURLConnection) url.openConnection();
+
+
+            // Begin streaming the JSON
+            InputStream in = (InputStream) url.getContent();
+            Drawable d = Drawable.createFromStream(in, "src name");
+            return d;
+
+
+        } catch (Exception e) {
+            // Usually indicates a lack of Internet connection
+            return null;
+        } finally {
+            // Close connection
+            if (conn != null)
+                conn.disconnect();
+        }
+
+
+    }
+
+
+
     public String getLoginClID() {
         return loginClID;
     }
@@ -188,5 +246,9 @@ public class GsonWorker {
 
     public ArrayList<MtrLine> getMtrLines() {
         return mtrLines;
+    }
+
+    public ArrayList<Mtrl> getMtrList() {
+        return mtrList;
     }
 }

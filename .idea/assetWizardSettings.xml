@@ -19,11 +19,9 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="height" value="32" />
-                            <entry key="outputName" value="ic_round_check_circle_outline_24px" />
+                            <entry key="outputName" value="ic_baseline_image_24px" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\logistic-i 7\Downloads\round-check_circle_outline-24px.svg" />
-                            <entry key="width" value="32" />
+                            <entry key="sourceFile" value="C:\Users\logistic-i 7\Downloads\baseline-image-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

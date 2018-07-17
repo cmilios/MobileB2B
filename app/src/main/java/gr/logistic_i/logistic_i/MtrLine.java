@@ -13,8 +13,9 @@ public class MtrLine implements Parcelable {
     String discount;
     String cleanValue;
     String fpaValue;
+    int mUnit;
 
-    public MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue) {
+    public MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
         this.code = code;
         this.description = description;
         this.qty = qty;
@@ -23,6 +24,7 @@ public class MtrLine implements Parcelable {
         this.discount = discount;
         this.cleanValue = cleanValue;
         this.fpaValue = fpaValue;
+        this.mUnit = mUnit;
     }
 
     public String getCode() {
@@ -65,6 +67,14 @@ public class MtrLine implements Parcelable {
         this.price = price;
     }
 
+    public int getmUnit() {
+        return mUnit;
+    }
+
+    public void setmUnit(int mUnit) {
+        this.mUnit = mUnit;
+    }
+
     public String getDiscount() {
         return discount;
     }
@@ -98,6 +108,7 @@ public class MtrLine implements Parcelable {
         discount = in.readString();
         cleanValue = in.readString();
         fpaValue = in.readString();
+        mUnit = in.readInt();
     }
 
     @Override
@@ -115,6 +126,7 @@ public class MtrLine implements Parcelable {
         dest.writeString(discount);
         dest.writeString(cleanValue);
         dest.writeString(fpaValue);
+        dest.writeInt(mUnit);
     }
 
     @SuppressWarnings("unused")
