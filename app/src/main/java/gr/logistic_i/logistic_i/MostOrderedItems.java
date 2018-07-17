@@ -28,6 +28,7 @@ public class MostOrderedItems extends PortraitActivity {
     android.support.v7.widget.Toolbar toolbarmostord;
 
     private MostOrderedItemsAdapter adapter;
+    private  BasketAdapter ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,9 @@ public class MostOrderedItems extends PortraitActivity {
         fab.setOnClickListener(v -> {
             fab.hide();
             slideUp.show();
+            if (mtrLines!=null){
+                initBasketRV();
+            }
 
 
         });
@@ -101,6 +105,16 @@ public class MostOrderedItems extends PortraitActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, refid, mtrLines);
         recyclerView.setAdapter(adapter);
+
+    }
+
+    private void initBasketRV(){
+        RecyclerView rv = findViewById(R.id.basket_rview);
+
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        ad = new BasketAdapter(mtrLines,this);
+        rv.setAdapter(ad);
 
     }
 

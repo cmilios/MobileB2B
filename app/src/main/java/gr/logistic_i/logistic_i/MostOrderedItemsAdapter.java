@@ -112,7 +112,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         protected TextView itemName;
         protected Button btn;
         protected RelativeLayout pbar_layout;
-        protected TextView selected_qty;
         protected ConstraintLayout parent_layout;
         protected TextView qty_not;
 

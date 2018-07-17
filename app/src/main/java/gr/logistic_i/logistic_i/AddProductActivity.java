@@ -70,8 +70,6 @@ public class AddProductActivity extends PortraitActivity {
             startActivity(intent);
 
 
-
-
         });
 
 
@@ -113,7 +111,7 @@ public class AddProductActivity extends PortraitActivity {
             String setQ = new String();
             for (MtrLine m : mtrLines) {
                 if (mtrl.getName().equals(m.getDescription())) {
-                    setQ =m.getQty();
+                    setQ = m.getQty();
                     qty.setText(setQ);
                     qtysp.setSelection(m.getmUnit());
 
@@ -128,23 +126,54 @@ public class AddProductActivity extends PortraitActivity {
     }
 
 
-
-
-    public void addMtrline(View view){
+    public void addMtrline(View view) {
+        Boolean f = false;
+        Boolean st = false;
         int index = -1;
+        int tdindex =0;
+
         String unit = qtysp.getSelectedItem().toString();
-        for (String s:mtrl.getUnitList()){
-            if (s.equals(unit)){
+        for (String s : mtrl.getUnitList()) {
+            if (s.equals(unit)) {
                 index = mtrl.getUnitList().indexOf(s);
             }
         }
-        MtrLine line = new MtrLine(mtrl.getCode(),mtrl.getName(),qty.getText().toString(),qty.getText().toString(), null,null,null,null, index);
+        MtrLine line;
 
-        if (mtrLines == null){
+        if (mtrLines == null) {
             mtrLines = new ArrayList<>();
 
         }
-        mtrLines.add(line);
+        for (MtrLine m :mtrLines){
+            if (m.getCode().equals(mtrl.getCode())){
+                f = true;
+                if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")){
+                    tdindex = mtrLines.indexOf(m);
+                    st=true;
+                }
+                else{
+                    m.setQty(qty.getText().toString());
+                    m.setQty1(qty.getText().toString());
+                }
+
+            }
+        }
+        if(st){
+            mtrLines.remove(mtrLines.get(tdindex));
+        }
+
+
+
+        if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !f) {
+            line = new MtrLine(mtrl.getCode(),mtrl.getName(),qty.getText().toString(),qty.getText().toString(), null,null,null,null, index);
+            mtrLines.add(line);
+        }
+
+
+
+
+
+
         Intent i = null;
         try {
             i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
@@ -160,31 +189,41 @@ public class AddProductActivity extends PortraitActivity {
         finish();
 
 
-
-
-
-
-
-
-
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
-        return super.dispatchTouchEvent( event );
+        return super.dispatchTouchEvent(event);
     }
 
 
+    @Override
+    public void onBackPressed() {
+        Intent i = null;
+        try {
+            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
+            i.putExtra("id", this.getClass().getSimpleName());
+            i.putParcelableArrayListExtra("lines", mtrLines);
+            i.putExtra("url", url);
+            i.putExtra("refid", refid);
+            i.putExtra("clid", clientid);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        startActivity(i);
+        finish();
+
+    }
 }
