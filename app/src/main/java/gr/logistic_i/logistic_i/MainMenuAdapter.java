@@ -22,7 +22,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     private static final String TAG = "RecyclerViewAdapter";
 
-    private ArrayList<Order> orderlist = new ArrayList<>();
+    private ArrayList<Order> orderlist;
     private Context mContext;
     private String url;
     private String clientId;

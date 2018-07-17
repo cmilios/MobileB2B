@@ -67,15 +67,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         }
 
 
-
-
-
-
-
-
-
-
-
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
             i.putParcelableArrayListExtra("lines", mtrLines);
@@ -105,8 +96,10 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     }
 
     public void replaceList(ArrayList<Mtrl> mtrList) {
-        mmtrList.clear();
-        mmtrList.addAll(mtrList);
+        ArrayList<Mtrl> ml = new ArrayList<>();
+        ml.clear();
+        ml.addAll(mtrList);
+        mmtrList = ml;
     }
 
 
@@ -119,7 +112,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         protected TextView itemName;
         protected Button btn;
         protected RelativeLayout pbar_layout;
-        protected TextView selected_qty;
         protected ConstraintLayout parent_layout;
         protected TextView qty_not;
 
