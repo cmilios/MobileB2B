@@ -31,6 +31,13 @@
             android:layout_marginBottom="16dp"
             android:textColor="@color/colorGrey"/>
 
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTextBold"
+            app:srcCompat="@drawable/grey_line" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/basket_rview"
             android:layout_width="match_parent"
