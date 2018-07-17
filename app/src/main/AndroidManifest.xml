@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMenuActivity" />
-        <activity android:name=".MostOrderedItems" />
+        <activity
+            android:name=".MostOrderedItems" />
         <activity android:name=".VoucherDetailsActivity" />
         <activity android:name=".ConfirmVoucher" />
         <activity android:name=".AddProductActivity" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#227DC2</color>
-    <color name="colorPrimaryDark">#227DC2</color>
+    <color name="colorPrimary">#15416c</color>
+    <color name="colorPrimaryDark">#042647</color>
     <color name="colorAccent">#848B94</color>
     <color name="colorGrey">#848B94</color>
     <color name="colorToolbar">#227DC2</color>
@@ -9,4 +9,5 @@
     <color name="colorCyan">#00DBFF</color>
     <color name="colorTextBold">#2c2c2c</color>
     <color name="colorHeader">#333C47</color>
+    <color name="colorTransparent">#00000000 </color>
 </resources>

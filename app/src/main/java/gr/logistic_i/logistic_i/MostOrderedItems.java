@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,6 +20,7 @@ public class MostOrderedItems extends PortraitActivity {
     String clientid = new String();
     ArrayList<Mtrl> mtrList = new ArrayList<>();
     private Intent i;
+    android.support.v7.widget.Toolbar toolbarmostord;
 
     private MostOrderedItemsAdapter adapter;
 
@@ -24,41 +28,43 @@ public class MostOrderedItems extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.most_ordered_items);
+        toolbarmostord = (android.support.v7.widget.Toolbar) findViewById(R.id.mostordtool);
+        setSupportActionBar(toolbarmostord);
+        getSupportActionBar().setTitle("Most Ordered Items");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         i = getIntent();
         storeParams();
 
         GsonWorker gsonWorker = new GsonWorker(url);
         initRecyclerView();
-        new Thread(()->{
+        new Thread(() -> {
             MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
             gsonWorker.getFOI(mtrlReq);
             mtrList = gsonWorker.getMtrList();
             //double dataset replace  in order to display interface earlier
             adapter.replaceList(mtrList);
             runOnUiThread((adapter::notifyDataSetChanged));
-            for (Mtrl m:mtrList){
-                   m.loadImage();
+            for (Mtrl m : mtrList) {
+                m.loadImage();
             }
             adapter.replaceList(mtrList);
             runOnUiThread((adapter::notifyDataSetChanged));
 
 
-
-
         }).start();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.details_list);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid,refid, mtrLines);
+        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, refid, mtrLines);
         recyclerView.setAdapter(adapter);
 
     }
 
-    public void confirmVoucher(View view){
+    public void confirmVoucher(View view) {
         Intent i = new Intent(this, ConfirmVoucher.class);
 
         i.putParcelableArrayListExtra("lines", mtrLines);
@@ -71,7 +77,7 @@ public class MostOrderedItems extends PortraitActivity {
 
     }
 
-    private void storeParams(){
+    private void storeParams() {
 
         mtrLines = i.getParcelableArrayListExtra("lines");
         url = i.getStringExtra("url");
@@ -88,7 +94,7 @@ public class MostOrderedItems extends PortraitActivity {
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 
 
-                    if(mtrLines!= null){
+                    if (mtrLines != null) {
                         mtrLines.clear();
 
 
@@ -102,11 +108,37 @@ public class MostOrderedItems extends PortraitActivity {
                     finish();
 
 
-
                 })
                 .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
                 })
                 .show();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_mostordered, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        String msg=" ";
+        switch (item.getItemId()){
+            case R.id.confirmVoucher:
+                Intent i = new Intent(this, ConfirmVoucher.class);
+
+                i.putParcelableArrayListExtra("lines", mtrLines);
+//              i.putExtra("url", url);
+//              i.putExtra("refid", refid);
+//              i.putExtra("clid", clientid);
+
+
+                this.startActivity(i);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
+
