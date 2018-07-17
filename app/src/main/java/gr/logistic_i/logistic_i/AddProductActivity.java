@@ -3,13 +3,10 @@ package gr.logistic_i.logistic_i;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -33,7 +29,6 @@ public class AddProductActivity extends PortraitActivity {
     ImageView mtrlIcon;
     TextView code;
     TextView manufacturer;
-    TextView mtrunit;
     Spinner qtysp;
     EditText qty;
     String cameFrom;
@@ -97,7 +92,7 @@ public class AddProductActivity extends PortraitActivity {
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
         manufacturer.setText(mtrl.getManufacturer());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, mtrl.getUnitList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, mtrl.getUnitList());
         qtysp.setAdapter(adapter);
         if (mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(1)) && mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(2)) && mtrl.getUnitList().get(1).equals(mtrl.getUnitList().get(2))) {
             qtysp.setClickable(false);
@@ -107,8 +102,7 @@ public class AddProductActivity extends PortraitActivity {
         }
 
         if (mtrLines != null) {
-            int index;
-            String setQ = new String();
+            String setQ ;
             for (MtrLine m : mtrLines) {
                 if (mtrl.getName().equals(m.getDescription())) {
                     setQ = m.getQty();
@@ -201,6 +195,7 @@ public class AddProductActivity extends PortraitActivity {
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }

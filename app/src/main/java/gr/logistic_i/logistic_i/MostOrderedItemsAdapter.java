@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -43,8 +42,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.most_ordered_items_adapter, parent ,false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -108,14 +106,14 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     public class ViewHolder extends RecyclerView.ViewHolder{
 
 
-        protected ImageView img;
-        protected TextView itemName;
-        protected Button btn;
+        ImageView img;
+        TextView itemName;
+        Button btn;
         protected RelativeLayout pbar_layout;
         protected ConstraintLayout parent_layout;
-        protected TextView qty_not;
+        TextView qty_not;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.item_picture);
             btn = itemView.findViewById(R.id.button);
