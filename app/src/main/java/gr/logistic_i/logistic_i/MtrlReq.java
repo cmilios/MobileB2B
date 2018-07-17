@@ -9,12 +9,12 @@ import java.util.ArrayList;
 public class MtrlReq {
 
 
-    String service;
-    String clientID;
-    String appID;
-    String sqlName;
-    String refid;
-    String url;
+    private String service;
+    private String clientID;
+    private String appID;
+    private String sqlName;
+    private String refid;
+    private String url;
 
     public MtrlReq(String service, String clientID, String appID, String sqlName, String refid, String url) {
         this.service = service;
@@ -32,7 +32,7 @@ public class MtrlReq {
             jsonData.put("clientID", clientID);
             jsonData.put("appId", appID);
             jsonData.put( "SqlName", sqlName);
-            jsonData.put("param1", /*refid*/ "2243");
+            jsonData.put("param1", refid /*"2243"*/);
         } catch (JSONException e) {
             e.printStackTrace();
         }
