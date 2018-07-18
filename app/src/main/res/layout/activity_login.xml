@@ -57,7 +57,7 @@
         android:focusable="true"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:text="MobileTEST"
+        android:text="MobileUser"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="@+id/softone_label"
         app:layout_constraintHorizontal_bias="0.0"

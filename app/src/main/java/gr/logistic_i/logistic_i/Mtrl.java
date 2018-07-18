@@ -57,6 +57,48 @@ public class Mtrl implements Parcelable {
 
     }
 
+    public String getMu21() {
+        return mu21;
+    }
+
+    public void setMu21(String mu21) {
+        this.mu21 = mu21;
+    }
+
+    public String getMu31() {
+        return mu31;
+    }
+
+    public void setMu31(String mu31) {
+        this.mu31 = mu31;
+    }
+
+    public String getQuantityToFirstMtrUnit(int index, String qty){
+        String qtyToFirstMtrUnit;
+
+        if (index==0){
+            return  qty;
+        }
+        else if(index==1){
+            if (mu21!=null) {
+                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu21));
+                return qtyToFirstMtrUnit;
+            }
+        }
+        else {
+            if(mu31!= null) {
+                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu31));
+                return qtyToFirstMtrUnit;
+            }
+        }
+
+        return  null;
+
+
+
+
+    }
+
     public String getImgURL() {
         return imgURL;
     }

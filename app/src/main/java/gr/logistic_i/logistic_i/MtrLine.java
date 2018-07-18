@@ -5,15 +5,15 @@ import android.os.Parcelable;
 
 public class MtrLine implements Parcelable {
 
-    String code;
-    String description;
-    String qty;
-    String qty1;
-    String price;
-    String discount;
-    String cleanValue;
-    String fpaValue;
-    int mUnit;
+    private String code;
+    private String description;
+    private String qty;
+    private String qty1;
+    private String price;
+    private String discount;
+    private String cleanValue;
+    private String fpaValue;
+    private int mUnit;
 
     public MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
         this.code = code;

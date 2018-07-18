@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddProductActivity extends PortraitActivity {
 
@@ -29,12 +30,14 @@ public class AddProductActivity extends PortraitActivity {
     ImageView mtrlIcon;
     TextView code;
     TextView manufacturer;
-    Spinner qtysp;
+    Spinner unitsp;
     EditText qty;
     String cameFrom;
     String url;
     String refid;
     String clientid;
+    HashMap<Integer, String> unitlist = new HashMap<>();
+    ArrayList<String> showList = new ArrayList<>();
 
 
     @Override
@@ -46,7 +49,7 @@ public class AddProductActivity extends PortraitActivity {
         code = findViewById(R.id.mtrlcode);
         mtrlIcon = findViewById(R.id.image_icon1);
         qty = findViewById(R.id.selected_qty);
-        qtysp = findViewById(R.id.unitspn);
+        unitsp = findViewById(R.id.unitspn);
 
 
         storeVariables();
@@ -92,47 +95,52 @@ public class AddProductActivity extends PortraitActivity {
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
         manufacturer.setText(mtrl.getManufacturer());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, mtrl.getUnitList());
-        qtysp.setAdapter(adapter);
-        if (mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(1)) && mtrl.getUnitList().get(0).equals(mtrl.getUnitList().get(2)) && mtrl.getUnitList().get(1).equals(mtrl.getUnitList().get(2))) {
-            qtysp.setClickable(false);
-            qtysp.setFocusable(false);
-            qtysp.setEnabled(false);
+        checkSpinnerView();
 
+
+        if(mtrLines == null){
+            unitsp.setSelection(mtrl.getUnitList().indexOf(0));
+            return;
         }
+        String setQ ;
+        for (MtrLine m : mtrLines) {
+            if (mtrl.getName().equals(m.getDescription())) {
+                setQ = m.getQty();
+                qty.setText(setQ);
+                for (String s: mtrl.getUnitList()){
+                    if (mtrl.getUnitList().indexOf(s) == m.getmUnit()){
+                        for (Integer key:unitlist.keySet()){
+                            if (s.equals(unitlist.get(key))){
+                                for (String st: showList){
+                                    if (s.equals(st)){
+                                            unitsp.setSelection(showList.indexOf(st));
+                                    }
+                                }
+                            }
+                        }
 
-        if (mtrLines != null) {
-            String setQ ;
-            for (MtrLine m : mtrLines) {
-                if (mtrl.getName().equals(m.getDescription())) {
-                    setQ = m.getQty();
-                    qty.setText(setQ);
-                    qtysp.setSelection(m.getmUnit());
-
+                    }
                 }
             }
-
-
-        } else {
-            qtysp.setSelection(mtrl.getUnitList().indexOf(0));
-
         }
     }
 
 
     public void addMtrline(View view) {
-        Boolean f = false;
-        Boolean st = false;
+        Boolean itemExistsFlag = false;
+        Boolean toDeleteFlag = false;
         int index = -1;
-        int tdindex =0;
+        int indexOfItemToDelete =0;
+        MtrLine line;
 
-        String unit = qtysp.getSelectedItem().toString();
-        for (String s : mtrl.getUnitList()) {
-            if (s.equals(unit)) {
-                index = mtrl.getUnitList().indexOf(s);
+
+        String unit = unitsp.getSelectedItem().toString();
+        for (Integer key : unitlist.keySet()) {
+            if (unitlist.get(key).equals(unit)) {
+                index = key;
             }
         }
-        MtrLine line;
+
 
         if (mtrLines == null) {
             mtrLines = new ArrayList<>();
@@ -140,26 +148,27 @@ public class AddProductActivity extends PortraitActivity {
         }
         for (MtrLine m :mtrLines){
             if (m.getCode().equals(mtrl.getCode())){
-                f = true;
+                itemExistsFlag = true;
                 if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")){
-                    tdindex = mtrLines.indexOf(m);
-                    st=true;
+                    indexOfItemToDelete = mtrLines.indexOf(m);
+                    toDeleteFlag=true;
                 }
                 else{
-                    m.setQty(qty.getText().toString());
+                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()));
                     m.setQty1(qty.getText().toString());
+                    m.setmUnit(index);
                 }
 
             }
         }
-        if(st){
-            mtrLines.remove(mtrLines.get(tdindex));
+        if(toDeleteFlag){
+            mtrLines.remove(mtrLines.get(indexOfItemToDelete));
         }
 
 
 
-        if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !f) {
-            line = new MtrLine(mtrl.getCode(),mtrl.getName(),qty.getText().toString(),qty.getText().toString(), null,null,null,null, index);
+        if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
+            line = new MtrLine(mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()),qty.getText().toString(), null,null,null,null, index);
             mtrLines.add(line);
         }
 
@@ -219,6 +228,57 @@ public class AddProductActivity extends PortraitActivity {
         }
         startActivity(i);
         finish();
+
+    }
+
+    public void checkSpinnerView(){
+
+
+        unitlist.put(0,mtrl.getUnitList().get(0));
+        unitlist.put(1, mtrl.getUnitList().get(1));
+        unitlist.put(2, mtrl.getUnitList().get(2));
+
+        if (mtrl.getMu21()==null || mtrl.getMu21().equals("0")){
+            unitlist.remove(1);
+        }
+        if (mtrl.getMu31()==null || mtrl.getMu31().equals("0")){
+            unitlist.remove(2);
+        }
+
+        if (unitlist.containsKey(1) || unitlist.containsKey(2)){
+            if (unitlist.get(0).equals(unitlist.get(1))){
+                unitlist.remove(1);
+            }
+            if (unitlist.get(0).equals(unitlist.get(2))){
+                unitlist.remove(2);
+            }
+            if (unitlist.containsKey(2)) {
+                if (unitlist.get(1).equals(unitlist.get(2))) {
+                    unitlist.remove(2);
+                }
+            }
+        }
+
+
+
+
+
+        for (Integer key:unitlist.keySet()){
+            showList.add(unitlist.get(key));
+        }
+
+
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, showList);
+
+        unitsp.setAdapter(adapter);
+        if (showList.size()==1) {
+            unitsp.setClickable(false);
+            unitsp.setFocusable(false);
+            unitsp.setEnabled(false);
+
+        }
 
     }
 }

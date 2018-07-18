@@ -68,7 +68,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
             i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("mtrl",mmtrList.get(holder.getAdapterPosition()));
+            i.putExtra("mtrl",mmtrList.get(position));
             i.putExtra("id", mContext.getClass().getSimpleName());
             i.putExtra("url", url);
             i.putExtra("refid", refid);
