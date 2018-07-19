@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -28,13 +27,12 @@ public class MostOrderedItems extends PortraitActivity {
     android.support.v7.widget.Toolbar toolbarmostord;
 
     private MostOrderedItemsAdapter adapter;
-    private  BasketAdapter ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.most_ordered_items);
-        toolbarmostord = (android.support.v7.widget.Toolbar) findViewById(R.id.mostordtool);
+        toolbarmostord = findViewById(R.id.mostordtool);
         setSupportActionBar(toolbarmostord);
         getSupportActionBar().setTitle("Most Ordered Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -113,7 +111,7 @@ public class MostOrderedItems extends PortraitActivity {
 
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        ad = new BasketAdapter(mtrLines,this);
+        BasketAdapter ad = new BasketAdapter(mtrLines, this);
         rv.setAdapter(ad);
 
     }

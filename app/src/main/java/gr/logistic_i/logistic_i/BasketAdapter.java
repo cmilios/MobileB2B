@@ -32,6 +32,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder holder, int position) {
         holder.item_qty.setText(mtrLines.get(position).getQty());
         holder.item_name.setText(mtrLines.get(position).getDescription());
+        holder.ordunt.setText(String.valueOf(mtrLines.get(position).getmUnit()));
 
     }
 
@@ -44,12 +45,14 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
 
         protected TextView item_name;
         protected TextView item_qty;
+        protected TextView ordunt;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
             item_name = itemView.findViewById(R.id.ordered_item_title);
             item_qty = itemView.findViewById(R.id.ordered_item_qty);
+            ordunt = itemView.findViewById(R.id.ordunt);
 
         }
     }

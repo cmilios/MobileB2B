@@ -16,7 +16,7 @@ public class MtrlReq {
     private String refid;
     private String url;
 
-    public MtrlReq(String service, String clientID, String appID, String sqlName, String refid, String url) {
+    MtrlReq(String service, String clientID, String appID, String sqlName, String refid, String url) {
         this.service = service;
         this.clientID = clientID;
         this.appID = appID;
@@ -49,57 +49,91 @@ public class MtrlReq {
 
                 for(int i=0; i<resarray.length();i++){
                     ArrayList<String> units = new ArrayList<>();
-
                     units.add(resarray.getJSONObject(i).getString("unit1"));
-                    units.add(resarray.getJSONObject(i).getString("unit2"));
-                    units.add(resarray.getJSONObject(i).getString("unit3"));
 
-
-
-
-
-
-
-                    if (resarray.getJSONObject(i).has("img")) {
-
-
-
-
-                        mtrList.add(new Mtrl(resarray.getJSONObject(i).getString("img"),
-                                resarray.getJSONObject(i).getString("mtrcode"),
-                                resarray.getJSONObject(i).getString("mtrname"),
-                                resarray.getJSONObject(i).getString("sales"),
-                                resarray.getJSONObject(i).getString("manufacturer"),
-                                resarray.getJSONObject(i).getString("mtrunits"),
-                                url,units, resarray.getJSONObject(i).getString("c21"),
-                                resarray.getJSONObject(i).getString("c31")
-                        ));
+                    if (resarray.getJSONObject(i).has("unit2")){
+                        units.add(resarray.getJSONObject(i).getString("unit2"));
+                    }
+                    else {
+                        units.add(null);
+                    }
+                    if (resarray.getJSONObject(i).has("unit4")){
+                        units.add(resarray.getJSONObject(i).getString("unit4"));
                     }
                     else{
-                        mtrList.add(new Mtrl(null,
-                                resarray.getJSONObject(i).getString("mtrcode"),
-                                resarray.getJSONObject(i).getString("mtrname"),
-                                resarray.getJSONObject(i).getString("sales"),
-                                resarray.getJSONObject(i).getString("manufacturer"),
-                                resarray.getJSONObject(i).getString("mtrunits"),
-                                url,units, resarray.getJSONObject(i).getString("c21"),
-                                resarray.getJSONObject(i).getString("c31")
-                        ));
-
+                        units.add(null);
                     }
+                    String img;
+                    if (resarray.getJSONObject(i).has("img")){
+                        img = resarray.getJSONObject(i).getString("img");
+                    }
+                    else{
+                        img = null;
+                    }
+                    String mtrcode;
+                    if (resarray.getJSONObject(i).has("mtrcode")){
+                        mtrcode = resarray.getJSONObject(i).getString("mtrcode");
+                    }
+                    else{
+                        mtrcode = null;
+                    }
+                    String mtrname;
+                    if(resarray.getJSONObject(i).has("mtrname")){
+                        mtrname = resarray.getJSONObject(i).getString("mtrname");
+                    }
+                    else{
+                        mtrname = null;
+                    }
+                    String sales;
+                    if (resarray.getJSONObject(i).has("sales")){
+                        sales = resarray.getJSONObject(i).getString("sales");
+                    }
+                    else{
+                        sales = null;
+                    }
+                    String manufacturer;
+                    if (resarray.getJSONObject(i).has("manufacturer")){
+                        manufacturer = resarray.getJSONObject(i).getString("manufacturer");
+                    }else{
+                        manufacturer = null;
+                    }
+                    String mu21;
+                    if ((resarray.getJSONObject(i).has("c21"))){
+                        mu21 = resarray.getJSONObject(i).getString("c21");
+                    }
+                    else{
+                        mu21 = null;
+                    }
+                    String mu41;
+                    if (resarray.getJSONObject(i).has("c41")){
+                        mu41 = resarray.getJSONObject(i).getString("c41");
+                    }
+                    else{
+                        mu41 = null;
+                    }
+                    String mu21mode;
+                    if (resarray.getJSONObject(i).has("c21mode")){
+                        mu21mode = resarray.getJSONObject(i).getString("c21mode");
+                    }
+                    else{
+                        mu21mode = null;
+                    }
+                    String mu41mode;
+                    if (resarray.getJSONObject(i).has("c41mode")){
+                        mu41mode = resarray.getJSONObject(i).getString("c41mode");
+                    }
+                    else{
+                        mu41mode = null;
+                    }
+
+                    mtrList.add(new Mtrl(img, mtrcode, mtrname, sales, manufacturer, url,units, mu21, mu41, mu21mode, mu41mode));
                 }
 
-
-
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return mtrList;
-
-
     }
 
 

@@ -53,7 +53,7 @@ public class GsonWorker {
 
     }
 
-    public void makeAuthenticate(UserData us){
+    private void makeAuthenticate(UserData us){
 
         String authUser = us.serObj();
         refID = us.getRefId();
@@ -112,7 +112,7 @@ public class GsonWorker {
         }
     }
 
-    public String getJSON(String furl, String jsonData,String standardCharsets ) {
+    private String getJSON(String furl, String jsonData,String standardCharsets ) {
         state = false;
         HttpURLConnection conn = null;
 
@@ -193,7 +193,6 @@ public class GsonWorker {
 
 
         // Create a StringBuilder to store the JSON string
-        StringBuilder result = new StringBuilder();
         try {
             // Make a connection with the API
             URL url = new URL(finalURL.toString());

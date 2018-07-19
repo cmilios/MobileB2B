@@ -33,6 +33,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/ordunt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
@@ -41,4 +47,5 @@
         android:background="@color/colorGrey"
         android:scaleType="center"
         app:srcCompat="@drawable/divider" />
+
 </LinearLayout>
