@@ -5,17 +5,17 @@ import android.os.Parcelable;
 
 public class MtrLine implements Parcelable {
 
-    String code;
-    String description;
-    String qty;
-    String qty1;
-    String price;
-    String discount;
-    String cleanValue;
-    String fpaValue;
-    int mUnit;
+    private String code;
+    private String description;
+    private String qty;
+    private String qty1;
+    private String price;
+    private String discount;
+    private String cleanValue;
+    private String fpaValue;
+    private int mUnit;
 
-    public MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
+    MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
         this.code = code;
         this.description = description;
         this.qty = qty;
@@ -51,20 +51,8 @@ public class MtrLine implements Parcelable {
         this.qty = qty;
     }
 
-    public String getQty1() {
-        return qty1;
-    }
-
     public void setQty1(String qty1) {
         this.qty1 = qty1;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
     }
 
     public int getmUnit() {
@@ -75,31 +63,8 @@ public class MtrLine implements Parcelable {
         this.mUnit = mUnit;
     }
 
-    public String getDiscount() {
-        return discount;
-    }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
-    }
-
-    public String getCleanValue() {
-        return cleanValue;
-    }
-
-    public void setCleanValue(String cleanValue) {
-        this.cleanValue = cleanValue;
-    }
-
-    public String getFpaValue() {
-        return fpaValue;
-    }
-
-    public void setFpaValue(String fpaValue) {
-        this.fpaValue = fpaValue;
-    }
-
-    protected MtrLine(Parcel in) {
+    private MtrLine(Parcel in) {
         code = in.readString();
         description = in.readString();
         qty = in.readString();

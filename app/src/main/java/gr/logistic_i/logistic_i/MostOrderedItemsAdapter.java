@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private String refid;
 
 
-    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
+    MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
@@ -43,8 +42,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.most_ordered_items_adapter, parent ,false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -67,19 +65,10 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         }
 
 
-
-
-
-
-
-
-
-
-
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
             i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("mtrl",mmtrList.get(holder.getAdapterPosition()));
+            i.putExtra("mtrl",mmtrList.get(position));
             i.putExtra("id", mContext.getClass().getSimpleName());
             i.putExtra("url", url);
             i.putExtra("refid", refid);
@@ -89,12 +78,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
 
         });
-
-
-
-
-
-
     }
 
 
@@ -105,8 +88,10 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     }
 
     public void replaceList(ArrayList<Mtrl> mtrList) {
-        mmtrList.clear();
-        mmtrList.addAll(mtrList);
+        ArrayList<Mtrl> ml = new ArrayList<>();
+        ml.clear();
+        ml.addAll(mtrList);
+        mmtrList = ml;
     }
 
 
@@ -115,22 +100,19 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     public class ViewHolder extends RecyclerView.ViewHolder{
 
 
-        protected ImageView img;
-        protected TextView itemName;
-        protected Button btn;
+        ImageView img;
+        TextView itemName;
+        Button btn;
         protected RelativeLayout pbar_layout;
-        protected TextView selected_qty;
         protected ConstraintLayout parent_layout;
-        protected TextView qty_not;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.item_picture);
             btn = itemView.findViewById(R.id.button);
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             pbar_layout = itemView.findViewById(R.id.pbar_layout);
-            qty_not = itemView.findViewById(R.id.quantities_notation);
 
 
 

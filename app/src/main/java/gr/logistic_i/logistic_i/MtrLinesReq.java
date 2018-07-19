@@ -7,13 +7,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MtrLinesReq {
-    String service;
-    String clientID;
-    String appID;
-    String sqlName;
-    String findoc;
+    private  String service;
+    private  String clientID;
+    private  String appID;
+    private  String sqlName;
+    private  String findoc;
 
-    public MtrLinesReq(String service, String clientID, String appID, String sqlName, String findoc) {
+    MtrLinesReq(String service, String clientID, String appID, String sqlName, String findoc) {
         this.service = service;
         this.clientID = clientID;
         this.appID = appID;
