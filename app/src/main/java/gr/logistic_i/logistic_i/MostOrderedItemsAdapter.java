@@ -27,7 +27,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private String refid;
 
 
-    public MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
+    MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
@@ -78,12 +78,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
 
 
         });
-
-
-
-
-
-
     }
 
 
@@ -111,7 +105,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         Button btn;
         protected RelativeLayout pbar_layout;
         protected ConstraintLayout parent_layout;
-        TextView qty_not;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -120,7 +113,6 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             pbar_layout = itemView.findViewById(R.id.pbar_layout);
-            qty_not = itemView.findViewById(R.id.quantities_notation);
 
 
 

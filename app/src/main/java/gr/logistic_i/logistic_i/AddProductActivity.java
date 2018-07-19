@@ -25,7 +25,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
     ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    Mtrl mtrl = new Mtrl(null, null, null, null, null, null, null, null, null, null);
+    Mtrl mtrl = new Mtrl(null, null, null, null, null, null, null, null, null, null, null);
     TextView title;
     ImageView mtrlIcon;
     TextView code;
@@ -241,7 +241,7 @@ public class AddProductActivity extends PortraitActivity {
         if (mtrl.getMu21()==null || mtrl.getMu21().equals("0")){
             unitlist.remove(1);
         }
-        if (mtrl.getMu31()==null || mtrl.getMu31().equals("0")){
+        if (mtrl.getMu41()==null || mtrl.getMu41().equals("0")){
             unitlist.remove(2);
         }
 
