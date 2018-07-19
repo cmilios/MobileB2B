@@ -53,7 +53,6 @@ public class MostOrderedItems extends PortraitActivity {
                     runOnUiThread((adapter::notifyDataSetChanged));
                 }).start();
             }
-            //double dataset replace  in order to display interface earlier
             adapter.replaceList(mtrList);
             runOnUiThread((adapter::notifyDataSetChanged));
             for (Mtrl m : mtrList) {

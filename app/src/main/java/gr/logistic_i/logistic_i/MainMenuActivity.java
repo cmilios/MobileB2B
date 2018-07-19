@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,14 +46,21 @@ public class MainMenuActivity extends PortraitActivity {
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
+    private NestedScrollView nv;
+    private RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        toolbarmain = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        toolbarmain = findViewById(R.id.toolbar);
         setSupportActionBar(toolbarmain);
         getSupportActionBar().setTitle("My Orders");
+        rv = findViewById(R.id.orderlist);
+        nv = findViewById(R.id.nestedscrollview);
+        ViewCompat.setNestedScrollingEnabled(rv, false);
+
+
 
         
 

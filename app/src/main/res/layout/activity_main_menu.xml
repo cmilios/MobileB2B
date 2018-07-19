@@ -126,11 +126,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedscrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
         android:fillViewport="true"
-        android:id="@+id/nestedscrollview"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -149,21 +149,22 @@
                 android:text="Περιμένετε..."
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:fontFamily="@font/roboto" />
+
             <ImageView
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/divider"
-                android:src="@drawable/divider"
-                android:layout_below="@id/results_section"/>
+                android:layout_below="@id/results_section"
+                android:src="@drawable/divider" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/orderlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/divider"
-                android:scrollbars="vertical"
-                android:layout_alignParentLeft="true"></android.support.v7.widget.RecyclerView>
+                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>
 
