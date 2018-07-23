@@ -51,6 +51,14 @@ public class MtrlReq {
                     ArrayList<String> units = new ArrayList<>();
                     units.add(resarray.getJSONObject(i).getString("unit1"));
 
+                    String mtrl;
+                    if (resarray.getJSONObject(i).has("mtrl")){
+                        mtrl = resarray.getJSONObject(i).getString("mtrl");
+                    }
+                    else{
+                        mtrl = null;
+                    }
+
                     if (resarray.getJSONObject(i).has("unit2")){
                         units.add(resarray.getJSONObject(i).getString("unit2"));
                     }
@@ -126,7 +134,7 @@ public class MtrlReq {
                         mu41mode = null;
                     }
 
-                    mtrList.add(new Mtrl(img, mtrcode, mtrname, sales, manufacturer, url,units, mu21, mu41, mu21mode, mu41mode));
+                    mtrList.add(new Mtrl(mtrl ,img, mtrcode, mtrname, sales, manufacturer, url,units, mu21, mu41, mu21mode, mu41mode));
                 }
 
             }

@@ -3,8 +3,14 @@ package gr.logistic_i.logistic_i;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MtrLine implements Parcelable {
 
+
+
+    private String mtrl;
     private String code;
     private String description;
     private String qty;
@@ -15,7 +21,8 @@ public class MtrLine implements Parcelable {
     private String fpaValue;
     private int mUnit;
 
-    MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
+    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
+        this.mtrl = mtrl;
         this.code = code;
         this.description = description;
         this.qty = qty;
@@ -43,6 +50,14 @@ public class MtrLine implements Parcelable {
         this.description = description;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getQty() {
         return qty;
     }
@@ -63,8 +78,22 @@ public class MtrLine implements Parcelable {
         this.mUnit = mUnit;
     }
 
+    public JSONObject serCalcLine(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("MTRL", mtrl);
+            json.put("QTY1", qty);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return json;
+    }
+
 
     private MtrLine(Parcel in) {
+        mtrl = in.readString();
         code = in.readString();
         description = in.readString();
         qty = in.readString();
@@ -83,6 +112,7 @@ public class MtrLine implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mtrl);
         dest.writeString(code);
         dest.writeString(description);
         dest.writeString(qty);

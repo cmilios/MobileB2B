@@ -116,20 +116,6 @@ public class MostOrderedItems extends PortraitActivity {
     }
 
 
-
-    public void confirmVoucher(View view) {
-        Intent i = new Intent(this, ConfirmVoucher.class);
-
-        i.putParcelableArrayListExtra("lines", mtrLines);
-//        i.putExtra("url", url);
-//        i.putExtra("refid", refid);
-//        i.putExtra("clid", clientid);
-
-
-        this.startActivity(i);
-
-    }
-
     private void storeParams() {
 
         mtrLines = i.getParcelableArrayListExtra("lines");
@@ -143,7 +129,7 @@ public class MostOrderedItems extends PortraitActivity {
     @Override
     public void onBackPressed() {
         AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Θέλετε να ακυωσετε την καταχώρηση νέου παραστατικού")
+                .setMessage("Θέλετε να ακυρώσετε την καταχώρηση νέου παραστατικού")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 
 
@@ -175,15 +161,14 @@ public class MostOrderedItems extends PortraitActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        String msg=" ";
         switch (item.getItemId()){
             case R.id.confirmVoucher:
                 Intent i = new Intent(this, ConfirmVoucher.class);
 
                 i.putParcelableArrayListExtra("lines", mtrLines);
-//              i.putExtra("url", url);
-//              i.putExtra("refid", refid);
-//              i.putExtra("clid", clientid);
+                i.putExtra("url", url);
+                i.putExtra("refid", refid);
+                i.putExtra("clid", clientid);
 
 
                 this.startActivity(i);

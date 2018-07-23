@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class Mtrl implements Parcelable {
 
+
+
+    private String mtrl;
     private String imgURL;
     private String code;
     private String name;
@@ -25,8 +28,9 @@ public class Mtrl implements Parcelable {
 
 
 
-    Mtrl(String imgURL, String code, String name, String sales, String manufacturer,
+    Mtrl(String mtrl, String imgURL, String code, String name, String sales, String manufacturer,
          String correspondingBase, ArrayList<String> unitList, String mu21, String mu41, String mu21mode, String mu41mode) {
+        this.mtrl = mtrl;
         this.imgURL = imgURL;
         this.code = code;
         this.name = name;
@@ -107,6 +111,14 @@ public class Mtrl implements Parcelable {
         return name;
     }
 
+    public String getMtrl() {
+        return mtrl;
+    }
+
+    public void setMtrl(String mtrl) {
+        this.mtrl = mtrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -123,6 +135,7 @@ public class Mtrl implements Parcelable {
 
 
     private Mtrl(Parcel in) {
+        mtrl = in.readString();
         imgURL = in.readString();
         code = in.readString();
         name = in.readString();
@@ -155,6 +168,7 @@ public class Mtrl implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mtrl);
         dest.writeString(imgURL);
         dest.writeString(code);
         dest.writeString(name);

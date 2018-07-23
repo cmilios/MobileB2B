@@ -1,36 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConfirmVoucher">
+    android:orientation="vertical">
 
-
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/confirm_voucher_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            android:layout_alignParentLeft="true" />
+    <TextView
+        android:id="@+id/insdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/units"
+        android:layout_alignRight="@+id/units"
+        android:layout_alignTop="@+id/finalprice"
+        android:text="date" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true">
+    <TextView
+        android:id="@+id/code_of_fin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/insdate"
+        android:layout_marginStart="38dp"
+        android:text="fincode"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="38dp" />
 
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/finalprice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="133dp"
+        android:text="price" />
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/posotita"
+        android:layout_alignParentStart="true"
+        android:text="Περιγραφή"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_alignParentLeft="true"
+        android:layout_toStartOf="@id/posotita"
+        android:layout_toLeftOf="@id/posotita"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:id="@+id/posotita"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lines_to_confirm"
+        android:layout_centerHorizontal="true"
+        android:text="Ποσ."
+        android:layout_marginRight="10dp"
+        android:layout_toStartOf="@id/units"
+        android:layout_toLeftOf="@id/units"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:id="@+id/units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lines_to_confirm"
+        android:text="Μ.Μ"
+        android:layout_toStartOf="@id/finalsum"
+        android:layout_toLeftOf="@id/finalsum"
+        android:layout_toRightOf="@id/desc"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:id="@+id/finalsum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/collider"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="8dp"
+        android:text="Αξία"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp" />
+
+    <ImageView
+        android:id="@+id/collider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/lines_to_confirm"
+        android:background="@color/colorTextBold"
+        android:contentDescription="divider"
+        app:srcCompat="@drawable/divider" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lines_to_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

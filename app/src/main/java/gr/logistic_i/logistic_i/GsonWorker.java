@@ -112,6 +112,21 @@ public class GsonWorker {
         }
     }
 
+    public String calculateLinePrice(JSONObject jsonObject){
+
+        String lines = getJSON(url,jsonObject.toString(),"windows-1253");
+        try {
+            JSONObject resObj = new JSONObject(lines);
+            if(state){
+                return lines;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
     private String getJSON(String furl, String jsonData,String standardCharsets ) {
         state = false;
         HttpURLConnection conn = null;
