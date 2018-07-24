@@ -32,9 +32,9 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.desc.setText(mtrLines.get(position).getDescription());
-        holder.units.setText("lala");
-        holder.price.setText(mtrLines.get(position).getPrice());
-        holder.qty.setText(mtrLines.get(position).getQty());
+        holder.units.setText(mtrLines.get(position).getsUnit().substring(0,3));
+        holder.price.setText(mtrLines.get(position).getPrice()+"€");
+        holder.qty.setText(mtrLines.get(position).getQty1());
 
     }
 

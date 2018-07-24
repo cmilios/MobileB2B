@@ -46,6 +46,7 @@ public class Mtrl implements Parcelable {
 
     }
 
+
     public void loadImage(){
         GsonWorker gsonWorker = new GsonWorker(correspondingBase);
         if (imgURL!=null){

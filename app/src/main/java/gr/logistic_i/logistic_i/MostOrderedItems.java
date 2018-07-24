@@ -36,6 +36,8 @@ public class MostOrderedItems extends PortraitActivity {
         setSupportActionBar(toolbarmostord);
         getSupportActionBar().setTitle("Most Ordered Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
         i = getIntent();
         storeParams();
 
@@ -169,6 +171,8 @@ public class MostOrderedItems extends PortraitActivity {
                 i.putExtra("url", url);
                 i.putExtra("refid", refid);
                 i.putExtra("clid", clientid);
+                i.putParcelableArrayListExtra("mtrl", mtrList);
+
 
 
                 this.startActivity(i);

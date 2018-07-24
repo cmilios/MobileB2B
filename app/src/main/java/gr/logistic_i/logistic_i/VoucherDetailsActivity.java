@@ -2,14 +2,17 @@ package gr.logistic_i.logistic_i;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -24,6 +27,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrndate;
     private EditText dtrdrName;
     private EditText dsumamnt;
+    private android.support.v7.widget.Toolbar dtoolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,12 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrndate = findViewById(R.id.dtrndate);
         dtrdrName = findViewById(R.id.dtrdrname);
         dsumamnt = findViewById(R.id.dsumamnt);
-
+        dtoolbar = findViewById(R.id.details_toolbar);
+        dtoolbar.setTitle("Confirm Voucher");
+        dtoolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(dtoolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        dtoolbar.setNavigationOnClickListener(v -> onBackPressed());
         setTexts();
         GsonWorker gsonWorker = new GsonWorker(url);
 

@@ -108,16 +108,16 @@
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/details_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
+                android:elevation="4dp"
                 android:gravity="start|center_horizontal"
                 android:minHeight="?attr/actionBarSize"
-                android:elevation="4dp"
+                android:theme="@style/ToolbarTheme"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/PopupMenu"
-                app:titleTextAppearance="@style/Toolbar.TitleText"
-                />
+                app:titleTextAppearance="@style/Toolbar.TitleText" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>

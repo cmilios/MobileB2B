@@ -20,8 +20,9 @@ public class MtrLine implements Parcelable {
     private String cleanValue;
     private String fpaValue;
     private int mUnit;
+    private String sUnit;
 
-    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
+    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit) {
         this.mtrl = mtrl;
         this.code = code;
         this.description = description;
@@ -32,6 +33,7 @@ public class MtrLine implements Parcelable {
         this.cleanValue = cleanValue;
         this.fpaValue = fpaValue;
         this.mUnit = mUnit;
+        this.sUnit = sUnit;
     }
 
     public String getCode() {
@@ -54,6 +56,14 @@ public class MtrLine implements Parcelable {
         return price;
     }
 
+    public String getMtrl() {
+        return mtrl;
+    }
+
+    public void setMtrl(String mtrl) {
+        this.mtrl = mtrl;
+    }
+
     public void setPrice(String price) {
         this.price = price;
     }
@@ -68,6 +78,10 @@ public class MtrLine implements Parcelable {
 
     public void setQty1(String qty1) {
         this.qty1 = qty1;
+    }
+
+    public String getQty1() {
+        return qty1;
     }
 
     public int getmUnit() {
@@ -91,6 +105,13 @@ public class MtrLine implements Parcelable {
         return json;
     }
 
+    public String getsUnit() {
+        return sUnit;
+    }
+
+    public void setsUnit(String sUnit) {
+        this.sUnit = sUnit;
+    }
 
     private MtrLine(Parcel in) {
         mtrl = in.readString();
@@ -103,6 +124,7 @@ public class MtrLine implements Parcelable {
         cleanValue = in.readString();
         fpaValue = in.readString();
         mUnit = in.readInt();
+        sUnit = in.readString();
     }
 
     @Override
@@ -122,6 +144,7 @@ public class MtrLine implements Parcelable {
         dest.writeString(cleanValue);
         dest.writeString(fpaValue);
         dest.writeInt(mUnit);
+        dest.writeString(sUnit);
     }
 
     @SuppressWarnings("unused")

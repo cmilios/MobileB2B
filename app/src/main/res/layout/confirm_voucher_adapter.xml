@@ -10,54 +10,61 @@
     <TextView
         android:id="@+id/namedis"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/imageView8"
+        android:layout_alignBottom="@id/imageView8"
+        android:layout_alignEnd="@id/imageView13"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@id/imageView13"
-        android:layout_marginBottom="-27dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="3dp"
+        android:gravity="clip_vertical"
         android:text="d"
-        android:gravity="fill_horizontal"
-        android:layout_marginEnd="8dp"
-        android:layout_alignEnd="@id/imageView13" />
+        app:fontFamily="@font/roboto" />
 
     <ImageView
         android:id="@+id/imageView13"
         android:layout_width="1dp"
-        android:layout_height="27dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/imageView8"
+        android:layout_marginStart="167dp"
         android:background="@color/colorGrey"
-        app:srcCompat="@drawable/v_line" />
+        app:srcCompat="@drawable/v_line"
+        android:layout_marginLeft="167dp" />
 
     <TextView
         android:id="@+id/mm"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/imageView8"
         android:layout_alignEnd="@id/imageView10"
         android:layout_alignLeft="@id/imageView11"
         android:layout_alignRight="@id/imageView10"
         android:layout_alignStart="@id/imageView11"
-        android:layout_alignTop="@+id/namedis"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toEndOf="@+id/imageView11"
-        android:layout_toRightOf="@+id/imageView11"
+        android:layout_marginTop="2dp"
         android:gravity="center"
-        android:text="u" />
+        android:text="u"
+        android:textSize="14sp"
+        app:fontFamily="@font/roboto" />
 
     <ImageView
         android:id="@+id/imageView11"
         android:layout_width="1dp"
-        android:layout_height="27dp"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView8"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="128dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="135dp"
         android:layout_marginRight="128dp"
         android:background="@color/colorGrey"
         app:srcCompat="@drawable/v_line" />
@@ -65,25 +72,29 @@
     <TextView
         android:id="@+id/qq"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@+id/imageView8"
         android:layout_alignEnd="@id/imageView11"
         android:layout_alignLeft="@id/imageView13"
         android:layout_alignRight="@id/imageView11"
         android:layout_alignStart="@id/imageView13"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
         android:gravity="center"
-        android:text="q" />
+        android:text="q"
+        app:fontFamily="@font/roboto" />
 
     <ImageView
         android:id="@+id/imageView10"
         android:layout_width="1dp"
-        android:layout_height="27dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="60dp"
+        android:layout_alignBottom="@id/imageView8"
+        android:layout_marginEnd="70dp"
         android:layout_marginRight="60dp"
         android:background="@color/colorGrey"
         app:srcCompat="@drawable/v_line" />
@@ -91,27 +102,30 @@
     <TextView
         android:id="@+id/pprice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/imageView8"
         android:layout_alignLeft="@+id/imageView10"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignStart="@+id/imageView10"
-        android:layout_alignTop="@+id/namedis"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
         android:gravity="center"
-        android:text="p" />
+        android:text="p"
+        app:fontFamily="@font/roboto" />
 
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="52dp"
         android:background="@color/colorGrey"
-        app:srcCompat="@drawable/divider" />
+        app:srcCompat="@drawable/divider"
+        android:layout_alignParentLeft="true" />
 
 
 </RelativeLayout>

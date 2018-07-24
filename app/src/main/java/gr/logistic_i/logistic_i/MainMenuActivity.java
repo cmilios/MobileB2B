@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -53,9 +52,11 @@ public class MainMenuActivity extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        toolbarmain = findViewById(R.id.toolbar);
+        toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
         getSupportActionBar().setTitle("My Orders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
         rv = findViewById(R.id.orderlist);
         nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);

@@ -104,8 +104,8 @@ public class AddProductActivity extends PortraitActivity {
         }
         String setQ ;
         for (MtrLine m : mtrLines) {
-            if (mtrl.getName().equals(m.getDescription())) {
-                setQ = m.getQty();
+            if (mtrl.getMtrl().equals(m.getMtrl())) {
+                setQ = m.getQty1();
                 qty.setText(setQ);
                 for (String s: mtrl.getUnitList()){
                     if (mtrl.getUnitList().indexOf(s) == m.getmUnit()){
@@ -156,6 +156,7 @@ public class AddProductActivity extends PortraitActivity {
                 else{
                     m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()));
                     m.setQty1(qty.getText().toString());
+                    m.setsUnit(unitsp.getSelectedItem().toString());
                     m.setmUnit(index);
                 }
 
@@ -168,7 +169,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()),qty.getText().toString(), null,null,null,null, index);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()),qty.getText().toString(), null,null,null,null, index, unit);
             mtrLines.add(line);
         }
 

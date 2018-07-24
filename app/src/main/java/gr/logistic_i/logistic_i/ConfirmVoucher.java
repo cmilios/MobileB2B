@@ -1,10 +1,14 @@
 package gr.logistic_i.logistic_i;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 
@@ -12,7 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class ConfirmVoucher extends PortraitActivity {
@@ -24,25 +31,43 @@ public class ConfirmVoucher extends PortraitActivity {
     private String clid;
     private String mtrLinesResponse;
     private Toolbar tool;
+    private ArrayList<Mtrl> mtrList;
+    private TextView finalp;
+    private Date c;
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private TextView dt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_voucher);
+        finalp = findViewById(R.id.f_price);
+        dt = findViewById(R.id.current_date);
         tool = findViewById(R.id.confirm_voucher_toolbar);
         tool.setTitle("Confirm Voucher");
+        tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        tool.setNavigationOnClickListener(v -> onBackPressed());
+        c = Calendar.getInstance().getTime();
+        dt.setText(df.format(c));
+
+
+
+
         storeVars();
         if (mtrLines!=null) {
+            initRecyclerView();
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 mtrLinesResponse = gsonWorker.calculateLinePrice(serCalcObj());
                 runOnUiThread(this::deserMtrLinesResponse);
                 runOnUiThread(adapter::notifyDataSetChanged);
+                runOnUiThread(this::setSumAmnt);
             }).start();
-            initRecyclerView();
+
         }
 
 
@@ -66,6 +91,7 @@ public class ConfirmVoucher extends PortraitActivity {
         clid = i.getStringExtra("clid");
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
+        mtrList = i.getParcelableArrayListExtra("mtrl");
 
 
     }
@@ -78,7 +104,7 @@ public class ConfirmVoucher extends PortraitActivity {
             JSONArray itelines = data.getJSONArray("ITELINES");
             for(int i=0; i<itelines.length(); i++){
                 for (MtrLine m:mtrLines){
-                    if (m.getCode().equals(itelines.getJSONObject(i).getString("MTRL"))){
+                    if (m.getMtrl().equals(itelines.getJSONObject(i).getString("MTRL"))){
                         m.setPrice(itelines.getJSONObject(i).getString("LINEVAL"));
                     }
                 }
@@ -136,6 +162,14 @@ public class ConfirmVoucher extends PortraitActivity {
         return json;
     }
 
+    public  void setSumAmnt(){
+        Double fp = 0.0;
+        for (MtrLine m:mtrLines){
+            fp = fp+Double.parseDouble(m.getPrice());
+        }
+
+        finalp.setText(fp.toString()+"€");
+    }
 
 
 

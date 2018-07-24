@@ -12,13 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="63dp"
         android:background="@color/colorPrimary"
+        android:gravity="center|left"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
-        android:gravity="center|left"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/details_list"
@@ -59,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         app:backgroundTint="@color/colorGrey"
         app:elevation="4dp"
         app:fabSize="normal"
@@ -68,6 +69,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/include"
         app:layout_constraintVertical_bias="0.968"
-        app:srcCompat="@drawable/ic_baseline_add_box_24px"
-        android:focusable="true" />
+        app:srcCompat="@drawable/ic_baseline_add_box_24px" />
 </android.support.constraint.ConstraintLayout>
