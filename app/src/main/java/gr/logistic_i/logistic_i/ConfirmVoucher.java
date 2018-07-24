@@ -1,16 +1,15 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +34,11 @@ public class ConfirmVoucher extends PortraitActivity {
     private TextView finalp;
     private Date c;
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd");
     private TextView dt;
+    private JSONObject data;
+    boolean setState = false;
+    private String res;
 
 
     @Override
@@ -62,7 +65,7 @@ public class ConfirmVoucher extends PortraitActivity {
             initRecyclerView();
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
-                mtrLinesResponse = gsonWorker.calculateLinePrice(serCalcObj());
+                mtrLinesResponse = gsonWorker.calculatePrice(serCalcObj());
                 runOnUiThread(this::deserMtrLinesResponse);
                 runOnUiThread(adapter::notifyDataSetChanged);
                 runOnUiThread(this::setSumAmnt);
@@ -125,6 +128,7 @@ public class ConfirmVoucher extends PortraitActivity {
         JSONObject ss = new JSONObject();
         try {
             ss.put("SERIES", 7021);
+            ss.put("TRNDATE", sqlformat.format(c));
             ss.put("TRDR", refid);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -134,7 +138,7 @@ public class ConfirmVoucher extends PortraitActivity {
         JSONArray saldoc = new JSONArray();
         saldoc.put(ss);
 
-        JSONObject data = new JSONObject();
+        data = new JSONObject();
         try {
             data.put("SALDOC", saldoc);
             data.put("ITELINES", sermtrlines);
@@ -170,6 +174,58 @@ public class ConfirmVoucher extends PortraitActivity {
 
         finalp.setText(fp.toString()+"€");
     }
+
+    public void setFindoc(View view){
+        JSONObject setDataJson = serSet();
+
+        GsonWorker gson = new GsonWorker(url);
+        new Thread(()->{
+            res = gson.setData(setDataJson);
+            if (res!=null){
+                setState = true;
+            }
+            runOnUiThread(this::goToOrders);
+        }).start();
+
+
+
+    }
+
+    public JSONObject serSet(){
+        JSONObject setData = new JSONObject();
+
+        try {
+            setData.put("service", "setData");
+            setData.put("clientID", clid);
+            setData.put("appID", "1100");
+            setData.put("OBJECT", "SALDOC");
+            setData.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return setData;
+
+    }
+
+    public void goToOrders(){
+        if (setState){
+            Intent i = new Intent(this, MainMenuActivity.class);
+            i.putExtra("url", url);
+            i.putExtra("clid", clid);
+            i.putExtra("refid", refid);
+            this.startActivity(i);
+        }
+        else{
+            AlertDialog alertbox = new AlertDialog.Builder(this)
+                    .setMessage("Υπήρξε πρόβλημα κατα την καταχώρηση")
+                    .setNeutralButton("OK", (dialog, which) -> {
+                    })
+                    .show();
+        }
+    }
+
+
 
 
 

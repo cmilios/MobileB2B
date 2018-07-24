@@ -36,7 +36,8 @@
             android:layout_marginTop="16dp"
             android:layout_toRightOf="@id/code_of_fin"
             android:text="Date: "
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_toEndOf="@id/code_of_fin" />
 
         <TextView
             android:id="@+id/current_date"
@@ -53,7 +54,8 @@
             android:layout_toRightOf="@+id/insdate"
             android:gravity="center"
             android:text="Current Date"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
 
         <TextView
             android:id="@+id/code_of_fin"
@@ -77,14 +79,15 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="0dp"
+            android:layout_toEndOf="@id/code_of_fin"
             android:layout_toRightOf="@id/code_of_fin"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:fontFamily="@font/roboto"
             android:gravity="center"
             android:text="7021: ΠΑΟ"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
 
         <TextView
             android:id="@+id/finalprice"
@@ -115,7 +118,8 @@
             android:layout_toRightOf="@+id/insdate"
             android:gravity="center"
             android:text="0€"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -184,6 +188,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
+            android:onClick="setFindoc"
             android:text="Καταχωρηση" />
 
         <ImageView
