@@ -60,10 +60,6 @@ public class MtrLine implements Parcelable {
         return mtrl;
     }
 
-    public void setMtrl(String mtrl) {
-        this.mtrl = mtrl;
-    }
-
     public void setPrice(String price) {
         this.price = price;
     }

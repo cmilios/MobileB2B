@@ -77,18 +77,18 @@ public class LoginActivity extends PortraitActivity {
                     i.putExtra("clID", gson.getAuthenticateClID());
                     i.putExtra("refid", gson.getRefID());
                     this.startActivity(i);
-                    runOnUiThread(()->setAllToNormal());
+                    runOnUiThread(this::setAllToNormal);
                 }
                 else{
                     h.sendEmptyMessage(0);
-                    runOnUiThread(() -> setAllToNormal());
+                    runOnUiThread(this::setAllToNormal);
 
                 }
             }
             else{
 
                 h.sendEmptyMessage(1);
-                runOnUiThread(() -> setAllToNormal());
+                runOnUiThread(this::setAllToNormal);
             }
 
 

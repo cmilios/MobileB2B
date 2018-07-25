@@ -230,7 +230,7 @@ public class ConfirmVoucher extends PortraitActivity {
 
         }
         else{
-            AlertDialog alertbox = new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this)
                     .setMessage("Υπήρξε πρόβλημα κατα την καταχώρηση")
                     .setNeutralButton("OK", (dialog, which) -> {
                     })

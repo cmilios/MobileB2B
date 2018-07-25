@@ -1,10 +1,8 @@
 package gr.logistic_i.logistic_i;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,29 +18,28 @@ import java.util.Date;
 public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHolder> {
 
 
-    private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<Order> orderlist;
     private Context mContext;
     private String url;
     private String clientId;
-    SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
-    SimpleDateFormat sqlResFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat sqlResFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Date formattedDate = new Date();
 
 
-    public MainMenuAdapter(Context mContext, ArrayList<Order> orderlist, String url, String clientId) {
+    MainMenuAdapter(Context mContext, ArrayList<Order> orderlist, String url, String clientId) {
         this.mContext = mContext;
         this.url = url;
         this.clientId = clientId;
         this.orderlist = orderlist;
     }
 
+    @NonNull
     @Override
     public  ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_menu_list_adapter, parent ,false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -80,12 +77,12 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder{
 
 
-        protected TextView parnum;
-        protected TextView dt;
+        TextView parnum;
+        TextView dt;
         protected TextView sumamnt;
-        protected  Button detailsButton;
+        Button detailsButton;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);

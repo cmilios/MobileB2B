@@ -15,7 +15,7 @@ public class VoucherDetailsAdapter extends RecyclerView.Adapter<VoucherDetailsAd
     private Context mContext;
     private ArrayList<MtrLine> mtrLines;
 
-    public VoucherDetailsAdapter(Context mContext, ArrayList<MtrLine> mtrLines) {
+    VoucherDetailsAdapter(Context mContext, ArrayList<MtrLine> mtrLines) {
         this.mContext = mContext;
         this.mtrLines = mtrLines;
     }
@@ -54,10 +54,10 @@ public class VoucherDetailsAdapter extends RecyclerView.Adapter<VoucherDetailsAd
 
 
         protected TextView desc;
-        protected TextView qty;
+        TextView qty;
         protected TextView fpaval;
-        protected TextView cleanval;
-        protected TextView fullval;
+        TextView cleanval;
+        TextView fullval;
 
         ViewHolder(View itemView) {
             super(itemView);

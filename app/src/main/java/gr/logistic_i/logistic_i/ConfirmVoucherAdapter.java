@@ -18,7 +18,7 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
     private Context mContext;
     DecimalFormat priceFormat = new DecimalFormat("#.##");
 
-    public ConfirmVoucherAdapter(Context mContext, ArrayList<MtrLine> mtrLines){
+    ConfirmVoucherAdapter(Context mContext, ArrayList<MtrLine> mtrLines){
         this.mContext = mContext;
         this.mtrLines = mtrLines;
     }
@@ -28,8 +28,7 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.confirm_voucher_adapter, parent ,false);
-        ConfirmVoucherAdapter.ViewHolder holder = new ConfirmVoucherAdapter.ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -51,10 +50,10 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
 
         protected TextView desc;
         protected TextView units;
-        protected TextView qty;
-        protected TextView price;
+        TextView qty;
+        TextView price;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             desc = itemView.findViewById(R.id.namedis);
             units = itemView.findViewById(R.id.mm);

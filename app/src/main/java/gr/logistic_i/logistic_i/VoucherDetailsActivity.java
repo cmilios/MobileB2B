@@ -29,7 +29,6 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrndate;
     private EditText dtrdrName;
     private EditText dsumamnt;
-    private android.support.v7.widget.Toolbar dtoolbar;
     private VoucherDetailsAdapter adapter;
 
     @Override
@@ -42,7 +41,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrndate = findViewById(R.id.dtrndate);
         dtrdrName = findViewById(R.id.dtrdrname);
         dsumamnt = findViewById(R.id.dsumamnt);
-        dtoolbar = findViewById(R.id.details_toolbar);
+        android.support.v7.widget.Toolbar dtoolbar = findViewById(R.id.details_toolbar);
         dtoolbar.setTitle("Confirm Voucher");
         dtoolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(dtoolbar);

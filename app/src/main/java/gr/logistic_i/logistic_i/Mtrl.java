@@ -116,10 +116,6 @@ public class Mtrl implements Parcelable {
         return mtrl;
     }
 
-    public void setMtrl(String mtrl) {
-        this.mtrl = mtrl;
-    }
-
     public void setName(String name) {
         this.name = name;
     }

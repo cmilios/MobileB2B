@@ -15,9 +15,7 @@ import java.util.ArrayList;
 public class GsonWorker {
 
     private String url;
-    private String jsonData = new String();
     private Boolean state = false;
-    private String loginClID = new String();
     private String authenticateClID = new String();
     private String refID = new String();
     private Boolean authenticationFlag = false;
@@ -31,12 +29,12 @@ public class GsonWorker {
 
     public void makeLogin(Creds creds){
 
-        jsonData = creds.serObjLogin();
-        String loginResponse = getJSON(url, jsonData, "windows-1253");
+        String jsonData = creds.serObjLogin();
+        String loginResponse = getJSON(url, jsonData);
         try {
             JSONObject resObj = new JSONObject(loginResponse);
                 if (state){
-                    loginClID = resObj.getString("clientID");
+                    String loginClID = resObj.getString("clientID");
                     UserData us = new UserData();
 
                     us = us.desirializeJsonStr(resObj.toString());
@@ -57,7 +55,7 @@ public class GsonWorker {
 
         String authUser = us.serObj();
         refID = us.getRefId();
-        String authenticateResponse = getJSON(url, authUser, "windows-1253");
+        String authenticateResponse = getJSON(url, authUser);
         try {
             JSONObject resObj = new JSONObject(authenticateResponse);
                 if(state){
@@ -73,7 +71,7 @@ public class GsonWorker {
     }
 
     public void getSqlOrders(SqlRequest sqlRequest){
-        String sqlOrders = getJSON(url, sqlRequest.serSqlData(), "windows-1253");
+        String sqlOrders = getJSON(url, sqlRequest.serSqlData());
         try {
             JSONObject resObj = new JSONObject(sqlOrders);
             if(state){
@@ -86,7 +84,7 @@ public class GsonWorker {
     }
 
     public void getMtrLines(MtrLinesReq mtrLinesReq){
-        String lines = getJSON(url, mtrLinesReq.serObj(), "windows-1253");
+        String lines = getJSON(url, mtrLinesReq.serObj());
         try {
             JSONObject resObj = new JSONObject(lines);
             if (state){
@@ -100,7 +98,7 @@ public class GsonWorker {
     }
 
     public void getFOI(MtrlReq mtrlReq){
-        String lines = getJSON(url, mtrlReq.serMtrlOrders(), "windows-1253");
+        String lines = getJSON(url, mtrlReq.serMtrlOrders());
         try{
             JSONObject resObj = new JSONObject(lines);
             if(state){
@@ -114,7 +112,7 @@ public class GsonWorker {
 
     public String calculatePrice(JSONObject jsonObject){
 
-        String lines = getJSON(url,jsonObject.toString(),"windows-1253");
+        String lines = getJSON(url,jsonObject.toString());
             if(state){
                 return lines;
             }
@@ -123,7 +121,7 @@ public class GsonWorker {
     }
 
     public String setData(JSONObject jsonObject){
-        String lines = getJSON(url, jsonObject.toString(),"windows-1253");
+        String lines = getJSON(url, jsonObject.toString());
 
         if (state){
             return lines;
@@ -134,7 +132,7 @@ public class GsonWorker {
 
 
 
-    private String getJSON(String furl, String jsonData,String standardCharsets ) {
+    private String getJSON(String furl, String jsonData) {
         state = false;
         HttpURLConnection conn = null;
 
@@ -154,15 +152,13 @@ public class GsonWorker {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.addRequestProperty("Accept", "application/json");
-            conn.addRequestProperty("Content-Type", "application/json; charset="+standardCharsets);
+            conn.addRequestProperty("Content-Type", "application/json; charset="+ "windows-1253");
             conn.setDoInput(true);
-
-            String urlParameters = jsonData.toString();
 
 
             conn.setDoOutput(true);// Should be part of code only for .Net web-services else no need for PHP
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-            wr.writeBytes(urlParameters);
+            wr.writeBytes(jsonData);
             wr.flush();
             wr.close();
 
@@ -223,8 +219,7 @@ public class GsonWorker {
 
             // Begin streaming the JSON
             InputStream in = (InputStream) url.getContent();
-            Drawable d = Drawable.createFromStream(in, "src name");
-            return d;
+            return Drawable.createFromStream(in, "src name");
 
 
         } catch (Exception e) {
@@ -239,11 +234,6 @@ public class GsonWorker {
 
     }
 
-
-
-    public String getLoginClID() {
-        return loginClID;
-    }
 
     public String getAuthenticateClID() {
         return authenticateClID;

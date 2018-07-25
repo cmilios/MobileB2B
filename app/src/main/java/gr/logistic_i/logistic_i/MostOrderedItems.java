@@ -15,13 +15,14 @@ import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MostOrderedItems extends PortraitActivity {
 
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    String url = new String();
-    String refid = new String();
-    String clientid = new String();
+    String url;
+    String refid;
+    String clientid;
     ArrayList<Mtrl> mtrList = new ArrayList<>();
     private Intent i;
     android.support.v7.widget.Toolbar toolbarmostord;
@@ -34,7 +35,7 @@ public class MostOrderedItems extends PortraitActivity {
         setContentView(R.layout.most_ordered_items);
         toolbarmostord = findViewById(R.id.mostordtool);
         setSupportActionBar(toolbarmostord);
-        getSupportActionBar().setTitle("Most Ordered Items");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Most Ordered Items");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
@@ -130,7 +131,7 @@ public class MostOrderedItems extends PortraitActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setMessage("Θέλετε να ακυρώσετε την καταχώρηση νέου παραστατικού")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 

@@ -119,15 +119,13 @@ public class MainMenuActivity extends PortraitActivity {
                 .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
                 fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        toDate.setOnClickListener(v -> {
-            new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
-                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
-                    toCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                toCalendar.get(Calendar.DAY_OF_MONTH)).show());
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.orderlist);
+        RecyclerView recyclerView = findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -240,7 +238,7 @@ public class MainMenuActivity extends PortraitActivity {
     public void onBackPressed() {
 
         // do something when the button is clicked
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
                     //close();

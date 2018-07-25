@@ -15,7 +15,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     private ArrayList<MtrLine> mtrLines;
     private Context mContext;
 
-    public BasketAdapter(ArrayList<MtrLine> mtrLines, Context mContext) {
+    BasketAdapter(ArrayList<MtrLine> mtrLines, Context mContext) {
         this.mtrLines = mtrLines;
         this.mContext = mContext;
     }
@@ -24,8 +24,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.basket_rview_adapter, parent ,false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -44,11 +43,11 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView item_name;
-        protected TextView item_qty;
+        TextView item_qty;
         protected TextView ordunt;
 
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             item_name = itemView.findViewById(R.id.ordered_item_title);
             item_qty = itemView.findViewById(R.id.ordered_item_qty);

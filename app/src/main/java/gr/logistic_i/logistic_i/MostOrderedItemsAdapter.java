@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedItemsAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<Mtrl> mmtrList;
     private Context mContext;
