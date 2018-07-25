@@ -35,6 +35,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dCode"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +55,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dfindoc"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dcode"
@@ -70,6 +74,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dfincode"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dfindoc"
@@ -87,6 +93,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dtrdrname"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dfincode"
@@ -104,6 +112,8 @@
         android:focusable="false"
         android:inputType="date"
         android:text="dtrndate"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dtrdrname"
@@ -121,12 +131,34 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dsumamnt"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dtrndate"
         app:layout_constraintStart_toStartOf="@+id/dtrndate"
         app:layout_constraintTop_toBottomOf="@+id/dtrndate"
         app:layout_constraintVertical_bias="0.0" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mtrdetails"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dsumamnt"
+        app:srcCompat="@drawable/divider" />
 
 
 </android.support.constraint.ConstraintLayout>

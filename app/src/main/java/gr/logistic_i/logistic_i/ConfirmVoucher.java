@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,18 +25,16 @@ import java.util.Objects;
 public class ConfirmVoucher extends PortraitActivity {
 
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    private ConfirmVoucherAdapter adapter;
     private String refid;
     private String url;
     private String clid;
     private String mtrLinesResponse;
-    private Toolbar tool;
     private ArrayList<Mtrl> mtrList;
     private TextView finalp;
     private Date c;
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd");
-    private TextView dt;
+    DecimalFormat priceFormat = new DecimalFormat("#.##");
     private JSONObject data;
     boolean setState = false;
     private String res;
@@ -46,8 +45,8 @@ public class ConfirmVoucher extends PortraitActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_voucher);
         finalp = findViewById(R.id.f_price);
-        dt = findViewById(R.id.current_date);
-        tool = findViewById(R.id.confirm_voucher_toolbar);
+        TextView dt = findViewById(R.id.current_date);
+        Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
         tool.setTitle("Confirm Voucher");
         tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
@@ -62,12 +61,11 @@ public class ConfirmVoucher extends PortraitActivity {
 
         storeVars();
         if (mtrLines!=null) {
-            initRecyclerView();
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 mtrLinesResponse = gsonWorker.calculatePrice(serCalcObj());
                 runOnUiThread(this::deserMtrLinesResponse);
-                runOnUiThread(adapter::notifyDataSetChanged);
+                runOnUiThread(this::initRecyclerView);
                 runOnUiThread(this::setSumAmnt);
             }).start();
 
@@ -80,11 +78,11 @@ public class ConfirmVoucher extends PortraitActivity {
     }
 
     public void initRecyclerView(){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.lines_to_confirm);
+        RecyclerView recyclerView = findViewById(R.id.lines_to_confirm);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new ConfirmVoucherAdapter(this, mtrLines);
+        ConfirmVoucherAdapter adapter = new ConfirmVoucherAdapter(this, mtrLines);
         recyclerView.setAdapter(adapter);
     }
 
@@ -108,7 +106,19 @@ public class ConfirmVoucher extends PortraitActivity {
             for(int i=0; i<itelines.length(); i++){
                 for (MtrLine m:mtrLines){
                     if (m.getMtrl().equals(itelines.getJSONObject(i).getString("MTRL"))){
-                        m.setPrice(itelines.getJSONObject(i).getString("LINEVAL"));
+                        if(itelines.getJSONObject(i).has("LINEVAL")) {
+                            m.setCleanValue(itelines.getJSONObject(i).getString("LINEVAL"));
+                        }
+                        else{
+                            m.setCleanValue("0");
+                        }
+                        if (itelines.getJSONObject(i).has("VATAMNT")){
+                            m.setFpaValue(itelines.getJSONObject(i).getString("VATAMNT"));
+                        }
+                        else{
+                            m.setFpaValue("0");
+                        }
+                        m.setPrice(String.valueOf(Double.parseDouble(m.getCleanValue()) + Double.parseDouble(m.getFpaValue())));
                     }
                 }
             }
@@ -155,7 +165,7 @@ public class ConfirmVoucher extends PortraitActivity {
             json.put("appID", "1100");
             json.put("OBJECT", "SALDOC");
             json.put("Key", "");
-            json.put("LOCATEINFO", "ITELINES:MTRL,QTY1,DISC1PRC,DISC2PRC,DISC3PRC,PRICE,LINEVAL,PRCRULEDATA");
+            json.put("LOCATEINFO", "ITELINES:MTRL,QTY1,DISC1PRC,DISC2PRC,DISC3PRC,PRICE,LINEVAL,VATAMNT");
             json.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -172,7 +182,7 @@ public class ConfirmVoucher extends PortraitActivity {
             fp = fp+Double.parseDouble(m.getPrice());
         }
 
-        finalp.setText(fp.toString()+"€");
+        finalp.setText(priceFormat.format(fp) +"€");
     }
 
     public void setFindoc(View view){
@@ -211,10 +221,13 @@ public class ConfirmVoucher extends PortraitActivity {
     public void goToOrders(){
         if (setState){
             Intent i = new Intent(this, MainMenuActivity.class);
+            i.putExtra("id", this.getClass().getSimpleName());
             i.putExtra("url", url);
-            i.putExtra("clid", clid);
+            i.putExtra("clID", clid);
             i.putExtra("refid", refid);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(i);
+
         }
         else{
             AlertDialog alertbox = new AlertDialog.Builder(this)

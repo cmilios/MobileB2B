@@ -113,6 +113,22 @@ public class MtrLine implements Parcelable {
         this.sUnit = sUnit;
     }
 
+    public String getCleanValue() {
+        return cleanValue;
+    }
+
+    public void setCleanValue(String cleanValue) {
+        this.cleanValue = cleanValue;
+    }
+
+    public String getFpaValue() {
+        return fpaValue;
+    }
+
+    public void setFpaValue(String fpaValue) {
+        this.fpaValue = fpaValue;
+    }
+
     private MtrLine(Parcel in) {
         mtrl = in.readString();
         code = in.readString();

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +30,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrdrName;
     private EditText dsumamnt;
     private android.support.v7.widget.Toolbar dtoolbar;
+    private VoucherDetailsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +51,13 @@ public class VoucherDetailsActivity extends PortraitActivity {
         setTexts();
         GsonWorker gsonWorker = new GsonWorker(url);
 
+        initRecyclerView();
         new Thread(()->{
             MtrLinesReq mtrLinesReq = new MtrLinesReq("SqlData", clientId, "1100", "GetMtrLines", o.getFindoc());
             gsonWorker.getMtrLines(mtrLinesReq);
             mtrLines = gsonWorker.getMtrLines();
+            adapter.replaceList(mtrLines);
+            runOnUiThread(adapter::notifyDataSetChanged);
 
 
 
@@ -76,7 +82,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrdrName.setText(o.getTrdrName());
         dsumamnt.setText(o.getSumamnt());
 
-        //TODO Grid layout to display mtrlines
+
     }
     //method that implements right cursor behavior on focused mode or not
     @Override
@@ -94,6 +100,15 @@ public class VoucherDetailsActivity extends PortraitActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    public void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.mtrdetails);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new VoucherDetailsAdapter(this, mtrLines);
+        recyclerView.setAdapter(adapter);
     }
 
 }

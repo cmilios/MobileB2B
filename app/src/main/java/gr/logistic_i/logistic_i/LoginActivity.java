@@ -53,8 +53,8 @@ public class LoginActivity extends PortraitActivity {
         curl = c.getText().toString();
         GsonWorker gson = new GsonWorker(curl);
 
-       Creds c1 = new Creds(name, pass, curl);
-         Handler h = new Handler() {
+        Creds c1 = new Creds(name, pass, curl);
+        Handler h = new Handler() {
             public void handleMessage(Message msg){
                 if(msg.what == 0){
                     Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();
@@ -64,14 +64,7 @@ public class LoginActivity extends PortraitActivity {
 
                 }
             }
-        };
-//        String serObj = c1.serObjLogin();
-//        try {
-//            json = new JSONObject(serObj);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        w.execute(c1.getCurl(), "login", json);
+         };
 
         new Thread(() -> {
 
@@ -79,6 +72,7 @@ public class LoginActivity extends PortraitActivity {
                 gson.makeLogin(c1);
                 if (gson.getAuthenticationFlag()){
                     Intent i = new Intent(this, MainMenuActivity.class);
+                    i.putExtra("id", this.getClass().getSimpleName());
                     i.putExtra("url", gson.getUrl());
                     i.putExtra("clID", gson.getAuthenticateClID());
                     i.putExtra("refid", gson.getRefID());

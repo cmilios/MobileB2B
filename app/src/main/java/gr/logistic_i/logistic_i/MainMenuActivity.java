@@ -47,6 +47,7 @@ public class MainMenuActivity extends PortraitActivity {
     private ArrayList<Order> orders = new ArrayList<>();
     private NestedScrollView nv;
     private RecyclerView rv;
+    private String cameFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +75,17 @@ public class MainMenuActivity extends PortraitActivity {
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
-        
+
+
 
         gson = new GsonWorker(url);
-        initRecyclerView();
+
         new Thread(() -> {
 
             SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
             gson.getSqlOrders(sqlRequest);
             orders = gson.getSqlResponse();
-            adapter.replaceList(orders);
-            runOnUiThread((adapter::notifyDataSetChanged));
+            runOnUiThread(this::initRecyclerView);
             if(!orders.isEmpty()){
                 if(orders.size() == 1){
                     runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
@@ -147,6 +148,7 @@ public class MainMenuActivity extends PortraitActivity {
 
     public void storeParams(){
         Intent intent = getIntent();
+        cameFrom = intent.getStringExtra("id");
         url = intent.getStringExtra("url");
         clientId = intent.getStringExtra("clID");
         refid = intent.getStringExtra("refid");
@@ -241,13 +243,8 @@ public class MainMenuActivity extends PortraitActivity {
         AlertDialog alertbox = new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
-
-
                     //close();
                     finish();
-
-
-
                 })
                 .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
                 })
@@ -276,7 +273,7 @@ public class MainMenuActivity extends PortraitActivity {
                 msg = "Login";
                 break;
             case R.id.logout:
-                msg = "Logout";
+                onBackPressed();
                 break;
         }
         Toast.makeText(this,msg+" Checked", Toast.LENGTH_LONG).show();
