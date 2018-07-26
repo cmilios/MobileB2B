@@ -264,17 +264,10 @@ public class MainMenuActivity extends PortraitActivity {
             case R.id.settings:
                 msg = "Settings";
                 break;
-            case R.id.user:
-                msg = "User";
-                break;
-            case R.id.login:
-                msg = "Login";
-                break;
             case R.id.logout:
                 onBackPressed();
                 break;
         }
-        Toast.makeText(this,msg+" Checked", Toast.LENGTH_LONG).show();
         return super.onOptionsItemSelected(item);
     }
 

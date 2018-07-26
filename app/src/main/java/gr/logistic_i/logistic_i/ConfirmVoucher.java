@@ -93,6 +93,9 @@ public class ConfirmVoucher extends PortraitActivity {
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
         mtrList = i.getParcelableArrayListExtra("mtrl");
+        for (MtrLine m:mtrLines){
+            m.linkMtrlWithLine(mtrList);
+        }
 
 
     }

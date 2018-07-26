@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Mtrl implements Parcelable {
@@ -24,6 +25,7 @@ public class Mtrl implements Parcelable {
     private String mu41;
     private String mu21mode;
     private String mu41mode;
+    private DecimalFormat qtyformat = new DecimalFormat("#.##");
 
 
 
@@ -73,14 +75,14 @@ public class Mtrl implements Parcelable {
             return  qty;
         }
         else if(index==1){
-            if (mu21!=null) {
-                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu21));
+            if (mu21!=null && !mu21.equals("0")) {
+                qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu21)));
                 return qtyToFirstMtrUnit;
             }
         }
         else {
-            if(mu41 != null) {
-                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu41));
+            if(mu41 != null && !mu41.equals("0")) {
+                qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu41)));
                 return qtyToFirstMtrUnit;
             }
         }
@@ -120,6 +122,29 @@ public class Mtrl implements Parcelable {
         this.name = name;
     }
 
+    public void setMu21(String mu21) {
+        this.mu21 = mu21;
+    }
+
+    public void setMu41(String mu41) {
+        this.mu41 = mu41;
+    }
+
+    public String getMu21mode() {
+        return mu21mode;
+    }
+
+    public void setMu21mode(String mu21mode) {
+        this.mu21mode = mu21mode;
+    }
+
+    public String getMu41mode() {
+        return mu41mode;
+    }
+
+    public void setMu41mode(String mu41mode) {
+        this.mu41mode = mu41mode;
+    }
 
     public String getManufacturer() {
         return manufacturer;

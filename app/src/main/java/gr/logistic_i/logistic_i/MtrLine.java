@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MtrLine implements Parcelable {
 
 
@@ -21,6 +23,7 @@ public class MtrLine implements Parcelable {
     private String fpaValue;
     private int mUnit;
     private String sUnit;
+    private Mtrl linkedobj;
 
     MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit) {
         this.mtrl = mtrl;
@@ -34,6 +37,21 @@ public class MtrLine implements Parcelable {
         this.fpaValue = fpaValue;
         this.mUnit = mUnit;
         this.sUnit = sUnit;
+    }
+
+    public void linkMtrlWithLine(ArrayList<Mtrl> mtrlist){
+        for(Mtrl m:mtrlist){
+            if (mtrl.equals(m.getMtrl())){
+                linkedobj = m;
+            }
+        }
+    }
+    public Mtrl getLinkedobj() {
+        return linkedobj;
+    }
+
+    public void setLinkedobj(Mtrl linkedobj) {
+        this.linkedobj = linkedobj;
     }
 
     public String getCode() {
@@ -92,7 +110,26 @@ public class MtrLine implements Parcelable {
         JSONObject json = new JSONObject();
         try {
             json.put("MTRL", mtrl);
-            json.put("QTY1", qty);
+            if (mUnit==0){
+                json.put("QTY1", qty);
+            }
+            if (mUnit==1){
+                if (linkedobj.getMu21mode().equals("1")){
+                    json.put("QTY2", qty1);
+                }
+                else{
+                    json.put("QTY1",qty);
+                }
+            }
+            if (mUnit==2){
+                if (linkedobj.getMu41mode().equals("1")){
+                    json.put("QTY", qty1);
+                }
+                else{
+                    json.put("QTY1", qty);
+                }
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

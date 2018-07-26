@@ -18,27 +18,28 @@ import android.widget.TextView;
 
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddProductActivity extends PortraitActivity {
 
 
-    ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null);
-    TextView title;
-    ImageView mtrlIcon;
-    TextView code;
-    TextView manufacturer;
-    Spinner unitsp;
-    EditText qty;
-    String cameFrom;
-    String url;
-    String refid;
-    String clientid;
-    HashMap<Integer, String> unitlist = new HashMap<>();
-    ArrayList<String> showList = new ArrayList<>();
-
+    private ArrayList<MtrLine> mtrLines = new ArrayList<>();
+    private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null);
+    private TextView title;
+    private ImageView mtrlIcon;
+    private TextView code;
+    private TextView manufacturer;
+    private Spinner unitsp;
+    private EditText qty;
+    private String cameFrom;
+    private String url;
+    private String refid;
+    private String clientid;
+    private HashMap<Integer, String> unitlist = new HashMap<>();
+    private ArrayList<String> showList = new ArrayList<>();
+    private ImageView backimg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,29 +51,20 @@ public class AddProductActivity extends PortraitActivity {
         mtrlIcon = findViewById(R.id.image_icon1);
         qty = findViewById(R.id.selected_qty);
         unitsp = findViewById(R.id.unitspn);
-
-
+        backimg = findViewById(R.id.back_img);
         storeVariables();
         setViews();
-
         mtrlIcon.setOnClickListener(v -> {
-
             Drawable d = mtrl.getImage();
             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] b = baos.toByteArray();
-
             Intent intent = new Intent(this, ShowImage.class);
             intent.putExtra("picture", b);
             startActivity(intent);
-
-
         });
-
-
     }
-
 
     private void storeVariables() {
         Intent i = getIntent();
@@ -91,6 +83,9 @@ public class AddProductActivity extends PortraitActivity {
             mtrl.loadImage();
             runOnUiThread(() -> mtrlIcon.setImageDrawable(mtrl.getImage()));
         }).start();
+
+
+        backimg.setOnClickListener(v -> onBackPressed());
 
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
@@ -212,7 +207,6 @@ public class AddProductActivity extends PortraitActivity {
         }
         return super.dispatchTouchEvent(event);
     }
-
 
     @Override
     public void onBackPressed() {

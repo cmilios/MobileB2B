@@ -1,6 +1,7 @@
 package gr.logistic_i.logistic_i;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -166,18 +167,24 @@ public class MostOrderedItems extends PortraitActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.confirmVoucher:
-                Intent i = new Intent(this, ConfirmVoucher.class);
+                if (mtrLines!=null && !(mtrLines.size()== 0)) {
+                    Intent i = new Intent(this, ConfirmVoucher.class);
+                    i.putParcelableArrayListExtra("lines", mtrLines);
+                    i.putExtra("url", url);
+                    i.putExtra("refid", refid);
+                    i.putExtra("clid", clientid);
+                    i.putParcelableArrayListExtra("mtrl", mtrList);
+                    this.startActivity(i);
+                    break;
+                }
+                else{
+                    new AlertDialog.Builder(this)
+                            .setMessage("Το καλάθι σας ειναι άδειο, προσθέστε προιόντα στο καλάθι ώστε να προχωρήσετε στην καταχώρηση του παραστατικού")
+                            .setNeutralButton("ΟΚ", (dialog, which) -> {
 
-                i.putParcelableArrayListExtra("lines", mtrLines);
-                i.putExtra("url", url);
-                i.putExtra("refid", refid);
-                i.putExtra("clid", clientid);
-                i.putParcelableArrayListExtra("mtrl", mtrList);
-
-
-
-                this.startActivity(i);
-                break;
+                            })
+                            .show();
+                }
 
         }
         return super.onOptionsItemSelected(item);

@@ -7,10 +7,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logistic_i_logo"
+        android:icon="@drawable/logistic_i_logo_out"
         android:label="Logistic-i"
-        android:logo="@drawable/logistic_i_logo"
-        android:roundIcon="@drawable/logistic_i_logo"
+        android:logo="@drawable/logistic_i_logo_out"
+        android:roundIcon="@drawable/logistic_i_logo_out"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">

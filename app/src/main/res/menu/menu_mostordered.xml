@@ -7,7 +7,7 @@
         android:title="Confirm Voucher"
         android:orderInCategory="100"
         app:showAsAction="always"
-        android:icon="@drawable/check">
+        android:icon="@drawable/ic_outline_done_24px">
     </item>
 
 </menu>

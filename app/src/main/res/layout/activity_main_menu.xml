@@ -65,7 +65,8 @@
                     android:textColorHint="@android:color/white"
                     android:inputType="date"
                     android:typeface="sans"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -74,7 +75,8 @@
                     android:id="@+id/toDate2"
                     android:layout_alignParentBottom="true"
                     android:layout_toRightOf="@+id/fromDate2"
-                    android:layout_margin="10dp">
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/fromDate2">
                 <EditText
                     android:id="@+id/toDate"
                     android:layout_width="131dp"
@@ -100,11 +102,11 @@
                     android:layout_height="44dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginBottom="11dp"
                     android:background="@color/colorTransparent"
                     android:onClick="initSearch"
-                    android:src="@drawable/searchicon"
-                    android:layout_alignParentRight="true" />
+                    android:src="@drawable/ic_search_white_24dp" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
