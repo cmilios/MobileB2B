@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -38,6 +39,7 @@ public class ConfirmVoucher extends PortraitActivity {
     private JSONObject data;
     boolean setState = false;
     private String res;
+    private Button b;
 
 
     @Override
@@ -55,6 +57,7 @@ public class ConfirmVoucher extends PortraitActivity {
         tool.setNavigationOnClickListener(v -> onBackPressed());
         c = Calendar.getInstance().getTime();
         dt.setText(df.format(c));
+        b = findViewById(R.id.setf);
 
 
 
@@ -96,6 +99,7 @@ public class ConfirmVoucher extends PortraitActivity {
         for (MtrLine m:mtrLines){
             m.linkMtrlWithLine(mtrList);
         }
+
 
 
     }
@@ -189,6 +193,8 @@ public class ConfirmVoucher extends PortraitActivity {
     }
 
     public void setFindoc(View view){
+        b.setVisibility(View.GONE);
+
         JSONObject setDataJson = serSet();
 
         GsonWorker gson = new GsonWorker(url);
@@ -233,6 +239,7 @@ public class ConfirmVoucher extends PortraitActivity {
 
         }
         else{
+            b.setVisibility(View.VISIBLE);
             new AlertDialog.Builder(this)
                     .setMessage("Υπήρξε πρόβλημα κατα την καταχώρηση")
                     .setNeutralButton("OK", (dialog, which) -> {

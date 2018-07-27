@@ -11,6 +11,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -27,6 +30,7 @@ public class MostOrderedItems extends PortraitActivity {
     ArrayList<Mtrl> mtrList = new ArrayList<>();
     private Intent i;
     android.support.v7.widget.Toolbar toolbarmostord;
+    Switch switchAB;
 
     private MostOrderedItemsAdapter adapter;
 
@@ -40,6 +44,7 @@ public class MostOrderedItems extends PortraitActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
+
         i = getIntent();
         storeParams();
 
@@ -165,9 +170,9 @@ public class MostOrderedItems extends PortraitActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.confirmVoucher:
-                if (mtrLines!=null && !(mtrLines.size()== 0)) {
+                if (mtrLines != null && !(mtrLines.size() == 0)) {
                     Intent i = new Intent(this, ConfirmVoucher.class);
                     i.putParcelableArrayListExtra("lines", mtrLines);
                     i.putExtra("url", url);
@@ -176,19 +181,69 @@ public class MostOrderedItems extends PortraitActivity {
                     i.putParcelableArrayListExtra("mtrl", mtrList);
                     this.startActivity(i);
                     break;
-                }
-                else{
+                } else {
                     new AlertDialog.Builder(this)
                             .setMessage("Το καλάθι σας ειναι άδειο, προσθέστε προιόντα στο καλάθι ώστε να προχωρήσετε στην καταχώρηση του παραστατικού")
                             .setNeutralButton("ΟΚ", (dialog, which) -> {
 
                             })
                             .show();
+                    break;
                 }
 
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void switchBehavior(){
+        switchAB.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
+                    gsonWorker.getFOI(mtrlReq);
+                    mtrList = gsonWorker.getMtrList();
+
+                    for (Mtrl m:mtrList) {
+                        new Thread(() -> {
+                            m.loadImage();
+                            adapter.replaceList(mtrList);
+                            runOnUiThread((adapter::notifyDataSetChanged));
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    for (Mtrl m : mtrList) {
+                        m.loadImage();
+                    }
+                }).start();
+            }
+            else{
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
+                    gsonWorker.getFOI(mtrlReq);
+                    mtrList = gsonWorker.getMtrList();
+
+                    for (Mtrl m:mtrList) {
+                        new Thread(() -> {
+                            m.loadImage();
+                            adapter.replaceList(mtrList);
+                            runOnUiThread((adapter::notifyDataSetChanged));
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    for (Mtrl m : mtrList) {
+                        m.loadImage();
+                    }
+                }).start();
+            }
+
+        });
+    }
+
+
 
 }
 

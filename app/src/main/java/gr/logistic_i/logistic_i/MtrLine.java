@@ -118,7 +118,7 @@ public class MtrLine implements Parcelable {
                     json.put("QTY2", qty1);
                 }
                 else{
-                    json.put("QTY1",qty);
+                    json.put("QTY1",qty.replace(",","."));
                 }
             }
             if (mUnit==2){
@@ -126,7 +126,7 @@ public class MtrLine implements Parcelable {
                     json.put("QTY", qty1);
                 }
                 else{
-                    json.put("QTY1", qty);
+                    json.put("QTY1", qty.replace(",","."));
                 }
             }
 
