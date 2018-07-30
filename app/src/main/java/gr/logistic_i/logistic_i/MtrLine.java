@@ -23,7 +23,7 @@ public class MtrLine implements Parcelable {
     private String fpaValue;
     private int mUnit;
     private String sUnit;
-    private Mtrl linkedobj;
+    private Mtrl linkedMtrl;
 
     MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit) {
         this.mtrl = mtrl;
@@ -42,16 +42,18 @@ public class MtrLine implements Parcelable {
     public void linkMtrlWithLine(ArrayList<Mtrl> mtrlist){
         for(Mtrl m:mtrlist){
             if (mtrl.equals(m.getMtrl())){
-                linkedobj = m;
+                linkedMtrl = m;
             }
         }
     }
-    public Mtrl getLinkedobj() {
-        return linkedobj;
+
+
+    public Mtrl getLinkedMtrl() {
+        return linkedMtrl;
     }
 
-    public void setLinkedobj(Mtrl linkedobj) {
-        this.linkedobj = linkedobj;
+    public void setLinkedMtrl(Mtrl linkedMtrl) {
+        this.linkedMtrl = linkedMtrl;
     }
 
     public String getCode() {
@@ -114,7 +116,7 @@ public class MtrLine implements Parcelable {
                 json.put("QTY1", qty);
             }
             if (mUnit==1){
-                if (linkedobj.getMu21mode().equals("1")){
+                if (linkedMtrl.getMu21mode().equals("1")){
                     json.put("QTY2", qty1);
                 }
                 else{
@@ -122,7 +124,7 @@ public class MtrLine implements Parcelable {
                 }
             }
             if (mUnit==2){
-                if (linkedobj.getMu41mode().equals("1")){
+                if (linkedMtrl.getMu41mode().equals("1")){
                     json.put("QTY", qty1);
                 }
                 else{

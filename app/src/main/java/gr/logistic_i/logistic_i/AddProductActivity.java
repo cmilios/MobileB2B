@@ -17,6 +17,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +43,8 @@ public class AddProductActivity extends PortraitActivity {
     private HashMap<Integer, String> unitlist = new HashMap<>();
     private ArrayList<String> showList = new ArrayList<>();
     private ImageView backimg;
+    private String wayOfTransormation;
+    private String resWay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +84,11 @@ public class AddProductActivity extends PortraitActivity {
     }
 
     public void setViews() {
+        JSONObject jsonObject = serWayOfTransformation();
         new Thread(() -> {
+            GsonWorker gsonWorker = new GsonWorker(url);
+            resWay = gsonWorker.getWayOfTransformation(jsonObject);
+            wayOfTransormation = deserWayOfTransformation(resWay);
             mtrl.loadImage();
             runOnUiThread(() -> mtrlIcon.setImageDrawable(mtrl.getImage()));
         }).start();
@@ -149,7 +158,7 @@ public class AddProductActivity extends PortraitActivity {
                     toDeleteFlag=true;
                 }
                 else{
-                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()));
+                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation));
                     m.setQty1(qty.getText().toString());
                     m.setsUnit(unitsp.getSelectedItem().toString());
                     m.setmUnit(index);
@@ -164,7 +173,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()),qty.getText().toString(), null,null,null,null, index, unit);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit);
             mtrLines.add(line);
         }
 
@@ -274,6 +283,39 @@ public class AddProductActivity extends PortraitActivity {
             unitsp.setEnabled(false);
 
         }
+
+    }
+
+    public JSONObject serWayOfTransformation(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("service", "getData");
+            jsonObject.put("clientID", clientid);
+            jsonObject.put("appID",1100);
+            jsonObject.put("OBJECT", "ITEPPRMS");
+            jsonObject.put("KEY", "51");
+            jsonObject.put("LOCATEINFO", "ITEPPRMS:MTRMD");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public String deserWayOfTransformation(String resObj){
+        String parsed = new String();
+        try {
+            JSONObject jsonObject = new JSONObject(resObj);
+            parsed = jsonObject.getJSONObject("data").getJSONArray("ITEPPRMS").getJSONObject(0).getString("MTRMD");
+            if(parsed.equals("0")){
+                parsed = "*";
+            }else{
+                parsed = "/";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return parsed;
 
     }
 }

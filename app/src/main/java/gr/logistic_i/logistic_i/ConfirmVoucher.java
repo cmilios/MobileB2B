@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -33,13 +34,14 @@ public class ConfirmVoucher extends PortraitActivity {
     private ArrayList<Mtrl> mtrList;
     private TextView finalp;
     private Date c;
-    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-    SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd");
-    DecimalFormat priceFormat = new DecimalFormat("#.##");
+    private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd");
+    private DecimalFormat priceFormat = new DecimalFormat("#.##");
     private JSONObject data;
     boolean setState = false;
     private String res;
     private Button b;
+    private ProgressBar pbar;
 
 
     @Override
@@ -49,6 +51,7 @@ public class ConfirmVoucher extends PortraitActivity {
         finalp = findViewById(R.id.f_price);
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
+        pbar = findViewById(R.id.setBar);
         tool.setTitle("Confirm Voucher");
         tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
@@ -193,6 +196,7 @@ public class ConfirmVoucher extends PortraitActivity {
     }
 
     public void setFindoc(View view){
+        pbar.setVisibility(View.VISIBLE);
         b.setVisibility(View.GONE);
 
         JSONObject setDataJson = serSet();
@@ -239,6 +243,7 @@ public class ConfirmVoucher extends PortraitActivity {
 
         }
         else{
+            pbar.setVisibility(View.GONE);
             b.setVisibility(View.VISIBLE);
             new AlertDialog.Builder(this)
                     .setMessage("Υπήρξε πρόβλημα κατα την καταχώρηση")

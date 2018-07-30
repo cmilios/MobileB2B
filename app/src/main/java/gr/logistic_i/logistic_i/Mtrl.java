@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -68,31 +70,37 @@ public class Mtrl implements Parcelable {
         return mu41;
     }
 
-    public String getQuantityToFirstMtrUnit(int index, String qty){
+    public String getQuantityToFirstMtrUnit(int index, String qty, String wayOfTransformation){
         String qtyToFirstMtrUnit;
 
-        if (index==0){
-            return  qty;
-        }
-        else if(index==1){
-            if (mu21!=null && !mu21.equals("0")) {
-                qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu21)));
-                return qtyToFirstMtrUnit;
-            }
-        }
-        else {
-            if(mu41 != null && !mu41.equals("0")) {
-                qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu41)));
-                return qtyToFirstMtrUnit;
-            }
-        }
+            if (index == 0) {
+                return qty;
+            } else if (index == 1) {
+                if (wayOfTransformation.equals("/")) {
+                    if (mu21 != null && !mu21.equals("0")) {
+                        qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) * Double.parseDouble(mu21)));
+                        return qtyToFirstMtrUnit;
+                    }
+                }
+                else{
+                    if (mu21 != null && !mu21.equals("0")) {
+                        qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu21)));
+                        return qtyToFirstMtrUnit;
+                    }
 
+                }
+            }
+            else {
+                if (mu41 != null && !mu41.equals("0")) {
+                    qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) * Double.parseDouble(mu41)));
+                    return qtyToFirstMtrUnit;
+                }
+            }
         return  null;
-
-
-
-
     }
+
+
+
 
     public String getImgURL() {
         return imgURL;

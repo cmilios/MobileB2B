@@ -14,34 +14,61 @@
     tools:showIn="@layout/most_ordered_items">
 
     <LinearLayout
+        android:id="@+id/slideView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/slideView"
-        android:orientation="vertical"
-        android:layout_marginTop="0dp"
-        android:background="@color/colorWhite">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Slide it down"
-            android:id="@+id/prompt"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/colorGrey"/>
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorTextBold"
-            app:srcCompat="@drawable/grey_line" />
+            <TextView
+                android:id="@+id/prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:text="Slide it down"
+                android:textColor="@color/colorGrey"
+                android:layout_alignParentLeft="true" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/basket_rview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTextBold"
+                app:srcCompat="@drawable/grey_line"
+                android:layout_below="@id/prompt"/>
+
+            <Button
+                android:id="@+id/clearall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:baselineAligned="false"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="clear voucher"
+                android:layout_alignParentLeft="true" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/basket_rview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageView7"
+                android:layout_above="@id/clearall">
+
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
 
 
     </LinearLayout>

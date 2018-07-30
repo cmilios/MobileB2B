@@ -46,8 +46,6 @@ public class MainMenuActivity extends PortraitActivity {
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
     private NestedScrollView nv;
-    private RecyclerView rv;
-    private String cameFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +56,7 @@ public class MainMenuActivity extends PortraitActivity {
         getSupportActionBar().setTitle("My Orders");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
-        rv = findViewById(R.id.orderlist);
+        RecyclerView rv = findViewById(R.id.orderlist);
         nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
 
@@ -146,7 +144,7 @@ public class MainMenuActivity extends PortraitActivity {
 
     public void storeParams(){
         Intent intent = getIntent();
-        cameFrom = intent.getStringExtra("id");
+        String cameFrom = intent.getStringExtra("id");
         url = intent.getStringExtra("url");
         clientId = intent.getStringExtra("clID");
         refid = intent.getStringExtra("refid");

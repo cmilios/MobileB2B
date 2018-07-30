@@ -120,6 +120,16 @@ public class GsonWorker {
 
     }
 
+
+    public String getWayOfTransformation(JSONObject jsonObject){
+       String lines = getJSON(url,jsonObject.toString());
+       if (state){
+           return lines;
+       }
+       return null;
+
+    }
+
     public String setData(JSONObject jsonObject){
         String lines = getJSON(url, jsonObject.toString());
 

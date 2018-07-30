@@ -5,25 +5,20 @@
     tools:context="gr.logistic_i.logistic_i.most_ordered_items">
 
 
+        <item
+            android:id="@+id/confirmVoucher"
+            android:checkable="true"
+            android:enabled="true"
+            android:icon="@drawable/ic_outline_done_24px"
+            android:orderInCategory="100"
+            android:title="Confirm Voucher"
+            android:visible="true"
+            app:showAsAction="always" />
     <item
-        android:id="@+id/confirmVoucher"
-        android:checkable= "true"
+        android:id="@+id/app_bar_switch"
+        android:title="See all items."
         android:enabled="true"
-        android:icon="@drawable/ic_outline_done_24px"
-        android:orderInCategory="100"
-        android:title="Confirm Voucher"
-        android:visible="true"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/switchId"
-        android:title=""
-        android:actionLayout="@layout/switch_layout"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title=""
-        app:showAsAction="never"/>
+        android:actionLayout="@layout/switch_item"/>
 
 
 </menu>
