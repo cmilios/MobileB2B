@@ -8,15 +8,15 @@ import java.util.ArrayList;
 
 public class SqlRequest {
 
-    String service;
-    String clientID;
-    String appID;
-    String sqlName;
-    String fromDate;
-    String toDate;
-    String refid;
+    private String service;
+    private String clientID;
+    private String appID;
+    private String sqlName;
+    private String fromDate;
+    private String toDate;
+    private String refid;
 
-    public SqlRequest(String service, String clientID, String appID, String sqlName, String fromDate, String toDate, String refid) {
+    SqlRequest(String service, String clientID, String appID, String sqlName, String fromDate, String toDate, String refid) {
         this.service = service;
         this.clientID = clientID;
         this.appID = appID;

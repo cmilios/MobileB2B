@@ -4,10 +4,6 @@ package gr.logistic_i.logistic_i;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-
 public class Order implements Parcelable {
 
     private String code;
@@ -17,7 +13,7 @@ public class Order implements Parcelable {
     private String trdrName;
     private String sumamnt;
 
-    public Order(String code, String findoc, String fincode, String trndate, String trdrName, String sumamnt) {
+    Order(String code, String findoc, String fincode, String trndate, String trdrName, String sumamnt) {
         this.code = code;
         this.findoc = findoc;
         this.fincode = fincode;
@@ -36,10 +32,6 @@ public class Order implements Parcelable {
 
     public String getFindoc() {
         return findoc;
-    }
-
-    public void setFindoc(String findoc) {
-        this.findoc = findoc;
     }
 
     public String getFincode() {
@@ -62,10 +54,6 @@ public class Order implements Parcelable {
         return trdrName;
     }
 
-    public void setTrdrName(String trdrName) {
-        this.trdrName = trdrName;
-    }
-
     public String getSumamnt() {
         return sumamnt;
     }
@@ -75,7 +63,7 @@ public class Order implements Parcelable {
     }
 
 
-    protected Order(Parcel in) {
+    private Order(Parcel in) {
         code = in.readString();
         findoc = in.readString();
         fincode = in.readString();

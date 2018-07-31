@@ -4,10 +4,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Mtrl implements Parcelable {
 
+
+
+    private String mtrl;
     private String imgURL;
     private String code;
     private String name;
@@ -21,12 +27,14 @@ public class Mtrl implements Parcelable {
     private String mu41;
     private String mu21mode;
     private String mu41mode;
+    private DecimalFormat qtyformat = new DecimalFormat("#.##");
 
 
 
 
-    Mtrl(String imgURL, String code, String name, String sales, String manufacturer,
+    Mtrl(String mtrl, String imgURL, String code, String name, String sales, String manufacturer,
          String correspondingBase, ArrayList<String> unitList, String mu21, String mu41, String mu21mode, String mu41mode) {
+        this.mtrl = mtrl;
         this.imgURL = imgURL;
         this.code = code;
         this.name = name;
@@ -41,6 +49,7 @@ public class Mtrl implements Parcelable {
 
 
     }
+
 
     public void loadImage(){
         GsonWorker gsonWorker = new GsonWorker(correspondingBase);
@@ -61,31 +70,37 @@ public class Mtrl implements Parcelable {
         return mu41;
     }
 
-    public String getQuantityToFirstMtrUnit(int index, String qty){
+    public String getQuantityToFirstMtrUnit(int index, String qty, String wayOfTransformation){
         String qtyToFirstMtrUnit;
 
-        if (index==0){
-            return  qty;
-        }
-        else if(index==1){
-            if (mu21!=null) {
-                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu21));
-                return qtyToFirstMtrUnit;
-            }
-        }
-        else {
-            if(mu41 != null) {
-                qtyToFirstMtrUnit = String.valueOf(Double.parseDouble(qty) * Double.parseDouble(mu41));
-                return qtyToFirstMtrUnit;
-            }
-        }
+            if (index == 0) {
+                return qty;
+            } else if (index == 1) {
+                if (wayOfTransformation.equals("/")) {
+                    if (mu21 != null && !mu21.equals("0")) {
+                        qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) * Double.parseDouble(mu21)));
+                        return qtyToFirstMtrUnit;
+                    }
+                }
+                else{
+                    if (mu21 != null && !mu21.equals("0")) {
+                        qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) / Double.parseDouble(mu21)));
+                        return qtyToFirstMtrUnit;
+                    }
 
+                }
+            }
+            else {
+                if (mu41 != null && !mu41.equals("0")) {
+                    qtyToFirstMtrUnit = String.valueOf(qtyformat.format(Double.parseDouble(qty) * Double.parseDouble(mu41)));
+                    return qtyToFirstMtrUnit;
+                }
+            }
         return  null;
-
-
-
-
     }
+
+
+
 
     public String getImgURL() {
         return imgURL;
@@ -107,10 +122,37 @@ public class Mtrl implements Parcelable {
         return name;
     }
 
+    public String getMtrl() {
+        return mtrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
+    public void setMu21(String mu21) {
+        this.mu21 = mu21;
+    }
+
+    public void setMu41(String mu41) {
+        this.mu41 = mu41;
+    }
+
+    public String getMu21mode() {
+        return mu21mode;
+    }
+
+    public void setMu21mode(String mu21mode) {
+        this.mu21mode = mu21mode;
+    }
+
+    public String getMu41mode() {
+        return mu41mode;
+    }
+
+    public void setMu41mode(String mu41mode) {
+        this.mu41mode = mu41mode;
+    }
 
     public String getManufacturer() {
         return manufacturer;
@@ -123,6 +165,7 @@ public class Mtrl implements Parcelable {
 
 
     private Mtrl(Parcel in) {
+        mtrl = in.readString();
         imgURL = in.readString();
         code = in.readString();
         name = in.readString();
@@ -155,6 +198,7 @@ public class Mtrl implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mtrl);
         dest.writeString(imgURL);
         dest.writeString(code);
         dest.writeString(name);

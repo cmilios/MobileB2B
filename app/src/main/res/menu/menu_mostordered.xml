@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="gr.logistic_i.logistic_i.most_ordered_items">
+
 
     <item
-        android:id="@+id/confirmVoucher"
-        android:title="Confirm Voucher"
+        android:id="@+id/app_bar_switch"
+        app:actionLayout="@layout/switch_item"
+        android:enabled="true"
+        android:checkable="true"
         android:orderInCategory="100"
-        app:showAsAction="always"
-        android:icon="@drawable/check">
-    </item>
+        android:title="See all items."
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/confirmVoucher"
+        android:checkable="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_done_24px"
+        android:orderInCategory="101"
+        android:title="Confirm Voucher"
+        android:visible="true"
+        app:showAsAction="always" />
+
 
 </menu>

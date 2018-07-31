@@ -3,8 +3,16 @@ package gr.logistic_i.logistic_i;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class MtrLine implements Parcelable {
 
+
+
+    private String mtrl;
     private String code;
     private String description;
     private String qty;
@@ -14,8 +22,11 @@ public class MtrLine implements Parcelable {
     private String cleanValue;
     private String fpaValue;
     private int mUnit;
+    private String sUnit;
+    private Mtrl linkedMtrl;
 
-    MtrLine(String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit) {
+    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit) {
+        this.mtrl = mtrl;
         this.code = code;
         this.description = description;
         this.qty = qty;
@@ -25,6 +36,24 @@ public class MtrLine implements Parcelable {
         this.cleanValue = cleanValue;
         this.fpaValue = fpaValue;
         this.mUnit = mUnit;
+        this.sUnit = sUnit;
+    }
+
+    public void linkMtrlWithLine(ArrayList<Mtrl> mtrlist){
+        for(Mtrl m:mtrlist){
+            if (mtrl.equals(m.getMtrl())){
+                linkedMtrl = m;
+            }
+        }
+    }
+
+
+    public Mtrl getLinkedMtrl() {
+        return linkedMtrl;
+    }
+
+    public void setLinkedMtrl(Mtrl linkedMtrl) {
+        this.linkedMtrl = linkedMtrl;
     }
 
     public String getCode() {
@@ -43,6 +72,18 @@ public class MtrLine implements Parcelable {
         this.description = description;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public String getMtrl() {
+        return mtrl;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     public String getQty() {
         return qty;
     }
@@ -55,6 +96,10 @@ public class MtrLine implements Parcelable {
         this.qty1 = qty1;
     }
 
+    public String getQty1() {
+        return qty1;
+    }
+
     public int getmUnit() {
         return mUnit;
     }
@@ -63,8 +108,64 @@ public class MtrLine implements Parcelable {
         this.mUnit = mUnit;
     }
 
+    public JSONObject serCalcLine(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("MTRL", mtrl);
+            if (mUnit==0){
+                json.put("QTY1", qty);
+            }
+            if (mUnit==1){
+                if (linkedMtrl.getMu21mode().equals("1")){
+                    json.put("QTY2", qty1);
+                }
+                else{
+                    json.put("QTY1",qty.replace(",","."));
+                }
+            }
+            if (mUnit==2){
+                if (linkedMtrl.getMu41mode().equals("1")){
+                    json.put("QTY", qty1);
+                }
+                else{
+                    json.put("QTY1", qty.replace(",","."));
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return json;
+    }
+
+    public String getsUnit() {
+        return sUnit;
+    }
+
+    public void setsUnit(String sUnit) {
+        this.sUnit = sUnit;
+    }
+
+    public String getCleanValue() {
+        return cleanValue;
+    }
+
+    public void setCleanValue(String cleanValue) {
+        this.cleanValue = cleanValue;
+    }
+
+    public String getFpaValue() {
+        return fpaValue;
+    }
+
+    public void setFpaValue(String fpaValue) {
+        this.fpaValue = fpaValue;
+    }
 
     private MtrLine(Parcel in) {
+        mtrl = in.readString();
         code = in.readString();
         description = in.readString();
         qty = in.readString();
@@ -74,6 +175,7 @@ public class MtrLine implements Parcelable {
         cleanValue = in.readString();
         fpaValue = in.readString();
         mUnit = in.readInt();
+        sUnit = in.readString();
     }
 
     @Override
@@ -83,6 +185,7 @@ public class MtrLine implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mtrl);
         dest.writeString(code);
         dest.writeString(description);
         dest.writeString(qty);
@@ -92,6 +195,7 @@ public class MtrLine implements Parcelable {
         dest.writeString(cleanValue);
         dest.writeString(fpaValue);
         dest.writeInt(mUnit);
+        dest.writeString(sUnit);
     }
 
     @SuppressWarnings("unused")

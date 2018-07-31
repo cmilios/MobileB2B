@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedItemsAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewAdapter";
 
     private ArrayList<Mtrl> mmtrList;
     private Context mContext;
@@ -25,18 +24,19 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private String url;
     private ArrayList<MtrLine> mtrLines;
     private String refid;
+    private Boolean isChecked;
 
 
-    MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines) {
+    MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
         this.clientID = clientId;
         this.mtrLines = mtrLines;
         this.refid = refid;
+        this.isChecked = isChecked;
 
     }
-
 
     @NonNull
     @Override
@@ -61,9 +61,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             holder.img.setImageResource(R.drawable.ic_baseline_image_24px);
             holder.pbar_layout.setVisibility(View.INVISIBLE);
             holder.img.setVisibility(View.VISIBLE);
-
         }
-
 
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
@@ -73,6 +71,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
             i.putExtra("url", url);
             i.putExtra("refid", refid);
             i.putExtra("clid", clientID);
+            i.putExtra("isChecked", isChecked);
             mContext.startActivity(i);
             ((Activity)mContext).finish();
 
@@ -94,11 +93,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
         mmtrList = ml;
     }
 
-
-
-
     public class ViewHolder extends RecyclerView.ViewHolder{
-
 
         ImageView img;
         TextView itemName;
