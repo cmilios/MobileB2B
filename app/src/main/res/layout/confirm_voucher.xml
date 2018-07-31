@@ -1,9 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConfirmVoucher">
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/confirm_voucher_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ToolbarTheme" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/confirm_voucher_toolbar"
+        android:layout_above="@id/list_relative"
+        android:layout_alignParentLeft="true">
+
+        <TextView
+            android:id="@+id/insdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/code_of_fin"
+            android:layout_alignLeft="@+id/code_of_fin"
+            android:layout_alignRight="@id/code_of_fin"
+            android:layout_alignStart="@+id/code_of_fin"
+            android:layout_below="@+id/code_of_fin"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@id/code_of_fin"
+            android:text="Date: "
+            android:textSize="18sp"
+            android:layout_toEndOf="@id/code_of_fin" />
+
+        <TextView
+            android:id="@+id/current_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/insdate"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/insdate"
+            android:layout_toRightOf="@+id/insdate"
+            android:gravity="center"
+            android:text="Current Date"
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
+
+        <TextView
+            android:id="@+id/code_of_fin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Series: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/insertFinSeries"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/code_of_fin"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@id/code_of_fin"
+            android:layout_toRightOf="@id/code_of_fin"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center"
+            android:text="7021: ΠΑΟ"
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
+
+        <TextView
+            android:id="@+id/finalprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/insdate"
+            android:layout_alignLeft="@+id/insdate"
+            android:layout_alignRight="@id/insdate"
+            android:layout_alignStart="@+id/insdate"
+            android:layout_below="@+id/insdate"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Price:"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/f_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/finalprice"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/insdate"
+            android:layout_toRightOf="@+id/insdate"
+            android:gravity="center"
+            android:text="0€"
+            android:textSize="18sp"
+            app:fontFamily="@font/roboto" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/list_relative"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/posotita"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_toLeftOf="@id/posotita"
+            android:layout_toStartOf="@id/posotita"
+            android:text="Περιγραφή"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/posotita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/units"
+            android:layout_marginEnd="163dp"
+            android:layout_marginRight="145dp"
+            android:text="Ποσ." />
+
+        <TextView
+            android:id="@+id/units"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/collider"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="90dp"
+            android:layout_marginRight="85dp"
+            android:text="Μ.Μ" />
+
+        <TextView
+            android:id="@+id/finalsum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/desc"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Αξία" />
+
+        <Button
+            android:id="@+id/setf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:onClick="setFindoc"
+            android:text="Confirm" />
+
+
+        <ProgressBar
+            android:id="@+id/setBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/collider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/lines_to_confirm"
+            android:background="@color/colorTextBold"
+            android:contentDescription="divider"
+            app:srcCompat="@drawable/divider" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lines_to_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="79dp" />
+    </RelativeLayout>
 
 </RelativeLayout>

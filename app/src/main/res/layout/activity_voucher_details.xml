@@ -14,39 +14,16 @@
         android:focusableInTouchMode="true" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/details_toolbar"
         android:layout_width="0dp"
         android:layout_height="62dp"
         android:background="@color/colorPrimary"
         android:minHeight="?android:attr/actionBarSize"
-        android:theme="@style/AppTheme"
+        android:theme="@style/ToolbarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="43dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:text="Voucher Details"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@color/colorWhite"
-        android:textSize="30sp"
-        android:typeface="sans"
-        app:fontFamily="@font/roboto"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <EditText
         android:id="@+id/dcode"
@@ -58,12 +35,14 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dCode"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/details_toolbar"
         app:layout_constraintVertical_bias="0.004" />
 
     <EditText
@@ -76,6 +55,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dfindoc"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dcode"
@@ -93,6 +74,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dfincode"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dfindoc"
@@ -110,6 +93,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dtrdrname"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dfincode"
@@ -127,6 +112,8 @@
         android:focusable="false"
         android:inputType="date"
         android:text="dtrndate"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dtrdrname"
@@ -144,6 +131,8 @@
         android:focusable="false"
         android:inputType="textPersonName"
         android:text="dsumamnt"
+        android:longClickable="false"
+        android:focusableInTouchMode="false"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dtrndate"
@@ -151,7 +140,25 @@
         app:layout_constraintTop_toBottomOf="@+id/dtrndate"
         app:layout_constraintVertical_bias="0.0" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mtrdetails"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dsumamnt"
+        app:srcCompat="@drawable/divider" />
 
 
 </android.support.constraint.ConstraintLayout>

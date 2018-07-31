@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -18,6 +20,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,16 +50,22 @@ public class MainMenuActivity extends PortraitActivity {
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
+    private NestedScrollView nv;
+    private SmartRefreshLayout ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        toolbarmain = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
         getSupportActionBar().setTitle("My Orders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
+        RecyclerView rv = findViewById(R.id.orderlist);
+        nv = findViewById(R.id.nestedscrollview);
+        ViewCompat.setNestedScrollingEnabled(rv, false);
 
-        
 
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
@@ -64,17 +76,17 @@ public class MainMenuActivity extends PortraitActivity {
 
         RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
-        
+
+
 
         gson = new GsonWorker(url);
-        initRecyclerView();
+
         new Thread(() -> {
 
             SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
             gson.getSqlOrders(sqlRequest);
             orders = gson.getSqlResponse();
-            adapter.replaceList(orders);
-            runOnUiThread((adapter::notifyDataSetChanged));
+            runOnUiThread(this::initRecyclerView);
             if(!orders.isEmpty()){
                 if(orders.size() == 1){
                     runOnUiThread(()->results_section.setText("Βρέθηκε "+orders.size()+" αποτελέσμα."));
@@ -108,15 +120,13 @@ public class MainMenuActivity extends PortraitActivity {
                 .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
                 fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        toDate.setOnClickListener(v -> {
-            new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
-                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
-                    toCalendar.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                toCalendar.get(Calendar.DAY_OF_MONTH)).show());
     }
 
     private void initRecyclerView(){
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.orderlist);
+        RecyclerView recyclerView = findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -137,6 +147,7 @@ public class MainMenuActivity extends PortraitActivity {
 
     public void storeParams(){
         Intent intent = getIntent();
+        String cameFrom = intent.getStringExtra("id");
         url = intent.getStringExtra("url");
         clientId = intent.getStringExtra("clID");
         refid = intent.getStringExtra("refid");
@@ -228,16 +239,11 @@ public class MainMenuActivity extends PortraitActivity {
     public void onBackPressed() {
 
         // do something when the button is clicked
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
-
-
                     //close();
                     finish();
-
-
-
                 })
                 .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
                 })
@@ -259,17 +265,10 @@ public class MainMenuActivity extends PortraitActivity {
             case R.id.settings:
                 msg = "Settings";
                 break;
-            case R.id.user:
-                msg = "User";
-                break;
-            case R.id.login:
-                msg = "Login";
-                break;
             case R.id.logout:
-                msg = "Logout";
+                onBackPressed();
                 break;
         }
-        Toast.makeText(this,msg+" Checked", Toast.LENGTH_LONG).show();
         return super.onOptionsItemSelected(item);
     }
 

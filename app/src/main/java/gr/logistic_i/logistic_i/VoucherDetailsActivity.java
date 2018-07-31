@@ -2,14 +2,19 @@ package gr.logistic_i.logistic_i;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -24,6 +29,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrndate;
     private EditText dtrdrName;
     private EditText dsumamnt;
+    private VoucherDetailsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +41,22 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrndate = findViewById(R.id.dtrndate);
         dtrdrName = findViewById(R.id.dtrdrname);
         dsumamnt = findViewById(R.id.dsumamnt);
-
+        android.support.v7.widget.Toolbar dtoolbar = findViewById(R.id.details_toolbar);
+        dtoolbar.setTitle("Confirm Voucher");
+        dtoolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(dtoolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        dtoolbar.setNavigationOnClickListener(v -> onBackPressed());
         setTexts();
         GsonWorker gsonWorker = new GsonWorker(url);
 
+        initRecyclerView();
         new Thread(()->{
             MtrLinesReq mtrLinesReq = new MtrLinesReq("SqlData", clientId, "1100", "GetMtrLines", o.getFindoc());
             gsonWorker.getMtrLines(mtrLinesReq);
             mtrLines = gsonWorker.getMtrLines();
+            adapter.replaceList(mtrLines);
+            runOnUiThread(adapter::notifyDataSetChanged);
 
 
 
@@ -67,7 +81,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrdrName.setText(o.getTrdrName());
         dsumamnt.setText(o.getSumamnt());
 
-        //TODO Grid layout to display mtrlines
+
     }
     //method that implements right cursor behavior on focused mode or not
     @Override
@@ -85,6 +99,15 @@ public class VoucherDetailsActivity extends PortraitActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    public void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.mtrdetails);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new VoucherDetailsAdapter(this, mtrLines);
+        recyclerView.setAdapter(adapter);
     }
 
 }

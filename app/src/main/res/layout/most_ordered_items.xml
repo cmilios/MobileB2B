@@ -7,30 +7,41 @@
     android:layout_height="match_parent"
     tools:context=".MostOrderedItems">
 
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/mostordtool"
         android:layout_width="match_parent"
-        android:layout_height="63dp"
+        android:layout_height="62dp"
         android:background="@color/colorPrimary"
+        android:gravity="center|left"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
-        android:gravity="center|left"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/PopupMenu"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/details_list"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/refreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dim"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mostordtool"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/mostordtool">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/details_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sbar" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <FrameLayout
         android:id="@+id/dim"
@@ -59,15 +70,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:backgroundTint="@color/colorGrey"
+        android:focusable="true"
+        app:backgroundTint="@color/colorPrimary"
         app:elevation="4dp"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="@+id/dim"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/include"
-        app:layout_constraintVertical_bias="0.968"
-        app:srcCompat="@drawable/ic_baseline_add_box_24px"
-        android:focusable="true" />
+        app:layout_constraintVertical_bias="0.98"
+        app:srcCompat="@drawable/ic_baseline_shopping_basket_24px" />
+
+
 </android.support.constraint.ConstraintLayout>

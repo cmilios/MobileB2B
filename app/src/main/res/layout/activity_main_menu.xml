@@ -65,7 +65,8 @@
                     android:textColorHint="@android:color/white"
                     android:inputType="date"
                     android:typeface="sans"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -74,7 +75,8 @@
                     android:id="@+id/toDate2"
                     android:layout_alignParentBottom="true"
                     android:layout_toRightOf="@+id/fromDate2"
-                    android:layout_margin="10dp">
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@+id/fromDate2">
                 <EditText
                     android:id="@+id/toDate"
                     android:layout_width="131dp"
@@ -100,24 +102,24 @@
                     android:layout_height="44dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginBottom="11dp"
                     android:background="@color/colorTransparent"
                     android:onClick="initSearch"
-                    android:src="@drawable/searchicon"
-                    android:layout_alignParentRight="true" />
+                    android:src="@drawable/ic_search_white_24dp" />
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/details_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
+                android:elevation="4dp"
                 android:gravity="start|center_horizontal"
                 android:minHeight="?attr/actionBarSize"
-                android:elevation="4dp"
+                android:theme="@style/ToolbarTheme"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/PopupMenu"
-                app:titleTextAppearance="@style/Toolbar.TitleText"
-                />
+                app:titleTextAppearance="@style/Toolbar.TitleText" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -126,11 +128,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedscrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
         android:fillViewport="true"
-        android:id="@+id/nestedscrollview"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
@@ -149,21 +151,22 @@
                 android:text="Περιμένετε..."
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:fontFamily="@font/roboto" />
+
             <ImageView
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/divider"
-                android:src="@drawable/divider"
-                android:layout_below="@id/results_section"/>
+                android:layout_below="@id/results_section"
+                android:src="@drawable/divider" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/orderlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/divider"
-                android:scrollbars="vertical"
-                android:layout_alignParentLeft="true"></android.support.v7.widget.RecyclerView>
+                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>
 

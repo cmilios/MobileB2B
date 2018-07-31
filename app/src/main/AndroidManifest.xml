@@ -7,10 +7,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logistic_i_logo"
+        android:icon="@drawable/logistic_i_flogo_round"
         android:label="Logistic-i"
-        android:logo="@drawable/logistic_i_logo"
-        android:roundIcon="@drawable/logistic_i_logo"
+        android:logo="@drawable/logistic_i_flogo_round"
+        android:roundIcon="@drawable/logistic_i_flogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
@@ -21,12 +21,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMenuActivity" />
-        <activity
-            android:name=".MostOrderedItems" />
+        <activity android:name=".MostOrderedItems" />
         <activity android:name=".VoucherDetailsActivity" />
         <activity android:name=".ConfirmVoucher" />
         <activity android:name=".AddProductActivity" />
-        <activity android:name=".ShowImage"></activity>
+        <activity android:name=".ShowImage" />
     </application>
 
 </manifest>

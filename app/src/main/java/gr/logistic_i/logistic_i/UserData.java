@@ -32,37 +32,19 @@ public class UserData implements Serializable {
         this.objs = objs;
     }
 
-
-
-    public UserData() {
+    UserData() {
 
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
+    private void setSuccess(boolean success) {
         this.success = success;
     }
 
-    public String getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(String clientID) {
+    private void setClientID(String clientID) {
         this.clientID = clientID;
     }
 
-    public ArrayList<String> getObjs() {
-        return objs;
-    }
-
-    public void setObjs(ArrayList<String> objs) {
-        this.objs = objs;
-    }
-
-    public void appendObjs(String s){
+    private void appendObjs(String s){
         objs.add(s);
 
     }

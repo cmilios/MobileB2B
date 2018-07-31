@@ -17,28 +17,34 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddProductActivity extends PortraitActivity {
 
 
-    ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    Mtrl mtrl = new Mtrl(null, null, null, null, null, null, null, null, null, null, null);
-    TextView title;
-    ImageView mtrlIcon;
-    TextView code;
-    TextView manufacturer;
-    Spinner unitsp;
-    EditText qty;
-    String cameFrom;
-    String url;
-    String refid;
-    String clientid;
-    HashMap<Integer, String> unitlist = new HashMap<>();
-    ArrayList<String> showList = new ArrayList<>();
-
+    private ArrayList<MtrLine> mtrLines = new ArrayList<>();
+    private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null);
+    private TextView title;
+    private ImageView mtrlIcon;
+    private TextView code;
+    private TextView manufacturer;
+    private Spinner unitsp;
+    private EditText qty;
+    private String cameFrom;
+    private String url;
+    private String refid;
+    private String clientid;
+    private HashMap<Integer, String> unitlist = new HashMap<>();
+    private ArrayList<String> showList = new ArrayList<>();
+    private ImageView backimg;
+    private String wayOfTransormation;
+    private String resWay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,29 +56,20 @@ public class AddProductActivity extends PortraitActivity {
         mtrlIcon = findViewById(R.id.image_icon1);
         qty = findViewById(R.id.selected_qty);
         unitsp = findViewById(R.id.unitspn);
-
-
+        backimg = findViewById(R.id.back_img);
         storeVariables();
         setViews();
-
         mtrlIcon.setOnClickListener(v -> {
-
             Drawable d = mtrl.getImage();
             Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] b = baos.toByteArray();
-
             Intent intent = new Intent(this, ShowImage.class);
             intent.putExtra("picture", b);
             startActivity(intent);
-
-
         });
-
-
     }
-
 
     private void storeVariables() {
         Intent i = getIntent();
@@ -87,10 +84,17 @@ public class AddProductActivity extends PortraitActivity {
     }
 
     public void setViews() {
+        JSONObject jsonObject = serWayOfTransformation();
         new Thread(() -> {
+            GsonWorker gsonWorker = new GsonWorker(url);
+            resWay = gsonWorker.getWayOfTransformation(jsonObject);
+            wayOfTransormation = deserWayOfTransformation(resWay);
             mtrl.loadImage();
             runOnUiThread(() -> mtrlIcon.setImageDrawable(mtrl.getImage()));
         }).start();
+
+
+        backimg.setOnClickListener(v -> onBackPressed());
 
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
@@ -104,8 +108,8 @@ public class AddProductActivity extends PortraitActivity {
         }
         String setQ ;
         for (MtrLine m : mtrLines) {
-            if (mtrl.getName().equals(m.getDescription())) {
-                setQ = m.getQty();
+            if (mtrl.getMtrl().equals(m.getMtrl())) {
+                setQ = m.getQty1();
                 qty.setText(setQ);
                 for (String s: mtrl.getUnitList()){
                     if (mtrl.getUnitList().indexOf(s) == m.getmUnit()){
@@ -154,8 +158,9 @@ public class AddProductActivity extends PortraitActivity {
                     toDeleteFlag=true;
                 }
                 else{
-                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()));
+                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation));
                     m.setQty1(qty.getText().toString());
+                    m.setsUnit(unitsp.getSelectedItem().toString());
                     m.setmUnit(index);
                 }
 
@@ -168,8 +173,10 @@ public class AddProductActivity extends PortraitActivity {
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString()),qty.getText().toString(), null,null,null,null, index);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit);
+            line.setLinkedMtrl(mtrl);
             mtrLines.add(line);
+
         }
 
 
@@ -211,7 +218,6 @@ public class AddProductActivity extends PortraitActivity {
         }
         return super.dispatchTouchEvent(event);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -279,6 +285,39 @@ public class AddProductActivity extends PortraitActivity {
             unitsp.setEnabled(false);
 
         }
+
+    }
+
+    public JSONObject serWayOfTransformation(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("service", "getData");
+            jsonObject.put("clientID", clientid);
+            jsonObject.put("appID",1100);
+            jsonObject.put("OBJECT", "ITEPPRMS");
+            jsonObject.put("KEY", "51");
+            jsonObject.put("LOCATEINFO", "ITEPPRMS:MTRMD");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    public String deserWayOfTransformation(String resObj){
+        String parsed = new String();
+        try {
+            JSONObject jsonObject = new JSONObject(resObj);
+            parsed = jsonObject.getJSONObject("data").getJSONArray("ITEPPRMS").getJSONObject(0).getString("MTRMD");
+            if(parsed.equals("0")){
+                parsed = "*";
+            }else{
+                parsed = "/";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return parsed;
 
     }
 }
