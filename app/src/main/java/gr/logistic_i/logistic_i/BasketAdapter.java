@@ -29,9 +29,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder holder, int position) {
-        holder.item_qty.setText(mtrLines.get(position).getQty());
+        holder.item_qty.setText(mtrLines.get(position).getQty1());
         holder.item_name.setText(mtrLines.get(position).getDescription());
-        holder.ordunt.setText(String.valueOf(mtrLines.get(position).getmUnit()));
+        holder.ordunt.setText(String.valueOf(mtrLines.get(position).getsUnit()));
 
     }
 

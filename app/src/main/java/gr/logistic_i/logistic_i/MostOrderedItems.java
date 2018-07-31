@@ -11,12 +11,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SearchView;
 import android.widget.Switch;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class MostOrderedItems extends PortraitActivity {
 
@@ -32,7 +36,9 @@ public class MostOrderedItems extends PortraitActivity {
     private boolean isChecked = true;
     private Switch s;
     private MostOrderedItemsAdapter adapter;
-    private SearchView sbar;
+    private RefreshLayout refLayout;
+    private RecyclerView recyclerView;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +48,61 @@ public class MostOrderedItems extends PortraitActivity {
         setSupportActionBar(toolbarmostord);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Items Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
-
         clearmtrlines = findViewById(R.id.clearall);
+        refLayout = findViewById(R.id.refreshLayout);
+        refLayout.setRefreshHeader(new ClassicsHeader(this));
+        refLayout.setOnRefreshListener(refreshlayout -> {
+            if (isChecked) {
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
+                    gsonWorker.getFOI(mtrlReq);
+                    mtrList = gsonWorker.getMtrList();
+
+                    for (Mtrl m : mtrList) {
+                        new Thread(() -> {
+                            m.loadImage();
+                            adapter.replaceList(mtrList);
+                            runOnUiThread((adapter::notifyDataSetChanged));
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    recyclerView.getRecycledViewPool().clear();
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    for (Mtrl m : mtrList) {
+                        m.loadImage();
+                    }
+                    runOnUiThread(refLayout::finishRefresh);
+                }).start();
+            } else {
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
+                    gsonWorker.getFOI(mtrlReq);
+                    mtrList = gsonWorker.getMtrList();
+                    recyclerView.getRecycledViewPool().clear();
+                    for (Mtrl m : mtrList) {
+                        new Thread(() -> {
+                            m.loadImage();
+                            adapter.replaceList(mtrList);
+                            recyclerView.getRecycledViewPool().clear();
+                            runOnUiThread((adapter::notifyDataSetChanged));
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    recyclerView.getRecycledViewPool().clear();
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    for (Mtrl m : mtrList) {
+                        m.loadImage();
+                    }
+                    runOnUiThread(refLayout::finishRefresh);
+                }).start();
+            }
+
+
+
+        });
 
         i = getIntent();
         storeParams();
@@ -59,7 +116,7 @@ public class MostOrderedItems extends PortraitActivity {
             }
         });
         View slideView = findViewById(R.id.slideView);
-        FloatingActionButton fab = findViewById(R.id.fabsee);
+        fab = findViewById(R.id.fabsee);
         View dim = findViewById(R.id.dim);
 
         SlideUp slideUp = new SlideUpBuilder(slideView)
@@ -90,23 +147,38 @@ public class MostOrderedItems extends PortraitActivity {
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.details_list);
+        recyclerView = findViewById(R.id.details_list);
 
         recyclerView.setHasFixedSize(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState ==  SCROLL_STATE_IDLE){
+                    s.setClickable(true);
+                    if (fab.getVisibility()!=View.VISIBLE){
+                        fab.show();
+                    }
+                }
+                else{
+                    s.setClickable(false);
+                    fab.hide();
+                }
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked);
         recyclerView.setAdapter(adapter);
-
     }
 
     private void initBasketRV() {
         RecyclerView rv = findViewById(R.id.basket_rview);
-
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         ad = new BasketAdapter(mtrLines, this);
         rv.setAdapter(ad);
-
     }
 
     private void storeParams() {
@@ -278,7 +350,5 @@ public class MostOrderedItems extends PortraitActivity {
         });
         return true;
     }
-
-
 }
 
