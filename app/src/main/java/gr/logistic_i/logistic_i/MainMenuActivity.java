@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +51,7 @@ public class MainMenuActivity extends PortraitActivity {
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
     private NestedScrollView nv;
+    private SmartRefreshLayout ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +66,6 @@ public class MainMenuActivity extends PortraitActivity {
         nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
 
-
-
-        
 
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
