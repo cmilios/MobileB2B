@@ -1,7 +1,6 @@
 package gr.logistic_i.logistic_i;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,11 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ public class ConfirmVoucher extends PortraitActivity {
     private String res;
     private Button b;
     private ProgressBar pbar;
-
+    private Boolean isChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +59,6 @@ public class ConfirmVoucher extends PortraitActivity {
         dt.setText(df.format(c));
         b = findViewById(R.id.setf);
 
-
-
-
         storeVars();
         if (mtrLines!=null) {
             GsonWorker gsonWorker = new GsonWorker(url);
@@ -74,13 +68,7 @@ public class ConfirmVoucher extends PortraitActivity {
                 runOnUiThread(this::initRecyclerView);
                 runOnUiThread(this::setSumAmnt);
             }).start();
-
         }
-
-
-
-
-
     }
 
     public void initRecyclerView(){
@@ -99,12 +87,10 @@ public class ConfirmVoucher extends PortraitActivity {
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
         mtrList = i.getParcelableArrayListExtra("mtrl");
+        isChecked = i.getBooleanExtra("isChecked", false);
         for (MtrLine m:mtrLines){
             m.linkMtrlWithLine(mtrList);
         }
-
-
-
     }
 
     public void deserMtrLinesResponse(){
@@ -143,8 +129,6 @@ public class ConfirmVoucher extends PortraitActivity {
         for(MtrLine m:mtrLines){
             sermtrlines.put(m.serCalcLine());
         }
-
-
         JSONObject ss = new JSONObject();
         try {
             ss.put("SERIES", 7021);
@@ -153,11 +137,8 @@ public class ConfirmVoucher extends PortraitActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         JSONArray saldoc = new JSONArray();
         saldoc.put(ss);
-
         data = new JSONObject();
         try {
             data.put("SALDOC", saldoc);
@@ -165,10 +146,7 @@ public class ConfirmVoucher extends PortraitActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         JSONObject json = new JSONObject();
-
         try {
             json.put("service", "calculate");
             json.put("clientID", clid);
@@ -180,9 +158,6 @@ public class ConfirmVoucher extends PortraitActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
         return json;
     }
 
@@ -191,16 +166,13 @@ public class ConfirmVoucher extends PortraitActivity {
         for (MtrLine m:mtrLines){
             fp = fp+Double.parseDouble(m.getPrice());
         }
-
         finalp.setText(priceFormat.format(fp) +"€");
     }
 
     public void setFindoc(View view){
         pbar.setVisibility(View.VISIBLE);
         b.setVisibility(View.GONE);
-
         JSONObject setDataJson = serSet();
-
         GsonWorker gson = new GsonWorker(url);
         new Thread(()->{
             res = gson.setData(setDataJson);
@@ -209,14 +181,10 @@ public class ConfirmVoucher extends PortraitActivity {
             }
             runOnUiThread(this::goToOrders);
         }).start();
-
-
-
     }
 
     public JSONObject serSet(){
         JSONObject setData = new JSONObject();
-
         try {
             setData.put("service", "setData");
             setData.put("clientID", clid);
@@ -226,9 +194,7 @@ public class ConfirmVoucher extends PortraitActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return setData;
-
     }
 
     public void goToOrders(){
@@ -238,9 +204,9 @@ public class ConfirmVoucher extends PortraitActivity {
             i.putExtra("url", url);
             i.putExtra("clID", clid);
             i.putExtra("refid", refid);
+            i.putExtra("isChecked", isChecked);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(i);
-
         }
         else{
             pbar.setVisibility(View.GONE);
@@ -252,9 +218,4 @@ public class ConfirmVoucher extends PortraitActivity {
                     .show();
         }
     }
-
-
-
-
-
 }

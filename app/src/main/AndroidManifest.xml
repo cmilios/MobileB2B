@@ -26,7 +26,6 @@
         <activity android:name=".ConfirmVoucher" />
         <activity android:name=".AddProductActivity" />
         <activity android:name=".ShowImage" />
-        <activity android:name=".AllProductActivity"></activity>
     </application>
 
 </manifest>

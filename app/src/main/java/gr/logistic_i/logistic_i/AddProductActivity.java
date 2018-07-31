@@ -174,7 +174,9 @@ public class AddProductActivity extends PortraitActivity {
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
             line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit);
+            line.setLinkedMtrl(mtrl);
             mtrLines.add(line);
+
         }
 
 
