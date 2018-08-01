@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -20,18 +19,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
@@ -53,7 +47,6 @@ public class MainMenuActivity extends PortraitActivity {
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
-    private NestedScrollView nv;
     private FloatingActionButton fab;
     RecyclerView rv;
 
@@ -63,12 +56,12 @@ public class MainMenuActivity extends PortraitActivity {
         setContentView(R.layout.activity_main_menu);
         toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
-        getSupportActionBar().setTitle("Οι Παραγγελίες μου");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Οι Παραγγελίες μου");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
         rv = findViewById(R.id.orderlist);
         fab = findViewById(R.id.additem);
-        nv = findViewById(R.id.nestedscrollview);
+        NestedScrollView nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
         nv.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             if (scrollY > oldScrollY) {
@@ -86,7 +79,7 @@ public class MainMenuActivity extends PortraitActivity {
 
         setUpDatePickers();
 
-        RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
+        RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
 

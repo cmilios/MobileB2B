@@ -15,13 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -312,7 +308,7 @@ public class AddProductActivity extends PortraitActivity {
     }
 
     public String deserWayOfTransformation(String resObj){
-        String parsed = new String();
+        String parsed = "";
         try {
             JSONObject jsonObject = new JSONObject(resObj);
             parsed = jsonObject.getJSONObject("data").getJSONArray("ITEPPRMS").getJSONObject(0).getString("MTRMD");

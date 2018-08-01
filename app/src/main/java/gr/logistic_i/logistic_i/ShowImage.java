@@ -82,8 +82,10 @@ public class ShowImage extends PortraitActivity {
 
     public void storeParams(){
         Bundle extras = getIntent().getExtras();
+        assert extras != null;
         byte[] b = extras.getByteArray("picture");
 
+        assert b != null;
         Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
         image.setImageBitmap(bmp);
         fullScreen();
