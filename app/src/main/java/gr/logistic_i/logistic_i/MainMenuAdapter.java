@@ -76,8 +76,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-
-        TextView parnum;
+         TextView parnum;
         TextView dt;
         protected TextView sumamnt;
         Button detailsButton;

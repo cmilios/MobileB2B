@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_menu_parent"
+    style="@style/Widget.Design.CoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenuActivity">
@@ -13,97 +14,109 @@
         android:layout_height="0px"
         android:focusable="true"
         android:focusableInTouchMode="true" />
---------------------------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------------------------
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/htab_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:elevation="20dp"
         android:theme="@style/ToolbarTheme">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/htab_collapse_toolbar"
             android:layout_width="match_parent"
-            app:titleEnabled="false"
             android:layout_height="140dp"
+            android:elevation="10dp"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            android:elevation="10dp"
-            app:layout_scrollFlags="scroll|enterAlways|snap">
+            app:layout_collapseMode="parallax"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:titleEnabled="false">
 
             <RelativeLayout
                 android:id="@+id/htab_header"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:elevation="10dp"
-                app:layout_collapseMode="parallax">
+
+                android:fitsSystemWindows="true">
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="131dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/fromDate2"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_margin="10dp"
-                    android:layout_alignParentLeft="true">
-                <EditText
-                    android:id="@+id/fromDate"
-                    android:theme="@style/ToolbarTheme"
-                    android:layout_width="131dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:clickable="true"
-                    android:cursorVisible="true"
-                    android:textColor="#FFFFFF"
-                    android:ellipsize="end"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    android:hint="Ημ/νία από:"
-                    android:textColorHint="@android:color/white"
-                    android:inputType="date"
-                    android:typeface="sans"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/toDate2"
+                    android:layout_toStartOf="@id/toDate2">
+
+                    <EditText
+                        android:id="@+id/fromDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+
+                        android:layout_alignParentStart="true"
+                        android:clickable="true"
+                        android:cursorVisible="true"
+                        android:ellipsize="end"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:hint="Ημ/νία από:"
+                        android:inputType="date"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="@android:color/white"
+                        android:theme="@style/ToolbarTheme"
+                        android:typeface="sans" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="131dp"
-                    android:layout_height="wrap_content"
                     android:id="@+id/toDate2"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toRightOf="@+id/fromDate2"
-                    android:layout_margin="10dp"
-                    android:layout_toEndOf="@+id/fromDate2">
-                <EditText
-                    android:id="@+id/toDate"
-                    android:layout_width="131dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/fromDate2"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignTop="@id/fromDate2"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
 
-                    android:ems="10"
-                    android:clickable="true"
-                    android:cursorVisible="true"
-                    android:ellipsize="end"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
-                    android:hint="Ημ/νία εώς:"
-                    android:textColorHint="@android:color/white"
-                    android:textColor="#FFFF"
-                    android:typeface="sans"
-                    android:inputType="date" />
+                    android:layout_toLeftOf="@id/search"
+                    android:layout_toStartOf="@id/search">
+
+                    <EditText
+                        android:id="@+id/toDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:clickable="true"
+                        android:cursorVisible="true"
+                        android:ellipsize="end"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+                        android:hint="Ημ/νία εώς:"
+                        android:inputType="date"
+                        android:textColor="#FFFF"
+                        android:textColorHint="@android:color/white"
+                        android:typeface="sans" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageButton
                     android:id="@+id/search"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/toDate2"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginBottom="11dp"
+                    android:layout_alignTop="@id/toDate2"
+                    android:layout_marginRight="16dp"
                     android:background="@color/colorTransparent"
                     android:onClick="initSearch"
                     android:src="@drawable/ic_search_white_24dp" />
@@ -112,7 +125,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/details_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="63dp"
+                android:layout_height="wrap_content"
                 android:elevation="4dp"
                 android:gravity="start|center_horizontal"
                 android:minHeight="?attr/actionBarSize"
@@ -143,7 +156,7 @@
             <TextView
                 android:id="@+id/results_section"
                 android:layout_width="match_parent"
-                android:layout_height="26dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
@@ -156,6 +169,10 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
                 android:layout_below="@id/results_section"
                 android:src="@drawable/divider" />
 
@@ -166,22 +183,22 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/divider"
-                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+                android:scrollbars="vertical" />
 
         </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/additem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
         android:elevation="4dp"
         android:onClick="initAddIntent"
         android:src="@drawable/faddbutton"
-        android:id="@+id/additem"/>
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>

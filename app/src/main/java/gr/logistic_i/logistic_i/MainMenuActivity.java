@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,18 +19,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class MainMenuActivity extends PortraitActivity {
 
@@ -50,8 +47,8 @@ public class MainMenuActivity extends PortraitActivity {
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
-    private NestedScrollView nv;
-    private SmartRefreshLayout ref;
+    private FloatingActionButton fab;
+    RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +56,21 @@ public class MainMenuActivity extends PortraitActivity {
         setContentView(R.layout.activity_main_menu);
         toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
-        getSupportActionBar().setTitle("My Orders");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Οι Παραγγελίες μου");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
-        RecyclerView rv = findViewById(R.id.orderlist);
-        nv = findViewById(R.id.nestedscrollview);
+        rv = findViewById(R.id.orderlist);
+        fab = findViewById(R.id.additem);
+        NestedScrollView nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
-
+        nv.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY > oldScrollY) {
+                fab.hide();
+            } else {
+                fab.show();
+            }
+        });
+        nv.setSmoothScrollingEnabled(true);
 
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
@@ -74,7 +79,7 @@ public class MainMenuActivity extends PortraitActivity {
 
         setUpDatePickers();
 
-        RelativeLayout focuslayout = (RelativeLayout) findViewById(R.id.RequestFocusLayout);
+        RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
 
@@ -130,6 +135,20 @@ public class MainMenuActivity extends PortraitActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState ==  SCROLL_STATE_IDLE){
+                    if (fab.getVisibility()!=View.VISIBLE){
+                        fab.show();
+                    }
+                }
+                else{
+                    fab.hide();
+                }
+            }
+        });
         adapter = new MainMenuAdapter(this, orders, url,clientId);
         recyclerView.setAdapter(adapter);
     }

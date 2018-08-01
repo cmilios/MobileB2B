@@ -16,6 +16,7 @@
         android:gravity="center|left"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/refreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

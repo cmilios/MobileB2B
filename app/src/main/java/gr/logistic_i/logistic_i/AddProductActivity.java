@@ -15,13 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -98,7 +94,14 @@ public class AddProductActivity extends PortraitActivity {
 
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
-        manufacturer.setText(mtrl.getManufacturer());
+        if (mtrl.getManufacturer()!=null) {
+            manufacturer.setText(mtrl.getManufacturer());
+        }
+        else{
+            TextView kata = findViewById(R.id.kata);
+            kata.setVisibility(View.GONE);
+            manufacturer.setVisibility(View.GONE);
+        }
         checkSpinnerView();
 
 
@@ -122,7 +125,6 @@ public class AddProductActivity extends PortraitActivity {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -276,7 +278,9 @@ public class AddProductActivity extends PortraitActivity {
 
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, showList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, showList);
+
+
 
         unitsp.setAdapter(adapter);
         if (showList.size()==1) {
@@ -304,7 +308,7 @@ public class AddProductActivity extends PortraitActivity {
     }
 
     public String deserWayOfTransformation(String resObj){
-        String parsed = new String();
+        String parsed = "";
         try {
             JSONObject jsonObject = new JSONObject(resObj);
             parsed = jsonObject.getJSONObject("data").getJSONArray("ITEPPRMS").getJSONObject(0).getString("MTRMD");

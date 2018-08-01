@@ -30,8 +30,6 @@ public class MostOrderedItems extends PortraitActivity {
     private String clientid;
     private ArrayList<Mtrl> mtrList = new ArrayList<>();
     private Intent i;
-    private android.support.v7.widget.Toolbar toolbarmostord;
-    private Button clearmtrlines;
     private BasketAdapter ad;
     private boolean isChecked = true;
     private Switch s;
@@ -44,12 +42,11 @@ public class MostOrderedItems extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.most_ordered_items);
-        toolbarmostord = findViewById(R.id.mostordtool);
+        android.support.v7.widget.Toolbar toolbarmostord = findViewById(R.id.mostordtool);
         setSupportActionBar(toolbarmostord);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Items Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
-        clearmtrlines = findViewById(R.id.clearall);
+        Button clearmtrlines = findViewById(R.id.clearall);
         refLayout = findViewById(R.id.refreshLayout);
         refLayout.setRefreshHeader(new ClassicsHeader(this));
         refLayout.setOnRefreshListener(refreshlayout -> {
@@ -262,6 +259,7 @@ public class MostOrderedItems extends PortraitActivity {
         s = (Switch) checkable.getActionView();
         s.setChecked(isChecked);
         if (isChecked) {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
@@ -282,6 +280,7 @@ public class MostOrderedItems extends PortraitActivity {
                 }
             }).start();
         } else {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);

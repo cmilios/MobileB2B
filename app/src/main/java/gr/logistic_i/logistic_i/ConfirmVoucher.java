@@ -49,7 +49,7 @@ public class ConfirmVoucher extends PortraitActivity {
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
         pbar = findViewById(R.id.setBar);
-        tool.setTitle("Confirm Voucher");
+        tool.setTitle("Επισκόπηση παραστατικού");
         tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
