@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Logistic-i</string>
+    <string name="username_hint">Όνομα Χρήστη</string>
+    <string name="password_hint">Συνθηματικό</string>
+    <string name="base_hint">URL Βάσης</string>
+    <string name="softone_credentials">Στοιχεία Πρόσβασης</string>
+    <string name="login_btn">συνδεση</string>
+</resources>

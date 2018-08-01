@@ -3,6 +3,7 @@ package gr.logistic_i.logistic_i;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,8 +77,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-
-        TextView parnum;
+         TextView parnum;
         TextView dt;
         protected TextView sumamnt;
         Button detailsButton;

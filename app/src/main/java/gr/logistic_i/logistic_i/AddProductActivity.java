@@ -98,7 +98,14 @@ public class AddProductActivity extends PortraitActivity {
 
         title.setText(mtrl.getName());
         code.setText(mtrl.getCode());
-        manufacturer.setText(mtrl.getManufacturer());
+        if (mtrl.getManufacturer()!=null) {
+            manufacturer.setText(mtrl.getManufacturer());
+        }
+        else{
+            TextView kata = findViewById(R.id.kata);
+            kata.setVisibility(View.GONE);
+            manufacturer.setVisibility(View.GONE);
+        }
         checkSpinnerView();
 
 
@@ -122,7 +129,6 @@ public class AddProductActivity extends PortraitActivity {
                                 }
                             }
                         }
-
                     }
                 }
             }
@@ -276,7 +282,9 @@ public class AddProductActivity extends PortraitActivity {
 
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, showList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, showList);
+
+
 
         unitsp.setAdapter(adapter);
         if (showList.size()==1) {

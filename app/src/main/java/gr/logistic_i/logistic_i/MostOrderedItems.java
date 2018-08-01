@@ -46,7 +46,6 @@ public class MostOrderedItems extends PortraitActivity {
         setContentView(R.layout.most_ordered_items);
         toolbarmostord = findViewById(R.id.mostordtool);
         setSupportActionBar(toolbarmostord);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Items Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
         clearmtrlines = findViewById(R.id.clearall);
@@ -262,6 +261,7 @@ public class MostOrderedItems extends PortraitActivity {
         s = (Switch) checkable.getActionView();
         s.setChecked(isChecked);
         if (isChecked) {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
@@ -282,6 +282,7 @@ public class MostOrderedItems extends PortraitActivity {
                 }
             }).start();
         } else {
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
