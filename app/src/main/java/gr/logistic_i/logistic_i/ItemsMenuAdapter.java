@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedItemsAdapter.ViewHolder> {
+public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.ViewHolder> {
 
     private ArrayList<Mtrl> mmtrList;
     private Context mContext;
@@ -27,7 +27,7 @@ public class MostOrderedItemsAdapter extends RecyclerView.Adapter<MostOrderedIte
     private Boolean isChecked;
 
 
-    MostOrderedItemsAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId,String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked) {
+    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;

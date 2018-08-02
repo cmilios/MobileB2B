@@ -139,6 +139,12 @@
             android:layout_height="wrap_content"
             android:indeterminate="true" />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rq_fc"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
 
 </android.support.constraint.ConstraintLayout>

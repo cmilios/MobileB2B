@@ -15,14 +15,13 @@ import android.widget.Switch;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
 import java.util.ArrayList;
 import java.util.Objects;
-
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
-public class MostOrderedItems extends PortraitActivity {
+public class ItemsMenuActivity extends PortraitActivity {
 
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     private String url;
@@ -33,10 +32,14 @@ public class MostOrderedItems extends PortraitActivity {
     private BasketAdapter ad;
     private boolean isChecked = true;
     private Switch s;
-    private MostOrderedItemsAdapter adapter;
+    private ItemsMenuAdapter adapter;
     private RefreshLayout refLayout;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
+    private FloatingActionButton gotfab;
+    private long counter=0;
+    private long counterall=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,55 +47,87 @@ public class MostOrderedItems extends PortraitActivity {
         setContentView(R.layout.most_ordered_items);
         android.support.v7.widget.Toolbar toolbarmostord = findViewById(R.id.mostordtool);
         setSupportActionBar(toolbarmostord);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarmostord.setTitle("Είδη αποθήκης");
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
         Button clearmtrlines = findViewById(R.id.clearall);
         refLayout = findViewById(R.id.refreshLayout);
         refLayout.setRefreshHeader(new ClassicsHeader(this));
+        refLayout.setRefreshFooter(new ClassicsFooter(this));
+
+
+        refLayout.setOnLoadMoreListener(refreshLayout -> {
+            if (isChecked) {
+                counter+=50;
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
+                    gsonWorker.getFOI(mtrlReq);
+                    for (Mtrl m:gsonWorker.getMtrList()){
+                        new Thread(()-> {
+                                m.loadImage();
+                                mtrList.add(m);
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    runOnUiThread(refreshLayout::finishLoadMore);
+                }).start();
+            } else {
+                counterall+=50;
+                GsonWorker gsonWorker = new GsonWorker(url);
+                new Thread(() -> {
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",counterall, url);
+                    gsonWorker.getFOI(mtrlReq);
+                    for (Mtrl m:gsonWorker.getMtrList()){
+                        new Thread(()-> {
+                            m.loadImage();
+                            mtrList.add(m);
+                        }).start();
+                    }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread((adapter::notifyDataSetChanged));
+                    runOnUiThread(refreshLayout::finishLoadMore);
+                }).start();
+            }
+        });
+
+
+
         refLayout.setOnRefreshListener(refreshlayout -> {
             if (isChecked) {
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,0, url);
                     gsonWorker.getFOI(mtrlReq);
-                    mtrList = gsonWorker.getMtrList();
-
-                    for (Mtrl m : mtrList) {
-                        new Thread(() -> {
+                    mtrList.clear();
+                    for (Mtrl m:gsonWorker.getMtrList()){
+                        new Thread(()-> {
                             m.loadImage();
+                            mtrList.add(m);
                             adapter.replaceList(mtrList);
                             runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
                     adapter.replaceList(mtrList);
-                    recyclerView.getRecycledViewPool().clear();
                     runOnUiThread((adapter::notifyDataSetChanged));
-                    for (Mtrl m : mtrList) {
-                        m.loadImage();
-                    }
                     runOnUiThread(refLayout::finishRefresh);
                 }).start();
             } else {
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                     gsonWorker.getFOI(mtrlReq);
-                    mtrList = gsonWorker.getMtrList();
-                    recyclerView.getRecycledViewPool().clear();
-                    for (Mtrl m : mtrList) {
-                        new Thread(() -> {
+                    mtrList.clear();
+                    for (Mtrl m:gsonWorker.getMtrList()){
+                        new Thread(()-> {
                             m.loadImage();
+                            mtrList.add(m);
                             adapter.replaceList(mtrList);
-                            recyclerView.getRecycledViewPool().clear();
                             runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
-                    adapter.replaceList(mtrList);
-                    recyclerView.getRecycledViewPool().clear();
-                    runOnUiThread((adapter::notifyDataSetChanged));
-                    for (Mtrl m : mtrList) {
-                        m.loadImage();
-                    }
+
                     runOnUiThread(refLayout::finishRefresh);
                 }).start();
             }
@@ -100,22 +135,20 @@ public class MostOrderedItems extends PortraitActivity {
 
 
         });
-
         i = getIntent();
         storeParams();
-
+        gotfab = findViewById(R.id.got_fab);
         initRecyclerView();
-
         clearmtrlines.setOnClickListener(v -> {
             if (mtrLines != null) {
                 mtrLines.clear();
                 ad.notifyDataSetChanged();
             }
         });
+
         View slideView = findViewById(R.id.slideView);
         fab = findViewById(R.id.fabsee);
         View dim = findViewById(R.id.dim);
-
         SlideUp slideUp = new SlideUpBuilder(slideView)
                 .withStartState(SlideUp.State.HIDDEN)
                 .withStartGravity(Gravity.BOTTOM)
@@ -141,9 +174,13 @@ public class MostOrderedItems extends PortraitActivity {
                 initBasketRV();
             }
         });
+        gotfab.setOnClickListener(v -> recyclerView.smoothScrollToPosition(0));
+
+
     }
 
     private void initRecyclerView() {
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = findViewById(R.id.details_list);
 
         recyclerView.setHasFixedSize(true);
@@ -163,10 +200,24 @@ public class MostOrderedItems extends PortraitActivity {
                     s.setClickable(false);
                     fab.hide();
                 }
+
+
+
             }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int visibility = (MyLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) ? View.VISIBLE : View.GONE;
+                gotfab.setVisibility(visibility);
+            }
+
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MostOrderedItemsAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked);
+
+
+
+
+
+        recyclerView.setLayoutManager(MyLayoutManager);
+        adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked);
         recyclerView.setAdapter(adapter);
     }
 
@@ -239,7 +290,7 @@ public class MostOrderedItems extends PortraitActivity {
 
                 } else {
                     new AlertDialog.Builder(this)
-                            .setMessage("Το καλάθι σας ειναι άδειο, προσθέστε προιόντα στο καλάθι ώστε να προχωρήσετε στην καταχώρηση του παραστατικού")
+                            .setMessage("Το καλάθι σας ειναι άδειο, προσθέστε προιόντα στο καλάθι.")
                             .setNeutralButton("ΟΚ", (dialog, which) -> {
 
                             })
@@ -262,7 +313,7 @@ public class MostOrderedItems extends PortraitActivity {
             Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
-                MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
+                MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,0, url);
                 gsonWorker.getFOI(mtrlReq);
                 mtrList = gsonWorker.getMtrList();
 
@@ -275,15 +326,12 @@ public class MostOrderedItems extends PortraitActivity {
                 }
                 adapter.replaceList(mtrList);
                 runOnUiThread((adapter::notifyDataSetChanged));
-                for (Mtrl m : mtrList) {
-                    m.loadImage();
-                }
             }).start();
         } else {
             Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
-                MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
+                MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                 gsonWorker.getFOI(mtrlReq);
                 mtrList = gsonWorker.getMtrList();
 
@@ -296,9 +344,6 @@ public class MostOrderedItems extends PortraitActivity {
                 }
                 adapter.replaceList(mtrList);
                 runOnUiThread((adapter::notifyDataSetChanged));
-                for (Mtrl m : mtrList) {
-                    m.loadImage();
-                }
             }).start();
         }
         s.setOnClickListener(v -> {
@@ -306,44 +351,43 @@ public class MostOrderedItems extends PortraitActivity {
             checkable.setChecked(isChecked);
             s.setChecked(isChecked);
             if (isChecked) {
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid, url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,0, url);
                     gsonWorker.getFOI(mtrlReq);
                     mtrList = gsonWorker.getMtrList();
 
                     for (Mtrl m : mtrList) {
                         new Thread(() -> {
                             m.loadImage();
-                            adapter.replaceList(mtrList);
+                            ArrayList<Mtrl>buffer = mtrList;
+                            adapter.replaceList(buffer);
                             runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
-                    for (Mtrl m : mtrList) {
-                        m.loadImage();
-                    }
                 }).start();
             } else {
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ", url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                     gsonWorker.getFOI(mtrlReq);
                     mtrList = gsonWorker.getMtrList();
 
                     for (Mtrl m : mtrList) {
                         new Thread(() -> {
                             m.loadImage();
-                            adapter.replaceList(mtrList);
+                            ArrayList<Mtrl> buffer = mtrList;
+                            adapter.replaceList(buffer);
                             runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
-                    for (Mtrl m : mtrList) {
-                        m.loadImage();
-                    }
+
                 }).start();
             }
         });

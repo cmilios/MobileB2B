@@ -13,15 +13,17 @@ public class MtrlReq {
     private String clientID;
     private String appID;
     private String sqlName;
-    private String refid;
+    private String param1;
+    private long param2;
     private String url;
 
-    MtrlReq(String service, String clientID, String appID, String sqlName, String refid, String url) {
+    MtrlReq(String service, String clientID, String appID, String sqlName, String param1, long param2, String url) {
         this.service = service;
         this.clientID = clientID;
         this.appID = appID;
         this.sqlName = sqlName;
-        this.refid = refid;
+        this.param1 = param1;
+        this.param2 = param2;
         this.url = url;
     }
 
@@ -32,7 +34,8 @@ public class MtrlReq {
             jsonData.put("clientID", clientID);
             jsonData.put("appId", appID);
             jsonData.put( "SqlName", sqlName);
-            jsonData.put("param1", refid /*"2243"*/);
+            jsonData.put("param1", param1 /*"2243"*/);
+            jsonData.put("param2", param2);
 
         } catch (JSONException e) {
             e.printStackTrace();

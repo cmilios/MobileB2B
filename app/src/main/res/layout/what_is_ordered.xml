@@ -10,7 +10,7 @@
     android:paddingRight="0dp"
     android:paddingTop="62dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MostOrderedItems"
+    tools:context=".ItemsMenuActivity"
     tools:showIn="@layout/most_ordered_items">
 
     <LinearLayout

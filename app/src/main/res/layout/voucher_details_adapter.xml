@@ -45,8 +45,8 @@
         android:layout_marginTop="16dp"
         android:layout_toLeftOf="@id/fullprice"
         android:layout_toStartOf="@id/fullprice"
-        android:text="qty"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="timu1" />
 
     <TextView
         android:id="@+id/fullprice"
@@ -60,8 +60,8 @@
         android:layout_marginTop="16dp"
         android:layout_toLeftOf="@id/kathari"
         android:layout_toStartOf="@id/kathari"
-        android:text="fullval"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="axia_enos" />
 
     <TextView
         android:id="@+id/kathari"
@@ -75,8 +75,8 @@
         android:layout_marginTop="16dp"
         android:layout_toLeftOf="@id/fpaval"
         android:layout_toStartOf="@id/fpaval"
-        android:text="cleanvalue"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="axia_gramis" />
 
     <TextView
         android:id="@+id/fpaval"
