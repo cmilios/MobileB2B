@@ -61,6 +61,14 @@ public class Mtrl implements Parcelable {
 
     }
 
+    public String getCorrespondingBase() {
+        return correspondingBase;
+    }
+
+    public void setCorrespondingBase(String correspondingBase) {
+        this.correspondingBase = correspondingBase;
+    }
+
     public String getMu21() {
         return mu21;
     }
@@ -99,8 +107,9 @@ public class Mtrl implements Parcelable {
         return  null;
     }
 
-
-
+    public void setImage(Drawable image) {
+        this.image = image;
+    }
 
     public String getImgURL() {
         return imgURL;

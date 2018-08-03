@@ -3,6 +3,7 @@ package gr.logistic_i.logistic_i;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
@@ -48,20 +51,15 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
-        if (mmtrList.get(holder.getAdapterPosition()).getImgURL()!=null){
-            if (mmtrList.get(holder.getAdapterPosition()).getImage()!=null){
-                holder.img.setImageDrawable(mmtrList.get(holder.getAdapterPosition()).getImage());
-                holder.pbar_layout.setVisibility(View.INVISIBLE);
-                holder.img.setVisibility(View.VISIBLE);
+        if(mmtrList.get(position).getName()!=null){
+            holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
+        }
 
-            }
+        if (mmtrList.get(position).getImgURL()!=null){
+            Uri uri = Uri.parse("https://"+mmtrList.get(holder.getAdapterPosition()).getCorrespondingBase()+"/s1services/?filename="+mmtrList.get(position).getImgURL());
+            holder.draweeView.setImageURI(uri);
         }
-        else{
-            holder.img.setImageResource(R.drawable.ic_baseline_image_24px);
-            holder.pbar_layout.setVisibility(View.INVISIBLE);
-            holder.img.setVisibility(View.VISIBLE);
-        }
+
 
         holder.btn.setOnClickListener(v -> {
             Intent i = new Intent(mContext, AddProductActivity.class);
@@ -95,19 +93,17 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView img;
         TextView itemName;
         Button btn;
-        protected RelativeLayout pbar_layout;
         protected ConstraintLayout parent_layout;
+        SimpleDraweeView draweeView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            img = itemView.findViewById(R.id.item_picture);
             btn = itemView.findViewById(R.id.button);
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
-            pbar_layout = itemView.findViewById(R.id.pbar_layout);
+            draweeView = itemView.findViewById(R.id.my_image_view);
 
 
 

@@ -54,8 +54,6 @@ public class ItemsMenuActivity extends PortraitActivity {
         refLayout = findViewById(R.id.refreshLayout);
         refLayout.setRefreshHeader(new ClassicsHeader(this));
         refLayout.setRefreshFooter(new ClassicsFooter(this));
-
-
         refLayout.setOnLoadMoreListener(refreshLayout -> {
             if (isChecked) {
                 counter+=50;
@@ -65,13 +63,18 @@ public class ItemsMenuActivity extends PortraitActivity {
                     gsonWorker.getFOI(mtrlReq);
                     for (Mtrl m:gsonWorker.getMtrList()){
                         new Thread(()-> {
-                                m.loadImage();
                                 mtrList.add(m);
+                                adapter.replaceList(mtrList);
+                                runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
-                    adapter.replaceList(mtrList);
-                    runOnUiThread((adapter::notifyDataSetChanged));
-                    runOnUiThread(refreshLayout::finishLoadMore);
+
+                    if (gsonWorker.getMtrList().size()<50){
+                        runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
+                    }
+                    else{
+                        runOnUiThread(refreshLayout::finishLoadMore);
+                    }
                 }).start();
             } else {
                 counterall+=50;
@@ -81,19 +84,20 @@ public class ItemsMenuActivity extends PortraitActivity {
                     gsonWorker.getFOI(mtrlReq);
                     for (Mtrl m:gsonWorker.getMtrList()){
                         new Thread(()-> {
-                            m.loadImage();
                             mtrList.add(m);
+                            adapter.replaceList(mtrList);
+                            runOnUiThread((adapter::notifyDataSetChanged));
                         }).start();
                     }
-                    adapter.replaceList(mtrList);
-                    runOnUiThread((adapter::notifyDataSetChanged));
-                    runOnUiThread(refreshLayout::finishLoadMore);
+                    if (gsonWorker.getMtrList().size()<50){
+                        runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
+                    }
+                    else{
+                        runOnUiThread(refreshLayout::finishLoadMore);
+                    }
                 }).start();
             }
         });
-
-
-
         refLayout.setOnRefreshListener(refreshlayout -> {
             if (isChecked) {
                 GsonWorker gsonWorker = new GsonWorker(url);
@@ -103,7 +107,6 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.clear();
                     for (Mtrl m:gsonWorker.getMtrList()){
                         new Thread(()-> {
-                            m.loadImage();
                             mtrList.add(m);
                             adapter.replaceList(mtrList);
                             runOnUiThread((adapter::notifyDataSetChanged));
@@ -121,7 +124,6 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.clear();
                     for (Mtrl m:gsonWorker.getMtrList()){
                         new Thread(()-> {
-                            m.loadImage();
                             mtrList.add(m);
                             adapter.replaceList(mtrList);
                             runOnUiThread((adapter::notifyDataSetChanged));
@@ -175,18 +177,13 @@ public class ItemsMenuActivity extends PortraitActivity {
             }
         });
         gotfab.setOnClickListener(v -> recyclerView.smoothScrollToPosition(0));
-
-
     }
 
     private void initRecyclerView() {
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = findViewById(R.id.details_list);
-
         recyclerView.setHasFixedSize(true);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -200,22 +197,13 @@ public class ItemsMenuActivity extends PortraitActivity {
                     s.setClickable(false);
                     fab.hide();
                 }
-
-
-
             }
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int visibility = (MyLayoutManager.findFirstCompletelyVisibleItemPosition() != 0) ? View.VISIBLE : View.GONE;
                 gotfab.setVisibility(visibility);
             }
-
         });
-
-
-
-
-
         recyclerView.setLayoutManager(MyLayoutManager);
         adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked);
         recyclerView.setAdapter(adapter);
@@ -284,7 +272,6 @@ public class ItemsMenuActivity extends PortraitActivity {
                     i.putExtra("url", url);
                     i.putExtra("refid", refid);
                     i.putExtra("clid", clientid);
-                    i.putParcelableArrayListExtra("mtrl", mtrList);
                     this.startActivity(i);
                     return true;
 
@@ -319,7 +306,7 @@ public class ItemsMenuActivity extends PortraitActivity {
 
                 for (Mtrl m : mtrList) {
                     new Thread(() -> {
-                        m.loadImage();
+
                         adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
                     }).start();
@@ -337,7 +324,6 @@ public class ItemsMenuActivity extends PortraitActivity {
 
                 for (Mtrl m : mtrList) {
                     new Thread(() -> {
-                        m.loadImage();
                         adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
                     }).start();
@@ -351,16 +337,17 @@ public class ItemsMenuActivity extends PortraitActivity {
             checkable.setChecked(isChecked);
             s.setChecked(isChecked);
             if (isChecked) {
+                counter=0;
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
+                refLayout.setNoMoreData(false);
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,0, url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
                     gsonWorker.getFOI(mtrlReq);
                     mtrList = gsonWorker.getMtrList();
 
                     for (Mtrl m : mtrList) {
                         new Thread(() -> {
-                            m.loadImage();
                             ArrayList<Mtrl>buffer = mtrList;
                             adapter.replaceList(buffer);
                             runOnUiThread((adapter::notifyDataSetChanged));
@@ -370,16 +357,17 @@ public class ItemsMenuActivity extends PortraitActivity {
                     runOnUiThread((adapter::notifyDataSetChanged));
                 }).start();
             } else {
+                counterall=0;
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
+                refLayout.setNoMoreData(false);
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
-                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
+                    MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",counterall, url);
                     gsonWorker.getFOI(mtrlReq);
                     mtrList = gsonWorker.getMtrList();
 
                     for (Mtrl m : mtrList) {
                         new Thread(() -> {
-                            m.loadImage();
                             ArrayList<Mtrl> buffer = mtrList;
                             adapter.replaceList(buffer);
                             runOnUiThread((adapter::notifyDataSetChanged));
@@ -393,5 +381,6 @@ public class ItemsMenuActivity extends PortraitActivity {
         });
         return true;
     }
+
 }
 

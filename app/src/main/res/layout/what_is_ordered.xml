@@ -44,9 +44,9 @@
                 android:id="@+id/imageView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/prompt"
                 android:background="@color/colorTextBold"
-                app:srcCompat="@drawable/grey_line"
-                android:layout_below="@id/prompt"/>
+                app:srcCompat="@drawable/grey_line" />
 
             <Button
                 android:id="@+id/clearall"
@@ -64,8 +64,8 @@
                 android:id="@+id/basket_rview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imageView7"
-                android:layout_above="@id/clearall">
+                android:layout_above="@id/clearall"
+                android:layout_below="@id/imageView7">
 
             </android.support.v7.widget.RecyclerView>
         </RelativeLayout>

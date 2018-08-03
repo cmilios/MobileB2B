@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
@@ -11,26 +11,28 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/mostordtool"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center|left"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/refreshLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/PopupMenu"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:layout_marginTop="50dp"
         android:id="@+id/refreshLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/dim"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mostordtool">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/mostordtool">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/details_list"
@@ -44,6 +46,24 @@
             app:layout_constraintTop_toBottomOf="@+id/sbar" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mostordtool">
+
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"
+            app:floatingSearch_leftActionMode="noLeftAction"
+            app:floatingSearch_menu="@menu/menu_main"
+            app:floatingSearch_searchHint="Search..."
+            app:floatingSearch_showSearchKey="true"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            tools:layout_editor_absoluteY="150dp" />
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/dim"
         android:layout_width="0dp"
@@ -53,8 +73,23 @@
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></FrameLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/got_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:elevation="4dp"
+        android:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_baseline_arrow_upward_24px"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="16dp"/>
     <include
         android:id="@+id/include"
         layout="@layout/what_is_ordered"
@@ -70,47 +105,16 @@
         android:id="@+id/fabsee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@color/colorPrimary"
         app:elevation="4dp"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/dim"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/include"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_baseline_shopping_basket_24px" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/got_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_baseline_arrow_upward_24px" />
+        app:srcCompat="@drawable/ic_baseline_shopping_basket_24px"
+        android:layout_alignParentRight="true" />
 
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
