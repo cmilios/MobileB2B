@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
@@ -27,7 +31,7 @@ public class AddProductActivity extends PortraitActivity {
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null);
     private TextView title;
-    private ImageView mtrlIcon;
+    private SimpleDraweeView mtrlIcon;
     private TextView code;
     private TextView manufacturer;
     private Spinner unitsp;
@@ -41,6 +45,7 @@ public class AddProductActivity extends PortraitActivity {
     private ImageView backimg;
     private String wayOfTransormation;
     private String resWay;
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +54,16 @@ public class AddProductActivity extends PortraitActivity {
         title = findViewById(R.id.title);
         manufacturer = findViewById(R.id.manufacturer);
         code = findViewById(R.id.mtrlcode);
-        mtrlIcon = findViewById(R.id.image_icon1);
+        mtrlIcon = (SimpleDraweeView) findViewById(R.id.image_icon1);
         qty = findViewById(R.id.selected_qty);
         unitsp = findViewById(R.id.unitspn);
         backimg = findViewById(R.id.back_img);
         storeVariables();
         setViews();
         mtrlIcon.setOnClickListener(v -> {
-            Drawable d = mtrl.getImage();
-            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] b = baos.toByteArray();
+
             Intent intent = new Intent(this, ShowImage.class);
-            intent.putExtra("picture", b);
+            intent.putExtra("uri", uri.toString());
             startActivity(intent);
         });
     }
@@ -85,9 +86,11 @@ public class AddProductActivity extends PortraitActivity {
             GsonWorker gsonWorker = new GsonWorker(url);
             resWay = gsonWorker.getWayOfTransformation(jsonObject);
             wayOfTransormation = deserWayOfTransformation(resWay);
-            mtrl.loadImage();
-            runOnUiThread(() -> mtrlIcon.setImageDrawable(mtrl.getImage()));
         }).start();
+
+        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+"/s1services/?filename="+mtrl.getImgURL());
+        mtrlIcon.setImageURI(uri);
+
 
 
         backimg.setOnClickListener(v -> onBackPressed());
@@ -180,6 +183,7 @@ public class AddProductActivity extends PortraitActivity {
             mtrLines.add(line);
 
         }
+
 
 
 

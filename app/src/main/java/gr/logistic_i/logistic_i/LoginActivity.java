@@ -23,6 +23,7 @@ public class LoginActivity extends PortraitActivity {
     String name;
     String pass;
     String curl;
+    RelativeLayout rq_fc;
 
 
     @Override
@@ -30,6 +31,7 @@ public class LoginActivity extends PortraitActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+        rq_fc = findViewById(R.id.rq_fc);
         setAllToNormal();
 
 
@@ -122,6 +124,7 @@ public class LoginActivity extends PortraitActivity {
                 v.getGlobalVisibleRect(outRect);
                 if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
                     v.clearFocus();
+                    rq_fc.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }

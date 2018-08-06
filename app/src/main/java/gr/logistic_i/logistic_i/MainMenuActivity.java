@@ -19,6 +19,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,14 +73,11 @@ public class MainMenuActivity extends PortraitActivity {
             }
         });
         nv.setSmoothScrollingEnabled(true);
-
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         results_section = findViewById(R.id.results_section);
         storeParams();
-
         setUpDatePickers();
-
         RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
         focuslayout.requestFocus();
 
@@ -174,7 +173,7 @@ public class MainMenuActivity extends PortraitActivity {
     }
 
     public void initAddIntent(View view){
-        Intent intent = new Intent(this, MostOrderedItems.class);
+        Intent intent = new Intent(this, ItemsMenuActivity.class);
         intent.putExtra("url", url);
         intent.putExtra("refid", refid);
         intent.putExtra("clid", clientId);
@@ -288,6 +287,7 @@ public class MainMenuActivity extends PortraitActivity {
                 onBackPressed();
                 break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
