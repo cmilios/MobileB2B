@@ -187,7 +187,7 @@ public class GsonWorker {
                 result.append(line);
             }
 
-            if (result.toString()!=null) {
+            if (result!=null) {
                 JSONObject res = new JSONObject(result.toString());
                 state = res.getBoolean("success");
             }

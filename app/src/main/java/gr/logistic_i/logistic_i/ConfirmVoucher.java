@@ -49,7 +49,7 @@ public class ConfirmVoucher extends PortraitActivity {
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
         pbar = findViewById(R.id.setBar);
-        tool.setTitle("Confirm Voucher");
+        tool.setTitle("Επισκόπηση παραστατικού");
         tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -86,11 +86,7 @@ public class ConfirmVoucher extends PortraitActivity {
         clid = i.getStringExtra("clid");
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
-        mtrList = i.getParcelableArrayListExtra("mtrl");
         isChecked = i.getBooleanExtra("isChecked", false);
-        for (MtrLine m:mtrLines){
-            m.linkMtrlWithLine(mtrList);
-        }
     }
 
     public void deserMtrLinesResponse(){

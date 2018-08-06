@@ -7,16 +7,18 @@
     android:background="#000000"
     tools:context=".ShowImage">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/icon"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:background="@color/colorTextBold"
         android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@drawable/ic_baseline_image_24px" />
+
 </android.support.constraint.ConstraintLayout>

@@ -39,18 +39,6 @@ public class MtrLine implements Parcelable {
         this.sUnit = sUnit;
     }
 
-    public void linkMtrlWithLine(ArrayList<Mtrl> mtrlist){
-        for(Mtrl m:mtrlist){
-            if (mtrl.equals(m.getMtrl())){
-                linkedMtrl = m;
-            }
-        }
-    }
-
-
-    public Mtrl getLinkedMtrl() {
-        return linkedMtrl;
-    }
 
     public void setLinkedMtrl(Mtrl linkedMtrl) {
         this.linkedMtrl = linkedMtrl;
@@ -176,6 +164,7 @@ public class MtrLine implements Parcelable {
         fpaValue = in.readString();
         mUnit = in.readInt();
         sUnit = in.readString();
+        linkedMtrl = in.readParcelable(Mtrl.class.getClassLoader());
     }
 
     @Override
@@ -196,6 +185,7 @@ public class MtrLine implements Parcelable {
         dest.writeString(fpaValue);
         dest.writeInt(mUnit);
         dest.writeString(sUnit);
+        dest.writeParcelable(this.linkedMtrl, flags);
     }
 
     @SuppressWarnings("unused")

@@ -42,7 +42,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrdrName = findViewById(R.id.dtrdrname);
         dsumamnt = findViewById(R.id.dsumamnt);
         android.support.v7.widget.Toolbar dtoolbar = findViewById(R.id.details_toolbar);
-        dtoolbar.setTitle("Confirm Voucher");
+        dtoolbar.setTitle("Λεπτομέρειες Παραστατικού");
         dtoolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(dtoolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

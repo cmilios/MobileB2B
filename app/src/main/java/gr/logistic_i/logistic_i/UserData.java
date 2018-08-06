@@ -12,10 +12,6 @@ import java.util.ArrayList;
 
 public class UserData implements Serializable {
 
-    @SerializedName("Success")
-    @Expose
-    private boolean success;
-
     @SerializedName("clientID")
     @Expose
     private String clientID;
@@ -26,8 +22,7 @@ public class UserData implements Serializable {
 
     private JSONObject json = new JSONObject();
 
-    public UserData(boolean success, String clientID, ArrayList<String> objs) {
-        this.success = success;
+    public UserData(String clientID, ArrayList<String> objs) {
         this.clientID = clientID;
         this.objs = objs;
     }
@@ -37,7 +32,6 @@ public class UserData implements Serializable {
     }
 
     private void setSuccess(boolean success) {
-        this.success = success;
     }
 
     private void setClientID(String clientID) {

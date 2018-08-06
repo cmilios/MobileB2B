@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -10,13 +11,14 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 public class ShowImage extends PortraitActivity {
 
     private static final String TAG = "ImageViewShow";
 
-    private ImageView image;
+    private SimpleDraweeView image;
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
 
@@ -81,11 +83,8 @@ public class ShowImage extends PortraitActivity {
     }
 
     public void storeParams(){
-        Bundle extras = getIntent().getExtras();
-        byte[] b = extras.getByteArray("picture");
-
-        Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
-        image.setImageBitmap(bmp);
+        Intent i = getIntent();
+        image.setImageURI(i.getStringExtra("uri"));
         fullScreen();
     }
 
