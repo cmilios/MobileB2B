@@ -45,6 +45,7 @@ public class AddProductActivity extends PortraitActivity {
     private ImageView backimg;
     private String wayOfTransormation;
     private String resWay;
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +61,9 @@ public class AddProductActivity extends PortraitActivity {
         storeVariables();
         setViews();
         mtrlIcon.setOnClickListener(v -> {
-            Drawable d = mtrlIcon.getDrawable();
-            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] b = baos.toByteArray();
+
             Intent intent = new Intent(this, ShowImage.class);
-            intent.putExtra("picture", b);
+            intent.putExtra("uri", uri.toString());
             startActivity(intent);
         });
     }
@@ -91,7 +88,7 @@ public class AddProductActivity extends PortraitActivity {
             wayOfTransormation = deserWayOfTransformation(resWay);
         }).start();
 
-        Uri uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+"/s1services/?filename="+mtrl.getImgURL());
+        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+"/s1services/?filename="+mtrl.getImgURL());
         mtrlIcon.setImageURI(uri);
 
 
