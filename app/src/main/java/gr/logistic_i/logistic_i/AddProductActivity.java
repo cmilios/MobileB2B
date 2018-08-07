@@ -272,14 +272,9 @@ public class AddProductActivity extends PortraitActivity {
         }
 
 
-
-
-
         for (Integer key:unitlist.keySet()){
             showList.add(unitlist.get(key));
         }
-
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, showList);
@@ -291,7 +286,6 @@ public class AddProductActivity extends PortraitActivity {
             unitsp.setClickable(false);
             unitsp.setFocusable(false);
             unitsp.setEnabled(false);
-
         }
 
     }

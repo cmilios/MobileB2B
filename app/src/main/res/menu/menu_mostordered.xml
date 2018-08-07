@@ -14,13 +14,10 @@
         android:title="See all items."
         app:showAsAction="always" />
     <item
-        android:id="@+id/confirmVoucher"
-        android:checkable="true"
-        android:enabled="true"
-        android:icon="@drawable/ic_outline_done_24px"
-        android:orderInCategory="101"
-        android:title="Confirm Voucher"
-        android:visible="true"
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_action_search"
+        android:orderInCategory="100"
+        android:title="@string/abc_search_hint"
         app:showAsAction="always" />
 
 
