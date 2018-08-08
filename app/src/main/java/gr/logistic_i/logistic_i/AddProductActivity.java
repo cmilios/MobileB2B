@@ -2,10 +2,7 @@ package gr.logistic_i.logistic_i;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -21,7 +18,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.ByteArrayOutputStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,7 +26,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null);
+    private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null, null);
     private TextView title;
     private SimpleDraweeView mtrlIcon;
     private TextView code;
@@ -46,6 +43,7 @@ public class AddProductActivity extends PortraitActivity {
     private String wayOfTransormation;
     private String resWay;
     private Uri uri;
+    private int unitCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +52,7 @@ public class AddProductActivity extends PortraitActivity {
         title = findViewById(R.id.title);
         manufacturer = findViewById(R.id.manufacturer);
         code = findViewById(R.id.mtrlcode);
-        mtrlIcon = (SimpleDraweeView) findViewById(R.id.image_icon1);
+        mtrlIcon = findViewById(R.id.image_icon1);
         qty = findViewById(R.id.selected_qty);
         unitsp = findViewById(R.id.unitspn);
         backimg = findViewById(R.id.back_img);
@@ -118,7 +116,7 @@ public class AddProductActivity extends PortraitActivity {
                 setQ = m.getQty1();
                 qty.setText(setQ);
                 for (String s: mtrl.getUnitList()){
-                    if (mtrl.getUnitList().indexOf(s) == m.getmUnit()){
+                    if (mtrl.getUnitList().indexOf(s) == m.getUnitSpinnerPosition()){
                         for (Integer key:unitlist.keySet()){
                             if (s.equals(unitlist.get(key))){
                                 for (String st: showList){
@@ -165,8 +163,8 @@ public class AddProductActivity extends PortraitActivity {
                 else{
                     m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation));
                     m.setQty1(qty.getText().toString());
-                    m.setsUnit(unitsp.getSelectedItem().toString());
-                    m.setmUnit(index);
+                    m.setUnitSelectedName(unitsp.getSelectedItem().toString());
+                    m.setUnitSpinnerPosition(index);
                 }
 
             }
@@ -175,10 +173,18 @@ public class AddProductActivity extends PortraitActivity {
             mtrLines.remove(mtrLines.get(indexOfItemToDelete));
         }
 
+        HashMap<Integer, String> unitsMap = mtrl.getUnitsMap();
+       for(Integer i:unitsMap.keySet()){
+           if (unitsMap.get(i).equals(unit)){
+               unitCode = i;
+           }
+       }
+
+
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode);
             line.setLinkedMtrl(mtrl);
             mtrLines.add(line);
 
@@ -272,14 +278,9 @@ public class AddProductActivity extends PortraitActivity {
         }
 
 
-
-
-
         for (Integer key:unitlist.keySet()){
             showList.add(unitlist.get(key));
         }
-
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, showList);
@@ -291,7 +292,6 @@ public class AddProductActivity extends PortraitActivity {
             unitsp.setClickable(false);
             unitsp.setFocusable(false);
             unitsp.setEnabled(false);
-
         }
 
     }

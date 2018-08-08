@@ -8,7 +8,7 @@
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    android:paddingTop="62dp"
+    android:paddingTop="57dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ItemsMenuActivity"
     tools:showIn="@layout/most_ordered_items">
@@ -48,17 +48,43 @@
                 android:background="@color/colorTextBold"
                 app:srcCompat="@drawable/grey_line" />
 
-            <Button
+            <com.beardedhen.androidbootstrap.BootstrapButton
                 android:id="@+id/clearall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@id/confirm"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
                 android:baselineAligned="false"
-                android:text="εκκαθαριση λιστας" />
+                android:text="Εκκαθάριση λιστας"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="xl"
+                android:maxLines="1"
+                app:buttonMode="regular"
+                app:showOutline="false"
+                app:roundedCorners="true"
+                android:layout_toStartOf="@id/confirm"
+                android:layout_marginStart="8dp" />
+
+            <com.beardedhen.androidbootstrap.BootstrapButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirm"
+                android:text="Καταχώρηση"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/basket_rview"
+                android:layout_margin="8dp"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="xl"
+                app:buttonMode="regular"
+                app:showOutline="false"
+                app:roundedCorners="true"
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/basket_rview"

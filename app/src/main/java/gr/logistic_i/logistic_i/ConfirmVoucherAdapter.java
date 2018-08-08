@@ -2,7 +2,6 @@ package gr.logistic_i.logistic_i;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.constraint.Placeholder;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +33,7 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.desc.setText(mtrLines.get(position).getDescription());
-        holder.units.setText(mtrLines.get(position).getsUnit().substring(0,3));
+        holder.units.setText(mtrLines.get(position).getUnitSelectedName().substring(0,3));
         holder.price.setText(String.valueOf(priceFormat.format(Double.parseDouble(mtrLines.get(position).getPrice())))+"€");
         holder.qty.setText(mtrLines.get(position).getQty1());
 

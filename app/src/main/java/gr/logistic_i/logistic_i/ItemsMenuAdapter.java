@@ -51,6 +51,7 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        if (mmtrList==null) throw new AssertionError("Object cannot be null");
         if(mmtrList.get(position).getName()!=null){
             holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
         }

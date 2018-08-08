@@ -1,16 +1,27 @@
 package gr.logistic_i.logistic_i;
 
 import android.graphics.drawable.Drawable;
+import android.util.Patterns;
+import android.webkit.URLUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class GsonWorker {
 
@@ -21,125 +32,182 @@ public class GsonWorker {
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    private ArrayList<Mtrl> mtrList = new ArrayList<>();
+    private boolean validURL = false;
 
     public GsonWorker(String url) {
         this.url = url;
     }
 
-    public void makeLogin(Creds creds){
+    public void makeLogin(Creds creds) {
 
         String jsonData = creds.serObjLogin();
-        String loginResponse = getJSON(url, jsonData);
+        Response loginResponse = getData(jsonData);
         try {
-            JSONObject resObj = new JSONObject(loginResponse);
-                if (state){
-                    String loginClID = resObj.getString("clientID");
-                    UserData us = new UserData();
+            if (loginResponse == null){
+                return;
+            }
+            JSONObject resObj = new JSONObject(loginResponse.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
+            if (state) {
+                String loginClID = resObj.getString("clientID");
+                UserData us = new UserData();
 
-                    us = us.desirializeJsonStr(resObj.toString());
-                    makeAuthenticate(us);
-                }
-
-
+                us = us.desirializeJsonStr(resObj.toString());
+                makeAuthenticate(us);
+            }
 
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
 
     }
 
-    private void makeAuthenticate(UserData us){
+    private void makeAuthenticate(UserData us) {
 
         String authUser = us.serObj();
         refID = us.getRefId();
-        String authenticateResponse = getJSON(url, authUser);
+        Response authenticateResponse = getData(authUser);
         try {
-            JSONObject resObj = new JSONObject(authenticateResponse);
-                if(state){
-                    authenticateClID = resObj.getString("clientID");
-                    authenticationFlag = true;
-                }
+            JSONObject resObj = new JSONObject(authenticateResponse.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
+            if (state) {
+                authenticateClID = resObj.getString("clientID");
+                authenticationFlag = true;
+            }
 
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void getSqlOrders(SqlRequest sqlRequest){
-        String sqlOrders = getJSON(url, sqlRequest.serSqlData());
+    public ArrayList<Order> getSqlOrders(SqlRequest sqlRequest) {
+        Response sqlOrders = getData(sqlRequest.serSqlData());
         try {
-            JSONObject resObj = new JSONObject(sqlOrders);
-            if(state){
+            JSONObject resObj = new JSONObject(sqlOrders.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
+            if (state) {
                 sqlResponse = sqlRequest.parseResponse(resObj);
+                return sqlResponse;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        return null;
     }
 
-    public void getMtrLines(MtrLinesReq mtrLinesReq){
-        String lines = getJSON(url, mtrLinesReq.serObj());
+    public ArrayList<MtrLine> getMtrLines(MtrLinesReq mtrLinesReq) {
+        Response lines = getData(mtrLinesReq.serObj());
         try {
-            JSONObject resObj = new JSONObject(lines);
-            if (state){
+            JSONObject resObj = new JSONObject(lines.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
+            if (state) {
                 mtrLines = mtrLinesReq.parseResponse(resObj);
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-
-    }
-
-    public void getFOI(MtrlReq mtrlReq){
-        String lines = getJSON(url, mtrlReq.serMtrlOrders());
-        try{
-            JSONObject resObj = new JSONObject(lines);
-            if(state){
-                mtrList = mtrlReq.parseResponse(resObj);
-
-            }
-        }catch (JSONException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
-    public String calculatePrice(JSONObject jsonObject){
+    public ArrayList<Mtrl> getFOI(MtrlReq mtrlReq) {
+        Response res = getData(mtrlReq.serMtrlOrders());
+        try {
+            JSONObject resObj = new JSONObject(res.body().string());
+            ArrayList<Mtrl> mtrList = mtrlReq.parseResponse(resObj);
+            return mtrList;
 
-        String lines = getJSON(url,jsonObject.toString());
-            if(state){
-                return lines;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String calculatePrice(JSONObject jsonObject) {
+
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (state) {
+                return json.toString();
+        }
         return null;
 
     }
 
 
-    public String getWayOfTransformation(JSONObject jsonObject){
-       String lines = getJSON(url,jsonObject.toString());
-       if (state){
-           return lines;
-       }
-       return null;
-
-    }
-
-    public String setData(JSONObject jsonObject){
-        String lines = getJSON(url, jsonObject.toString());
-
-        if (state){
-            return lines;
+    public String getWayOfTransformation(JSONObject jsonObject) {
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject( lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return  null;
+        if (state) {
+                return json.toString();
+        }
+        return null;
 
     }
 
+    public String setData(JSONObject jsonObject) {
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (state) {
+                return json.toString();
+        }
+        return null;
+
+    }
 
 
     private String getJSON(String furl, String jsonData) {
@@ -162,20 +230,16 @@ public class GsonWorker {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.addRequestProperty("Accept", "application/json");
-            conn.addRequestProperty("Content-Type", "application/json; charset="+ "windows-1253");
+            conn.addRequestProperty("Content-Type", "application/json; charset=" + "windows-1253");
             conn.setDoInput(true);
-
-
             conn.setDoOutput(true);// Should be part of code only for .Net web-services else no need for PHP
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
             wr.writeBytes(jsonData);
             wr.flush();
             wr.close();
-
             // Begin streaming the JSON
             InputStream in = new BufferedInputStream(conn.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, "windows-1253"));
-
             // Read the first line
             String line = reader.readLine();
 
@@ -187,7 +251,7 @@ public class GsonWorker {
                 result.append(line);
             }
 
-            if (result!=null) {
+            if (result != null) {
                 JSONObject res = new JSONObject(result.toString());
                 state = res.getBoolean("success");
             }
@@ -206,7 +270,7 @@ public class GsonWorker {
         return result.toString();
     }
 
-    public Drawable getImage(String furl, String imgURL){
+    public Drawable getImage(String furl, String imgURL) {
         state = false;
         HttpURLConnection conn = null;
 
@@ -244,32 +308,61 @@ public class GsonWorker {
 
     }
 
+    private Response getData(String json) {
+        OkHttpClient client = new OkHttpClient();
 
-    public String getAuthenticateClID() {
-        return authenticateClID;
+        String finalURL = "https://" + url + "/s1services";
+        validURL = Patterns.WEB_URL.matcher(finalURL).matches();
+
+
+        if (validURL) {
+            MediaType mediaType = MediaType.parse("application/octet-stream");
+            RequestBody body = RequestBody.create(mediaType, json);
+            Request request = new Request.Builder()
+                    .url(finalURL)
+                    .post(body)
+                    .addHeader("cache-control", "no-cache")
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                return response;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+
+            }
+        }
+        return null;
+
     }
 
-    public String getRefID() {
-        return refID;
-    }
 
-    public Boolean getAuthenticationFlag() {
-        return authenticationFlag;
-    }
+        public String getAuthenticateClID () {
+            return authenticateClID;
+        }
 
-    public ArrayList<Order> getSqlResponse() {
-        return sqlResponse;
-    }
+        public String getRefID () {
+            return refID;
+        }
 
-    public String getUrl() {
-        return url;
-    }
+        public Boolean getAuthenticationFlag () {
+            return authenticationFlag;
+        }
 
-    public ArrayList<MtrLine> getMtrLines() {
-        return mtrLines;
-    }
+        public ArrayList<Order> getSqlResponse () {
+            return sqlResponse;
+        }
 
-    public ArrayList<Mtrl> getMtrList() {
-        return mtrList;
+        public String getUrl () {
+            return url;
+        }
+
+        public ArrayList<MtrLine> getMtrLines () {
+            return mtrLines;
+        }
+
+    public boolean isValidURL() {
+        return validURL;
     }
 }

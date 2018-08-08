@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -56,14 +57,17 @@ public class LoginActivity extends PortraitActivity {
         GsonWorker gson = new GsonWorker(curl);
 
         Creds c1 = new Creds(name, pass, curl);
-        Handler h = new Handler() {
+        @SuppressLint("HandlerLeak") Handler h = new Handler() {
             public void handleMessage(Message msg){
                 if(msg.what == 0){
-                    Toast.makeText(getApplicationContext(), "Wrong Credentials!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Λανθασμένο όνομα χρήστη ή συνθηματικό!", Toast.LENGTH_SHORT).show();
                 }
                 if (msg.what == 1){
-                    Toast.makeText(getApplicationContext(), "No Network Connection Detected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Δεν ανιχνεύτικε κάποια σύνδεση στο δίκτυο", Toast.LENGTH_SHORT).show();
 
+                }
+                if (msg.what==2){
+                    Toast.makeText(getApplicationContext(),"Το URL δεν αντιστοιχεί σε κάποια βάση", Toast.LENGTH_SHORT).show();
                 }
             }
          };
@@ -72,19 +76,24 @@ public class LoginActivity extends PortraitActivity {
 
             if (isOnline()){
                 gson.makeLogin(c1);
-                if (gson.getAuthenticationFlag()){
-                    Intent i = new Intent(this, MainMenuActivity.class);
-                    i.putExtra("id", this.getClass().getSimpleName());
-                    i.putExtra("url", gson.getUrl());
-                    i.putExtra("clID", gson.getAuthenticateClID());
-                    i.putExtra("refid", gson.getRefID());
-                    this.startActivity(i);
-                    runOnUiThread(this::setAllToNormal);
+                if (gson.isValidURL()) {
+                    if (gson.getAuthenticationFlag()) {
+                        Intent i = new Intent(this, MainMenuActivity.class);
+                        i.putExtra("id", this.getClass().getSimpleName());
+                        i.putExtra("url", gson.getUrl());
+                        i.putExtra("clID", gson.getAuthenticateClID());
+                        i.putExtra("refid", gson.getRefID());
+                        this.startActivity(i);
+                        runOnUiThread(this::setAllToNormal);
+                    } else {
+                        h.sendEmptyMessage(0);
+                        runOnUiThread(this::setAllToNormal);
+
+                    }
                 }
                 else{
-                    h.sendEmptyMessage(0);
+                    h.sendEmptyMessage(2);
                     runOnUiThread(this::setAllToNormal);
-
                 }
             }
             else{
