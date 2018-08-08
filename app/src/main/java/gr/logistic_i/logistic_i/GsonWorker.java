@@ -1,6 +1,9 @@
 package gr.logistic_i.logistic_i;
 
 import android.graphics.drawable.Drawable;
+import android.util.Patterns;
+import android.webkit.URLUtil;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -29,6 +32,7 @@ public class GsonWorker {
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
+    private boolean validURL = false;
 
     public GsonWorker(String url) {
         this.url = url;
@@ -37,9 +41,15 @@ public class GsonWorker {
     public void makeLogin(Creds creds) {
 
         String jsonData = creds.serObjLogin();
-        String loginResponse = getJSON(url, jsonData);
+        Response loginResponse = getData(jsonData);
         try {
-            JSONObject resObj = new JSONObject(loginResponse);
+            if (loginResponse == null){
+                return;
+            }
+            JSONObject resObj = new JSONObject(loginResponse.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
             if (state) {
                 String loginClID = resObj.getString("clientID");
                 UserData us = new UserData();
@@ -51,6 +61,8 @@ public class GsonWorker {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
@@ -60,9 +72,12 @@ public class GsonWorker {
 
         String authUser = us.serObj();
         refID = us.getRefId();
-        String authenticateResponse = getJSON(url, authUser);
+        Response authenticateResponse = getData(authUser);
         try {
-            JSONObject resObj = new JSONObject(authenticateResponse);
+            JSONObject resObj = new JSONObject(authenticateResponse.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
             if (state) {
                 authenticateClID = resObj.getString("clientID");
                 authenticationFlag = true;
@@ -71,39 +86,53 @@ public class GsonWorker {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void getSqlOrders(SqlRequest sqlRequest) {
-        String sqlOrders = getJSON(url, sqlRequest.serSqlData());
+    public ArrayList<Order> getSqlOrders(SqlRequest sqlRequest) {
+        Response sqlOrders = getData(sqlRequest.serSqlData());
         try {
-            JSONObject resObj = new JSONObject(sqlOrders);
+            JSONObject resObj = new JSONObject(sqlOrders.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
             if (state) {
                 sqlResponse = sqlRequest.parseResponse(resObj);
+                return sqlResponse;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        return null;
     }
 
-    public void getMtrLines(MtrLinesReq mtrLinesReq) {
-        String lines = getJSON(url, mtrLinesReq.serObj());
+    public ArrayList<MtrLine> getMtrLines(MtrLinesReq mtrLinesReq) {
+        Response lines = getData(mtrLinesReq.serObj());
         try {
-            JSONObject resObj = new JSONObject(lines);
+            JSONObject resObj = new JSONObject(lines.body().string());
+            if (resObj.has("success")) {
+                state = resObj.getBoolean("success");
+            }
             if (state) {
                 mtrLines = mtrLinesReq.parseResponse(resObj);
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        return null;
     }
 
     public ArrayList<Mtrl> getFOI(MtrlReq mtrlReq) {
-        Response res = searchRequest(mtrlReq);
+        Response res = getData(mtrlReq.serMtrlOrders());
         try {
             JSONObject resObj = new JSONObject(res.body().string());
             ArrayList<Mtrl> mtrList = mtrlReq.parseResponse(resObj);
@@ -119,9 +148,20 @@ public class GsonWorker {
 
     public String calculatePrice(JSONObject jsonObject) {
 
-        String lines = getJSON(url, jsonObject.toString());
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (state) {
-            return lines;
+                return json.toString();
         }
         return null;
 
@@ -129,19 +169,41 @@ public class GsonWorker {
 
 
     public String getWayOfTransformation(JSONObject jsonObject) {
-        String lines = getJSON(url, jsonObject.toString());
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject( lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (state) {
-            return lines;
+                return json.toString();
         }
         return null;
 
     }
 
     public String setData(JSONObject jsonObject) {
-        String lines = getJSON(url, jsonObject.toString());
+        Response lines = getData(jsonObject.toString());
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(lines.body().string());
+            if(json.has("success")){
+                state = json.getBoolean("success");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (state) {
-            return lines;
+                return json.toString();
         }
         return null;
 
@@ -246,30 +308,33 @@ public class GsonWorker {
 
     }
 
-    private Response searchRequest(MtrlReq mtrlReq) {
+    private Response getData(String json) {
         OkHttpClient client = new OkHttpClient();
 
         String finalURL = "https://" + url + "/s1services";
+        validURL = Patterns.WEB_URL.matcher(finalURL).matches();
 
 
-        MediaType mediaType = MediaType.parse("application/octet-stream");
-        RequestBody body = RequestBody.create(mediaType, mtrlReq.serMtrlOrders());
-        Request request = new Request.Builder()
-                .url(finalURL)
-                .post(body)
-                .addHeader("cache-control", "no-cache")
-                .build();
+        if (validURL) {
+            MediaType mediaType = MediaType.parse("application/octet-stream");
+            RequestBody body = RequestBody.create(mediaType, json);
+            Request request = new Request.Builder()
+                    .url(finalURL)
+                    .post(body)
+                    .addHeader("cache-control", "no-cache")
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                return response;
 
-        try {
-            Response response = client.newCall(request).execute();
-            return response;
+            } catch (IOException e) {
+                e.printStackTrace();
 
-        } catch (IOException e) {
-            e.printStackTrace();
 
-            return null;
-
+            }
         }
+        return null;
+
     }
 
 
@@ -297,4 +362,7 @@ public class GsonWorker {
             return mtrLines;
         }
 
+    public boolean isValidURL() {
+        return validURL;
+    }
 }

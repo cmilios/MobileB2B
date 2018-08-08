@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MtrlReq {
 
@@ -52,8 +53,10 @@ public class MtrlReq {
                 JSONArray resarray = jsonRes.getJSONArray("rows");
 
                 for(int i=0; i<resarray.length();i++){
+                    HashMap<Integer, String> unitsList = new HashMap<>();
                     ArrayList<String> units = new ArrayList<>();
                     units.add(resarray.getJSONObject(i).getString("unit1"));
+                    unitsList.put(resarray.getJSONObject(i).getInt("code1"), resarray.getJSONObject(i).getString("unit1"));
 
                     String mtrl;
                     if (resarray.getJSONObject(i).has("mtrl")){
@@ -65,13 +68,13 @@ public class MtrlReq {
 
                     if (resarray.getJSONObject(i).has("unit2")){
                         units.add(resarray.getJSONObject(i).getString("unit2"));
-                    }
+                        unitsList.put(resarray.getJSONObject(i).getInt("code2"), resarray.getJSONObject(i).getString("unit2"));                    }
                     else {
                         units.add(null);
                     }
                     if (resarray.getJSONObject(i).has("unit4")){
                         units.add(resarray.getJSONObject(i).getString("unit4"));
-                    }
+                        unitsList.put(resarray.getJSONObject(i).getInt("code4"), resarray.getJSONObject(i).getString("unit4"));                    }
                     else{
                         units.add(null);
                     }
@@ -138,7 +141,7 @@ public class MtrlReq {
                         mu41mode = null;
                     }
 
-                    mtrList.add(new Mtrl(mtrl ,img, mtrcode, mtrname, sales, manufacturer, url,units, mu21, mu41, mu21mode, mu41mode));
+                    mtrList.add(new Mtrl(mtrl ,img, mtrcode, mtrname, sales, manufacturer, url,units, unitsList, mu21, mu41, mu21mode, mu41mode));
                 }
 
             }

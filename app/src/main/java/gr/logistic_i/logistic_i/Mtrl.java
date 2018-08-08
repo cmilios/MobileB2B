@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Mtrl implements Parcelable {
 
@@ -27,13 +28,15 @@ public class Mtrl implements Parcelable {
     private String mu41;
     private String mu21mode;
     private String mu41mode;
+
+    private HashMap<Integer, String> unitsMap;
     private DecimalFormat qtyformat = new DecimalFormat("#.##");
 
 
 
 
     Mtrl(String mtrl, String imgURL, String code, String name, String sales, String manufacturer,
-         String correspondingBase, ArrayList<String> unitList, String mu21, String mu41, String mu21mode, String mu41mode) {
+         String correspondingBase, ArrayList<String> unitList, HashMap<Integer,String> unitsMap, String mu21, String mu41, String mu21mode, String mu41mode) {
         this.mtrl = mtrl;
         this.imgURL = imgURL;
         this.code = code;
@@ -46,28 +49,18 @@ public class Mtrl implements Parcelable {
         this.mu41 = mu41;
         this.mu21mode = mu21mode;
         this.mu41mode = mu41mode;
+        this.unitsMap = unitsMap;
 
 
     }
 
 
-    public void loadImage(){
-        GsonWorker gsonWorker = new GsonWorker(correspondingBase);
-        if (imgURL!=null){
-            image = gsonWorker.getImage(correspondingBase, imgURL);
 
-        }
-
-
-    }
 
     public String getCorrespondingBase() {
         return correspondingBase;
     }
 
-    public void setCorrespondingBase(String correspondingBase) {
-        this.correspondingBase = correspondingBase;
-    }
 
     public String getMu21() {
         return mu21;
@@ -143,6 +136,9 @@ public class Mtrl implements Parcelable {
         return mu21mode;
     }
 
+    public HashMap getUnitsMap() {
+        return unitsMap;
+    }
 
     public String getMu41mode() {
         return mu41mode;
@@ -177,6 +173,7 @@ public class Mtrl implements Parcelable {
         mu41 = in.readString();
         mu21mode = in.readString();
         mu41mode = in.readString();
+        unitsMap = (HashMap) in.readValue(HashMap.class.getClassLoader());
 
 
     }
@@ -210,6 +207,7 @@ public class Mtrl implements Parcelable {
         dest.writeString(mu41);
         dest.writeString(mu21mode);
         dest.writeString(mu41mode);
+        dest.writeValue(unitsMap);
 
     }
 
