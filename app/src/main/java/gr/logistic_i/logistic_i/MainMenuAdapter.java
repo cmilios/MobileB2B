@@ -59,6 +59,12 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             i.putExtra("clID", clientId);
             mContext.startActivity(i);
         });
+        holder.detailsButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
 
     }
 

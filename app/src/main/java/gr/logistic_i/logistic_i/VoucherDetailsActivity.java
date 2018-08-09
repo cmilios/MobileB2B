@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,14 +8,20 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toolbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -30,6 +37,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrdrName;
     private EditText dsumamnt;
     private VoucherDetailsAdapter adapter;
+    Boolean b = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,4 +118,115 @@ public class VoucherDetailsActivity extends PortraitActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.delete:
+                new AlertDialog.Builder(this)
+                        .setMessage("Θελετε να γίνει ακύρωση της παραγγελίας")
+                        .setPositiveButton("ΝΑΙ", (dialog, which) -> {
+
+                            Boolean made = makeDeleteVoucherProcess();
+
+
+                        })
+                        .setNegativeButton("ΟΧΙ", (dialog, which) -> {
+
+                        })
+                        .show();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Boolean makeDeleteVoucherProcess(){
+        Boolean state = false;
+        doDelete();
+        return state;
+    }
+
+    private void doDelete(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("service", "getData");
+            jsonObject.put("clientID", clientId);
+            jsonObject.put("appID", 1100);
+            jsonObject.put("OBJECT", "SALDOC");
+            jsonObject.put("KEY", o.getFindoc());
+            jsonObject.put("LOCATEINFO","SALDOC:FINSTATES");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        GsonWorker gson = new GsonWorker(url);
+
+        new Thread(()->{
+           String state = gson.getIfAbleToDelete(jsonObject);
+           if (state.equals("1|Σε αναμονή")){
+               JSONObject json = new JSONObject();
+               JSONArray saldoc = new JSONArray();
+               JSONObject salobj = new JSONObject();
+               JSONObject finstates = new JSONObject();
+               try {
+                   finstates.put("FINSTATES", 4);
+                   saldoc.put(finstates);
+                   salobj.put("SALDOC", saldoc);
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
+               try {
+
+                   json.put("service", "setData");
+                   json.put("clientID", clientId);
+                   json.put("appID", 1100);
+                   json.put("OBJECT", "SALDOC");
+                   json.put("KEY", o.getFindoc());
+                   json.put("service", "setData");
+                   json.put("data", salobj);
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+               }
+
+               GsonWorker g = new GsonWorker(url);
+               b = g.setDeleteFinstate(jsonObject);
+
+
+
+
+           }
+           else if(state.equals("4|Ακυρώθηκε απο πελάτη")){
+               runOnUiThread(()-> new AlertDialog.Builder(this)
+                       .setMessage("Η παραγγελία είναι ήδη ακυρωμένη απο εσάς")
+                       .setNeutralButton("OK", (dialog, which) -> {})
+                       .show());
+
+
+           }
+           else if(state.equals("2|Σε εξέλιξη")){
+               runOnUiThread(()-> new AlertDialog.Builder(this)
+                       .setMessage("Η παραγγελία βρίσκεται σε εξέλιξη, παρακαλώ επικοινωνήστε με τον αρμόδιο πωλητή αμα όντως επιθυμείτε την ακύρωση της!")
+                       .setNeutralButton("OK", (dialog, which) -> {
+
+                       })
+                       .show());
+
+           }
+           else{
+               runOnUiThread(()->
+               new AlertDialog.Builder(this)
+                       .setMessage("Η παραγγελία αυτή έχει ολοκληρωθεί")
+                       .setNeutralButton("OK", (dialog, which) -> {
+
+                       })
+                       .show());
+           }
+        }).start();
+    }
 }

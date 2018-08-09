@@ -1,14 +1,20 @@
 package gr.logistic_i.logistic_i;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.json.JSONArray;
@@ -28,7 +34,6 @@ public class ConfirmVoucher extends PortraitActivity {
     private String url;
     private String clid;
     private String mtrLinesResponse;
-    private ArrayList<Mtrl> mtrList;
     private TextView finalp;
     private Date c;
     private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -40,6 +45,7 @@ public class ConfirmVoucher extends PortraitActivity {
     private Button b;
     private ProgressBar pbar;
     private Boolean isChecked;
+    private TextInputEditText comms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class ConfirmVoucher extends PortraitActivity {
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
         pbar = findViewById(R.id.setBar);
+        comms = findViewById(R.id.comm_section);
         tool.setTitle("Επισκόπηση παραστατικού");
         tool.setTitleTextColor(Color.WHITE);
         setSupportActionBar(tool);
@@ -130,6 +137,8 @@ public class ConfirmVoucher extends PortraitActivity {
             ss.put("SERIES", 7021);
             ss.put("TRNDATE", sqlformat.format(c));
             ss.put("TRDR", refid);
+            ss.put("COMMENTS", comms.getText().toString());
+            ss.put("FINSTATES", 1);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -162,12 +171,13 @@ public class ConfirmVoucher extends PortraitActivity {
         for (MtrLine m:mtrLines){
             fp = fp+Double.parseDouble(m.getPrice());
         }
-        finalp.setText(priceFormat.format(fp) +"€");
+        finalp.setText(priceFormat.format(fp) + "€");
     }
 
     public void setFindoc(View view){
         pbar.setVisibility(View.VISIBLE);
         b.setVisibility(View.GONE);
+        serCalcObj();
         JSONObject setDataJson = serSet();
         GsonWorker gson = new GsonWorker(url);
         new Thread(()->{
@@ -213,5 +223,22 @@ public class ConfirmVoucher extends PortraitActivity {
                     })
                     .show();
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
     }
 }
