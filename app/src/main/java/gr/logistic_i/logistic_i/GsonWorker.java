@@ -1,58 +1,47 @@
 package gr.logistic_i.logistic_i;
 
-import android.graphics.drawable.Drawable;
-import android.util.Patterns;
-import android.webkit.URLUtil;
 
+import android.util.Patterns;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class GsonWorker {
 
     private String url;
     private Boolean state = false;
-    private String authenticateClID = new String();
-    private String refID = new String();
+    private String authenticateClID = "";
+    private String refID = "";
     private Boolean authenticationFlag = false;
     private ArrayList<Order> sqlResponse = new ArrayList<>();
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     private boolean validURL = false;
 
-    public GsonWorker(String url) {
+    GsonWorker(String url) {
         this.url = url;
     }
 
     public void makeLogin(Creds creds) {
 
         String jsonData = creds.serObjLogin();
-        Response loginResponse = getData(jsonData);
+        String resstr = getData(jsonData);
         try {
-            if (loginResponse == null){
+            if (resstr == null){
                 return;
             }
-            JSONObject resObj = new JSONObject(loginResponse.body().string());
+            JSONObject resObj = new JSONObject(resstr);
             if (resObj.has("success")) {
                 state = resObj.getBoolean("success");
             }
             if (state) {
-                String loginClID = resObj.getString("clientID");
                 UserData us = new UserData();
 
                 us = us.desirializeJsonStr(resObj.toString());
@@ -61,8 +50,6 @@ public class GsonWorker {
 
 
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -73,9 +60,9 @@ public class GsonWorker {
 
         String authUser = us.serObj();
         refID = us.getRefId();
-        Response authenticateResponse = getData(authUser);
+        String resstr = getData(authUser);
         try {
-            JSONObject resObj = new JSONObject(authenticateResponse.body().string());
+            JSONObject resObj = new JSONObject(resstr);
             if (resObj.has("success")) {
                 state = resObj.getBoolean("success");
             }
@@ -87,16 +74,14 @@ public class GsonWorker {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
     }
 
     public ArrayList<Order> getSqlOrders(SqlRequest sqlRequest) {
-        Response sqlOrders = getData(sqlRequest.serSqlData());
+        String resstr = getData(sqlRequest.serSqlData());
         try {
-            JSONObject resObj = new JSONObject(sqlOrders.body().string());
+            JSONObject resObj = new JSONObject(resstr);
             if (resObj.has("success")) {
                 state = resObj.getBoolean("success");
             }
@@ -106,17 +91,15 @@ public class GsonWorker {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return null;
     }
 
     public ArrayList<MtrLine> getMtrLines(MtrLinesReq mtrLinesReq) {
-        Response lines = getData(mtrLinesReq.serObj());
+        String resstr = getData(mtrLinesReq.serObj());
         try {
-            JSONObject resObj = new JSONObject(lines.body().string());
+            JSONObject resObj = new JSONObject(resstr);
             if (resObj.has("success")) {
                 state = resObj.getBoolean("success");
             }
@@ -125,23 +108,18 @@ public class GsonWorker {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return null;
     }
 
     public ArrayList<Mtrl> getFOI(MtrlReq mtrlReq) {
-        Response res = getData(mtrlReq.serMtrlOrders());
+        String resstr = getData(mtrlReq.serMtrlOrders());
         try {
-            JSONObject resObj = new JSONObject(res.body().string());
-            ArrayList<Mtrl> mtrList = mtrlReq.parseResponse(resObj);
-            return mtrList;
+            JSONObject resObj = new JSONObject(resstr);
+            return mtrlReq.parseResponse(resObj);
 
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -149,16 +127,14 @@ public class GsonWorker {
 
     public String calculatePrice(JSONObject jsonObject) {
 
-        Response lines = getData(jsonObject.toString());
+        String resstr = getData(jsonObject.toString());
         JSONObject json = new JSONObject();
         try {
-            json = new JSONObject(lines.body().string());
+            json = new JSONObject(resstr);
             if(json.has("success")){
                 state = json.getBoolean("success");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         if (state) {
@@ -170,16 +146,14 @@ public class GsonWorker {
 
 
     public String getWayOfTransformation(JSONObject jsonObject) {
-        Response lines = getData(jsonObject.toString());
+        String resstr = getData(jsonObject.toString());
         JSONObject json = new JSONObject();
         try {
-            json = new JSONObject( lines.body().string());
+            json = new JSONObject(resstr);
             if(json.has("success")){
                 state = json.getBoolean("success");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         if (state) {
@@ -190,16 +164,14 @@ public class GsonWorker {
     }
 
     public String setData(JSONObject jsonObject) {
-        Response lines = getData(jsonObject.toString());
+        String resstr = getData(jsonObject.toString());
         JSONObject json = new JSONObject();
         try {
-            json = new JSONObject(lines.body().string());
+            json = new JSONObject(resstr);
             if(json.has("success")){
                 state = json.getBoolean("success");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -212,15 +184,13 @@ public class GsonWorker {
 
     public String getIfAbleToDelete(JSONObject jsonObject){
         String var = null;
-        Response lines = getData(jsonObject.toString());
-        JSONObject json = new JSONObject();
+        String resstr= getData(jsonObject.toString());
+        JSONObject json;
         try {
-                json = new JSONObject(lines.body().string());
+                json = new JSONObject(resstr);
                 JSONObject data = json.getJSONObject("data");
                 JSONArray saldoc = data.getJSONArray("SALDOC");
                 var = saldoc.getJSONObject(0).getString("FINSTATES");
-        }        catch (IOException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -229,22 +199,20 @@ public class GsonWorker {
     }
 
     public boolean setDeleteFinstate(JSONObject jsonObject){
-        Response response = getData(jsonObject.toString());
+        String resstr = getData(jsonObject.toString());
         try {
-            JSONObject json = new JSONObject(response.body().string());
+            JSONObject json = new JSONObject(resstr);
             if (json.has("success")){
                 state = json.getBoolean("success");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return state;
     }
 
 
-    private Response getData(String json) {
+    private String getData(String json) {
         OkHttpClient client = new OkHttpClient();
 
         String finalURL = "https://" + url + "/s1services";
@@ -261,7 +229,9 @@ public class GsonWorker {
                     .build();
             try {
                 Response response = client.newCall(request).execute();
-                return response;
+                ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+
+                return responseBodyCopy.string();
 
             } catch (IOException e) {
                 e.printStackTrace();

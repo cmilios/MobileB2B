@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,11 +47,14 @@ public class ConfirmVoucher extends PortraitActivity {
     private ProgressBar pbar;
     private Boolean isChecked;
     private TextInputEditText comms;
+    private RelativeLayout rq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_voucher);
+        rq = findViewById(R.id.rq);
+        rq.requestFocus();
         finalp = findViewById(R.id.f_price);
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
@@ -234,6 +238,7 @@ public class ConfirmVoucher extends PortraitActivity {
                 v.getGlobalVisibleRect(outRect);
                 if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
                     v.clearFocus();
+                    rq.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }

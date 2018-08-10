@@ -29,9 +29,9 @@
         <activity android:name=".VoucherDetailsActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ConfirmVoucher"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".AddProductActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".ShowImage"
             android:windowSoftInputMode="adjustResize"/>
     </application>

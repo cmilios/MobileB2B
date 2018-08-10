@@ -185,5 +185,12 @@
         app:layout_constraintTop_toTopOf="@+id/title"
         app:srcCompat="@drawable/leftarrow" />
 
+    <RelativeLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:id="@+id/rq_f"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
 
 </android.support.constraint.ConstraintLayout>

@@ -43,6 +43,7 @@ public class ItemsMenuActivity extends PortraitActivity {
     private FloatingActionButton gotfab;
     private long counter=0;
     private long counterall=0;
+    private LinearLayoutManager MyLayoutManager;
 
     private String searchString = " ";
 
@@ -195,7 +196,11 @@ public class ItemsMenuActivity extends PortraitActivity {
                     public void onVisibilityChanged(int visibility) {
                         if (visibility == View.GONE && fab.getVisibility() == View.GONE) {
                             fab.show();
-                            gotfab.show();
+                            if (!(MyLayoutManager.findFirstCompletelyVisibleItemPosition()==0)){
+                                gotfab.show();
+                            }
+
+
                         }
                     }
                 })
@@ -224,7 +229,7 @@ public class ItemsMenuActivity extends PortraitActivity {
     }
 
     private void initRecyclerView() {
-        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = findViewById(R.id.details_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

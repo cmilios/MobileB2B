@@ -88,8 +88,7 @@ public class MainMenuActivity extends PortraitActivity {
         new Thread(() -> {
 
             SqlRequest sqlRequest = new SqlRequest("SqlData", clientId, "1100", "GetMobileOrders", sqlformat.format(fromCalendar.getTime()), sqlformat.format(toCalendar.getTime()), refid);
-            gson.getSqlOrders(sqlRequest);
-            orders = gson.getSqlResponse();
+            orders = gson.getSqlOrders(sqlRequest);
             runOnUiThread(this::initRecyclerView);
             if(!orders.isEmpty()){
                 if(orders.size() == 1){
@@ -148,7 +147,7 @@ public class MainMenuActivity extends PortraitActivity {
                 }
             }
         });
-        adapter = new MainMenuAdapter(this, orders, url,clientId);
+        adapter = new MainMenuAdapter(this, orders, url, clientId, refid);
         recyclerView.setAdapter(adapter);
     }
 
@@ -165,7 +164,6 @@ public class MainMenuActivity extends PortraitActivity {
 
     public void storeParams(){
         Intent intent = getIntent();
-        String cameFrom = intent.getStringExtra("id");
         url = intent.getStringExtra("url");
         clientId = intent.getStringExtra("clID");
         refid = intent.getStringExtra("refid");
@@ -281,7 +279,6 @@ public class MainMenuActivity extends PortraitActivity {
         String msg=" ";
         switch (item.getItemId()){
             case R.id.settings:
-                msg = "Settings";
                 break;
             case R.id.logout:
                 onBackPressed();
@@ -290,6 +287,7 @@ public class MainMenuActivity extends PortraitActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }
