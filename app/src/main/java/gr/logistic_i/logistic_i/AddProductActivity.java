@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class AddProductActivity extends PortraitActivity {
     private Uri uri;
     private int unitCode;
 
+    private RelativeLayout rq;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class AddProductActivity extends PortraitActivity {
         qty = findViewById(R.id.selected_qty);
         unitsp = findViewById(R.id.unitspn);
         backimg = findViewById(R.id.back_img);
+        rq = findViewById(R.id.rq_f);
+        rq.requestFocus();
         storeVariables();
         setViews();
         mtrlIcon.setOnClickListener(v -> {
@@ -222,6 +226,7 @@ public class AddProductActivity extends PortraitActivity {
                 v.getGlobalVisibleRect(outRect);
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
+                    rq.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

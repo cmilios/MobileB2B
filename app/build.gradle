@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "gr.logistic_i.logistic_i"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "0.7"
@@ -50,13 +50,19 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
     implementation files('libs/commons-codec-1.11')
     implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
+    //refresh arraylist lib
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    //image retriver lib
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.facebook.fresco:webpsupport:1.10.0'
+    //custom searchview lib
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    //custom buttons lib
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
+    //network request manager lib
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
 
 
+    implementation 'com.android.support:mediarouter-v7:27.1.1'
 }

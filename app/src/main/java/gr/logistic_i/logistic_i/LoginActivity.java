@@ -33,6 +33,7 @@ public class LoginActivity extends PortraitActivity {
 
         setContentView(R.layout.activity_login);
         rq_fc = findViewById(R.id.rq_fc);
+        rq_fc.requestFocus();
         setAllToNormal();
 
 

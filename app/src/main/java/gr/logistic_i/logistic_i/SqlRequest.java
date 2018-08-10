@@ -55,7 +55,8 @@ public class SqlRequest {
                             resarray.getJSONObject(i).getString("fincode"),
                             resarray.getJSONObject(i).getString("TRNDATE"),
                             resarray.getJSONObject(i).getString("NAME"),
-                            resarray.getJSONObject(i).getString("SUMAMNT")
+                            resarray.getJSONObject(i).getString("SUMAMNT"),
+                            resarray.getJSONObject(i).getString("state")
                     ));
                 }
 
