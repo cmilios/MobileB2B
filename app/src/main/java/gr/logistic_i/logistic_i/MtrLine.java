@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class MtrLine implements Parcelable {
 
 
@@ -21,11 +19,12 @@ public class MtrLine implements Parcelable {
     private String discount;
     private String cleanValue;
     private String fpaValue;
-    private int mUnit;
-    private String sUnit;
+    private int unitSpinnerPosition;
+    private String unitSelectedName;
+    private int unitSelectedCode;
     private Mtrl linkedMtrl;
 
-    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit) {
+    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit,int unitSelectedCode) {
         this.mtrl = mtrl;
         this.code = code;
         this.description = description;
@@ -35,8 +34,9 @@ public class MtrLine implements Parcelable {
         this.discount = discount;
         this.cleanValue = cleanValue;
         this.fpaValue = fpaValue;
-        this.mUnit = mUnit;
-        this.sUnit = sUnit;
+        this.unitSpinnerPosition = mUnit;
+        this.unitSelectedName = sUnit;
+        this.unitSelectedCode = unitSelectedCode;
     }
 
 
@@ -88,22 +88,22 @@ public class MtrLine implements Parcelable {
         return qty1;
     }
 
-    public int getmUnit() {
-        return mUnit;
+    public int getUnitSpinnerPosition() {
+        return unitSpinnerPosition;
     }
 
-    public void setmUnit(int mUnit) {
-        this.mUnit = mUnit;
+    public void setUnitSpinnerPosition(int unitSpinnerPosition) {
+        this.unitSpinnerPosition = unitSpinnerPosition;
     }
 
     public JSONObject serCalcLine(){
         JSONObject json = new JSONObject();
         try {
             json.put("MTRL", mtrl);
-            if (mUnit==0){
+            if (unitSpinnerPosition ==0){
                 json.put("QTY1", qty);
             }
-            if (mUnit==1){
+            if (unitSpinnerPosition ==1){
                 if (linkedMtrl.getMu21mode().equals("1")){
                     json.put("QTY2", qty1);
                 }
@@ -111,7 +111,7 @@ public class MtrLine implements Parcelable {
                     json.put("QTY1",qty.replace(",","."));
                 }
             }
-            if (mUnit==2){
+            if (unitSpinnerPosition ==2){
                 if (linkedMtrl.getMu41mode().equals("1")){
                     json.put("QTY", qty1);
                 }
@@ -119,6 +119,7 @@ public class MtrLine implements Parcelable {
                     json.put("QTY1", qty.replace(",","."));
                 }
             }
+            json.put("NUM02", unitSelectedCode);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -128,12 +129,12 @@ public class MtrLine implements Parcelable {
         return json;
     }
 
-    public String getsUnit() {
-        return sUnit;
+    public String getUnitSelectedName() {
+        return unitSelectedName;
     }
 
-    public void setsUnit(String sUnit) {
-        this.sUnit = sUnit;
+    public void setUnitSelectedName(String unitSelectedName) {
+        this.unitSelectedName = unitSelectedName;
     }
 
     public String getCleanValue() {
@@ -162,9 +163,10 @@ public class MtrLine implements Parcelable {
         discount = in.readString();
         cleanValue = in.readString();
         fpaValue = in.readString();
-        mUnit = in.readInt();
-        sUnit = in.readString();
+        unitSpinnerPosition = in.readInt();
+        unitSelectedName = in.readString();
         linkedMtrl = in.readParcelable(Mtrl.class.getClassLoader());
+        unitSelectedCode = in.readInt();
     }
 
     @Override
@@ -183,9 +185,10 @@ public class MtrLine implements Parcelable {
         dest.writeString(discount);
         dest.writeString(cleanValue);
         dest.writeString(fpaValue);
-        dest.writeInt(mUnit);
-        dest.writeString(sUnit);
+        dest.writeInt(unitSpinnerPosition);
+        dest.writeString(unitSelectedName);
         dest.writeParcelable(this.linkedMtrl, flags);
+        dest.writeInt(unitSelectedCode);
     }
 
     @SuppressWarnings("unused")

@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,14 +8,23 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toolbar;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -30,6 +40,9 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dtrdrName;
     private EditText dsumamnt;
     private VoucherDetailsAdapter adapter;
+    private RelativeLayout waitlay;
+    private String refid;
+    private Boolean b = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +54,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         dtrndate = findViewById(R.id.dtrndate);
         dtrdrName = findViewById(R.id.dtrdrname);
         dsumamnt = findViewById(R.id.dsumamnt);
+        waitlay = findViewById(R.id.wait_lay);
         android.support.v7.widget.Toolbar dtoolbar = findViewById(R.id.details_toolbar);
         dtoolbar.setTitle("Λεπτομέρειες Παραστατικού");
         dtoolbar.setTitleTextColor(Color.WHITE);
@@ -74,6 +88,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         o = i.getParcelableExtra("order");
         url = i.getStringExtra("url");
         clientId = i.getStringExtra("clID");
+        refid = i.getStringExtra("refid");
         dcode.setText(o.getCode());
         dfindoc.setText(o.getFindoc());
         dfincode.setText(o.getFincode());
@@ -110,4 +125,161 @@ public class VoucherDetailsActivity extends PortraitActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.delete:
+                new AlertDialog.Builder(this)
+                        .setMessage("Θελετε να γίνει ακύρωση της παραγγελίας")
+                        .setPositiveButton("ΝΑΙ", (dialog, which) -> {
+
+                            waitlay.setVisibility(View.VISIBLE);
+                            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            doDelete();
+
+
+                        })
+                        .setNegativeButton("ΟΧΙ", (dialog, which) -> {
+
+                        })
+                        .show();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void doDelete(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("service", "getData");
+            jsonObject.put("clientID", clientId);
+            jsonObject.put("appID", 1100);
+            jsonObject.put("OBJECT", "SALDOC");
+            jsonObject.put("KEY", o.getFindoc());
+            jsonObject.put("LOCATEINFO","SALDOC:FINSTATES");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        GsonWorker gson = new GsonWorker(url);
+
+        new Thread(()->{
+           String state = gson.getIfAbleToDelete(jsonObject);
+
+
+            switch (state) {
+                case "1|Σε αναμονή":
+
+
+                    JSONObject json = new JSONObject();
+                    JSONArray saldoc = new JSONArray();
+                    JSONObject salobj = new JSONObject();
+                    JSONObject finstates = new JSONObject();
+                    try {
+                        finstates.put("FINSTATES", 4);
+                        saldoc.put(finstates);
+                        salobj.put("SALDOC", saldoc);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+
+                        json.put("service", "setData");
+                        json.put("clientID", clientId);
+                        json.put("appID", 1100);
+                        json.put("OBJECT", "SALDOC");
+                        json.put("KEY", o.getFindoc());
+                        json.put("service", "setData");
+                        json.put("data", salobj);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    GsonWorker g = new GsonWorker(url);
+                    b = g.setDeleteFinstate(json);
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    if (b) {
+                        runOnUiThread(() -> new AlertDialog.Builder(this)
+                                .setMessage("H παραγγελία σας ακυρώθηκε.")
+                                .setNeutralButton("OK", (dialog, which) -> {
+                                    Intent i = new Intent(this, MainMenuActivity.class);
+                                    i.putExtra("url", url);
+                                    i.putExtra("clID", clientId);
+                                    i.putExtra("refid", refid);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    this.startActivity(i);
+                                    finish();
+                                })
+                                .show());
+                    } else {
+                        runOnUiThread(() -> new AlertDialog.Builder(this)
+                                .setMessage("Κάτι πήγε λάθος κατα την ακύρωση.")
+                                .setNeutralButton("OK", (dialog, which) -> {
+                                })
+                                .show());
+                    }
+
+
+
+                    break;
+                case "4|Ακυρώθηκε απο πελάτη":
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setMessage("Η παραγγελία είναι ήδη ακυρωμένη απο εσάς.")
+                            .setNeutralButton("OK", (dialog, which) -> {
+                            })
+                            .show());
+
+
+                    break;
+                case "2|Σε εξέλιξη":
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setMessage("Η παραγγελία βρίσκεται σε εξέλιξη, παρακαλώ επικοινωνήστε με τον αρμόδιο πωλητή αν όντως επιθυμείτε την ακύρωση της!")
+                            .setNeutralButton("OK", (dialog, which) -> {
+
+                            })
+                            .show());
+
+                    break;
+                default:
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() ->
+                            new AlertDialog.Builder(this)
+                                    .setMessage("Η παραγγελία αυτή έχει ολοκληρωθεί.")
+                                    .setNeutralButton("OK", (dialog, which) -> {
+
+                                    })
+                                    .show());
+                    break;
+            }
+
+
+        }).start();
+    }
 }

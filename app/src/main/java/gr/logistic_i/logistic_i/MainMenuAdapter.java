@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -22,17 +23,19 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     private ArrayList<Order> orderlist;
     private Context mContext;
     private String url;
+    private String refid;
     private String clientId;
     private SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat sqlResFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Date formattedDate = new Date();
 
 
-    MainMenuAdapter(Context mContext, ArrayList<Order> orderlist, String url, String clientId) {
+    MainMenuAdapter(Context mContext, ArrayList<Order> orderlist, String url, String clientId, String refid) {
         this.mContext = mContext;
         this.url = url;
         this.clientId = clientId;
         this.orderlist = orderlist;
+        this.refid = refid;
     }
 
     @NonNull
@@ -44,6 +47,23 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        switch (orderlist.get(position).getState()) {
+            case "1":
+                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorWhite));
+                break;
+            case "2":
+                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentYellow));
+                break;
+            case "3":
+                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentGreen));
+                break;
+            default:
+                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentRed));
+                break;
+        }
+
+
         holder.parnum.setText(orderlist.get(position).getFincode());
         try {
             formattedDate = sqlResFormat.parse(orderlist.get(position).getTrndate());
@@ -57,8 +77,10 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             i.putExtra("order", orderlist.get(position));
             i.putExtra("url", url);
             i.putExtra("clID", clientId);
+            i.putExtra("refid", refid);
             mContext.startActivity(i);
         });
+        holder.detailsButton.setOnLongClickListener(v -> false);
 
     }
 
@@ -76,13 +98,15 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-         TextView parnum;
+        TextView parnum;
         TextView dt;
+        RelativeLayout mmparent;
         protected TextView sumamnt;
         Button detailsButton;
 
         ViewHolder(View itemView) {
             super(itemView);
+            mmparent = itemView.findViewById(R.id.mm_parent);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);
             sumamnt = itemView.findViewById(R.id.sumamnt);
