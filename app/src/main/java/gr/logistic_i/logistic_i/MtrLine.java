@@ -24,7 +24,9 @@ public class MtrLine implements Parcelable {
     private int unitSelectedCode;
     private Mtrl linkedMtrl;
 
-    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit,int unitSelectedCode) {
+    private int num02;
+
+    MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit,int unitSelectedCode, int num02) {
         this.mtrl = mtrl;
         this.code = code;
         this.description = description;
@@ -37,6 +39,7 @@ public class MtrLine implements Parcelable {
         this.unitSpinnerPosition = mUnit;
         this.unitSelectedName = sUnit;
         this.unitSelectedCode = unitSelectedCode;
+        this.num02 = num02;
     }
 
 
@@ -99,27 +102,37 @@ public class MtrLine implements Parcelable {
     public JSONObject serCalcLine(){
         JSONObject json = new JSONObject();
         try {
+            if (linkedMtrl==null){
             json.put("MTRL", mtrl);
-            if (unitSpinnerPosition ==0){
-                json.put("QTY1", qty);
+            json.put("QTY1", qty1.replace(",", "."));
             }
-            if (unitSpinnerPosition ==1){
-                if (linkedMtrl.getMu21mode().equals("1")){
-                    json.put("QTY2", qty1);
+            else {
+                json.put("MTRL", mtrl);
+            if (unitSpinnerPosition == 0) {
+                    json.put("QTY1", qty.replace(",", "."));
                 }
-                else{
-                    json.put("QTY1",qty.replace(",","."));
+                if (unitSpinnerPosition == 1) {
+                    if (linkedMtrl.getMu21mode().equals("1")) {
+                        json.put("QTY2", qty1.replace(",", "."));
+                    } else {
+                        json.put("QTY1", qty.replace(",", "."));
+                    }
                 }
+                if (unitSpinnerPosition == 2) {
+                    if (linkedMtrl.getMu41mode().equals("1")) {
+                        json.put("QTY", qty1.replace(",", "."));
+                    } else {
+                        json.put("QTY1", qty.replace(",", "."));
+                    }
+                }
+
             }
-            if (unitSpinnerPosition ==2){
-                if (linkedMtrl.getMu41mode().equals("1")){
-                    json.put("QTY", qty1);
-                }
-                else{
-                    json.put("QTY1", qty.replace(",","."));
-                }
+            if (linkedMtrl==null){
+                json.put("NUM02", num02);
             }
-            json.put("NUM02", unitSelectedCode);
+            else {
+                json.put("NUM02", unitSelectedCode);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -167,6 +180,7 @@ public class MtrLine implements Parcelable {
         unitSelectedName = in.readString();
         linkedMtrl = in.readParcelable(Mtrl.class.getClassLoader());
         unitSelectedCode = in.readInt();
+        num02 = in.readInt();
     }
 
     @Override
@@ -189,6 +203,7 @@ public class MtrLine implements Parcelable {
         dest.writeString(unitSelectedName);
         dest.writeParcelable(this.linkedMtrl, flags);
         dest.writeInt(unitSelectedCode);
+        dest.writeInt(num02);
     }
 
     @SuppressWarnings("unused")

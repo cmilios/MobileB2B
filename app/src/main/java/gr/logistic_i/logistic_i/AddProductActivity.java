@@ -45,6 +45,7 @@ public class AddProductActivity extends PortraitActivity {
     private String resWay;
     private Uri uri;
     private int unitCode;
+    private String key;
 
     private RelativeLayout rq;
     @Override
@@ -79,6 +80,7 @@ public class AddProductActivity extends PortraitActivity {
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
         clientid = i.getStringExtra("clid");
+        key = i.getStringExtra("key");
 
     }
 
@@ -158,19 +160,34 @@ public class AddProductActivity extends PortraitActivity {
 
         }
         for (MtrLine m :mtrLines){
-            if (m.getCode().equals(mtrl.getCode())){
-                itemExistsFlag = true;
-                if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")){
-                    indexOfItemToDelete = mtrLines.indexOf(m);
-                    toDeleteFlag=true;
-                }
-                else{
-                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation));
-                    m.setQty1(qty.getText().toString());
-                    m.setUnitSelectedName(unitsp.getSelectedItem().toString());
-                    m.setUnitSpinnerPosition(index);
-                }
+            if (m.getMtrl()!=null) {
+                if (m.getMtrl().equals(mtrl.getMtrl())) {
+                    itemExistsFlag = true;
+                    if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")) {
+                        indexOfItemToDelete = mtrLines.indexOf(m);
+                        toDeleteFlag = true;
+                    } else {
+                        m.setQty(mtrl.getQuantityToFirstMtrUnit(index, qty.getText().toString(), wayOfTransormation));
+                        m.setQty1(qty.getText().toString());
+                        m.setUnitSelectedName(unitsp.getSelectedItem().toString());
+                        m.setUnitSpinnerPosition(index);
+                    }
 
+                }
+            }
+            else{
+                if (m.getMtrl().equals(mtrl.getMtrl())) {
+                    itemExistsFlag = true;
+                    if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")) {
+                        indexOfItemToDelete = mtrLines.indexOf(m);
+                        toDeleteFlag = true;
+                    } else {
+                        m.setQty(mtrl.getQuantityToFirstMtrUnit(index, qty.getText().toString(), wayOfTransormation));
+                        m.setQty1(qty.getText().toString());
+                        m.setUnitSelectedName(unitsp.getSelectedItem().toString());
+                        m.setUnitSpinnerPosition(index);
+                    }
+                }
             }
         }
         if(toDeleteFlag){
@@ -188,7 +205,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode, unitCode);
             line.setLinkedMtrl(mtrl);
             mtrLines.add(line);
 
@@ -208,6 +225,7 @@ public class AddProductActivity extends PortraitActivity {
             i.putExtra("url", url);
             i.putExtra("refid", refid);
             i.putExtra("clid", clientid);
+            i.putExtra("key", key);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -246,6 +264,7 @@ public class AddProductActivity extends PortraitActivity {
             i.putExtra("url", url);
             i.putExtra("refid", refid);
             i.putExtra("clid", clientid);
+            i.putExtra("key", key);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -105,6 +105,7 @@ public class GsonWorker {
             }
             if (state) {
                 mtrLines = mtrLinesReq.parseResponse(resObj);
+                return mtrLines;
             }
         } catch (JSONException e) {
             e.printStackTrace();

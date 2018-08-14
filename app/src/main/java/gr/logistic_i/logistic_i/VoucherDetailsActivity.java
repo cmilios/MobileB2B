@@ -15,16 +15,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -65,7 +61,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
         GsonWorker gsonWorker = new GsonWorker(url);
 
         initRecyclerView();
-        new Thread(()->{
+        new Thread(() -> {
             MtrLinesReq mtrLinesReq = new MtrLinesReq("SqlData", clientId, "1100", "GetMtrLines", o.getFindoc());
             gsonWorker.getMtrLines(mtrLinesReq);
             mtrLines = gsonWorker.getMtrLines();
@@ -73,17 +69,12 @@ public class VoucherDetailsActivity extends PortraitActivity {
             runOnUiThread(adapter::notifyDataSetChanged);
 
 
-
         }).start();
-
-
-
-
 
 
     }
 
-    public void setTexts(){
+    public void setTexts() {
         Intent i = getIntent();
         o = i.getParcelableExtra("order");
         url = i.getStringExtra("url");
@@ -98,25 +89,26 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
 
     }
+
     //method that implements right cursor behavior on focused mode or not
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
-        return super.dispatchTouchEvent( event );
+        return super.dispatchTouchEvent(event);
     }
 
-    public void initRecyclerView(){
+    public void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.mtrdetails);
 
         recyclerView.setHasFixedSize(true);
@@ -133,7 +125,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.delete:
                 new AlertDialog.Builder(this)
                         .setMessage("Θελετε να γίνει ακύρωση της παραγγελίας")
@@ -150,6 +142,25 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
                         })
                         .show();
+                break;
+            case R.id.edit:
+                new AlertDialog.Builder(this)
+                        .setMessage("Θέλετε να προβείτε σε επεξεργασία του παραστατικού;")
+                        .setPositiveButton("ΝΑΙ", (dialog, which) -> {
+
+                            waitlay.setVisibility(View.VISIBLE);
+                            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            initEditActivity();
+
+
+                        })
+                        .setNegativeButton("ΟΧΙ", (dialog, which) -> {
+
+                        })
+                        .show();
+                break;
+
         }
 
 
@@ -157,7 +168,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
     }
 
 
-    private void doDelete(){
+    private void doDelete() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("service", "getData");
@@ -165,14 +176,14 @@ public class VoucherDetailsActivity extends PortraitActivity {
             jsonObject.put("appID", 1100);
             jsonObject.put("OBJECT", "SALDOC");
             jsonObject.put("KEY", o.getFindoc());
-            jsonObject.put("LOCATEINFO","SALDOC:FINSTATES");
+            jsonObject.put("LOCATEINFO", "SALDOC:FINSTATES");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         GsonWorker gson = new GsonWorker(url);
 
-        new Thread(()->{
-           String state = gson.getIfAbleToDelete(jsonObject);
+        new Thread(() -> {
+            String state = gson.getIfAbleToDelete(jsonObject);
 
 
             switch (state) {
@@ -233,7 +244,6 @@ public class VoucherDetailsActivity extends PortraitActivity {
                     }
 
 
-
                     break;
                 case "4|Ακυρώθηκε απο πελάτη":
                     runOnUiThread(() -> {
@@ -242,7 +252,7 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
                     });
                     runOnUiThread(() -> new AlertDialog.Builder(this)
-                            .setMessage("Η παραγγελία είναι ήδη ακυρωμένη απο εσάς.")
+                            .setMessage("Η παραγγελία είναι ακυρωμένη απο εσάς.")
                             .setNeutralButton("OK", (dialog, which) -> {
                             })
                             .show());
@@ -282,4 +292,80 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
         }).start();
     }
+
+    private void initEditActivity() {
+
+        GsonWorker g = new GsonWorker(url);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("service", "getData");
+            jsonObject.put("clientID", clientId);
+            jsonObject.put("appID", 1100);
+            jsonObject.put("OBJECT", "SALDOC");
+            jsonObject.put("KEY", o.getFindoc());
+            jsonObject.put("LOCATEINFO", "SALDOC:FINSTATES");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new Thread(() -> {
+            String state = g.getIfAbleToDelete(jsonObject);
+
+
+            switch (state) {
+                case "1|Σε αναμονή":
+                    Intent i = new Intent(this, ItemsMenuActivity.class);
+                    i.putExtra("clid", clientId);
+                    i.putExtra("url", url);
+                    i.putExtra("refid", refid);
+                    i.putExtra("lines", mtrLines);
+                    i.putExtra("key", o.getFindoc());
+                    startActivity(i);
+                    finish();
+                    break;
+                case "4|Ακυρώθηκε απο πελάτη":
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setMessage("Η παραγγελία είναι ακυρωμένη απο εσάς.")
+                            .setNeutralButton("OK", (dialog, which) -> {
+                            })
+                            .show());
+
+
+                    break;
+                case "2|Σε εξέλιξη":
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setMessage("Η παραγγελία βρίσκεται σε εξέλιξη, δεν έχετε δυνατότητα επεξεργασίας.")
+                            .setNeutralButton("OK", (dialog, which) -> {
+
+                            })
+                            .show());
+
+                    break;
+                default:
+                    runOnUiThread(() -> {
+                        waitlay.setVisibility(View.GONE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                    });
+                    runOnUiThread(() ->
+                            new AlertDialog.Builder(this)
+                                    .setMessage("Η παραγγελία αυτή έχει ολοκληρωθεί, δεν έχετε δικαίωμα επεξεργασίας")
+                                    .setNeutralButton("OK", (dialog, which) -> {
+
+                                    })
+                                    .show());
+                    break;
+            }
+        }).start();
+    }
 }
+

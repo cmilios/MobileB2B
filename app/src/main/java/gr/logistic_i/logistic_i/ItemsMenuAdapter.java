@@ -28,9 +28,10 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
     private ArrayList<MtrLine> mtrLines;
     private String refid;
     private Boolean isChecked;
+    private String key;
 
 
-    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked) {
+    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked,String key) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
         this.url = url;
@@ -38,6 +39,7 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
         this.mtrLines = mtrLines;
         this.refid = refid;
         this.isChecked = isChecked;
+        this.key = key;
 
     }
 
@@ -71,6 +73,7 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
             i.putExtra("refid", refid);
             i.putExtra("clid", clientID);
             i.putExtra("isChecked", isChecked);
+            i.putExtra("key", key);
             mContext.startActivity(i);
             ((Activity)mContext).finish();
 

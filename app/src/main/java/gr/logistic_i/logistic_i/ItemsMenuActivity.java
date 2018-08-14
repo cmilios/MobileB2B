@@ -44,6 +44,7 @@ public class ItemsMenuActivity extends PortraitActivity {
     private long counter=0;
     private long counterall=0;
     private LinearLayoutManager MyLayoutManager;
+    private String key;
 
     private String searchString = " ";
 
@@ -62,7 +63,7 @@ public class ItemsMenuActivity extends PortraitActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbarmostord.setNavigationOnClickListener(v -> onBackPressed());
         BootstrapButton clearmtrlines = findViewById(R.id.clearall);
-        BootstrapButton cc = findViewById(R.id.confirm);
+        BootstrapButton confirmButton = findViewById(R.id.confirm);
         refLayout = findViewById(R.id.refreshLayout);
         refLayout.setRefreshHeader(new ClassicsHeader(this));
         refLayout.setRefreshFooter(new ClassicsFooter(this));
@@ -157,18 +158,19 @@ public class ItemsMenuActivity extends PortraitActivity {
             if (mtrLines != null) {
                 mtrLines.clear();
                 ad.notifyDataSetChanged();
-                cc.setEnabled(false);
-                cc.setFocusable(false);
-                cc.setClickable(false);
+                confirmButton.setEnabled(false);
+                confirmButton.setFocusable(false);
+                confirmButton.setClickable(false);
             }
         });
-        cc.setOnClickListener(v -> {
+        confirmButton.setOnClickListener(v -> {
             if (mtrLines != null && !(mtrLines.size() == 0)) {
                 Intent i = new Intent(ItemsMenuActivity.this, ConfirmVoucher.class);
                 i.putParcelableArrayListExtra("lines", mtrLines);
                 i.putExtra("url", url);
                 i.putExtra("refid", refid);
                 i.putExtra("clid", clientid);
+                i.putExtra("key", key);
                 startActivity(i);
 
             } else {
@@ -212,15 +214,15 @@ public class ItemsMenuActivity extends PortraitActivity {
             slideUp.show();
             if (mtrLines != null) {
                 initBasketRV();
-                cc.setEnabled(true);
-                cc.setClickable(true);
-                cc.setFocusable(true);
+                confirmButton.setEnabled(true);
+                confirmButton.setClickable(true);
+                confirmButton.setFocusable(true);
 
             }
             if (mtrLines == null){
-                cc.setEnabled(false);
-                cc.setClickable(false);
-                cc.setFocusable(false);
+                confirmButton.setEnabled(false);
+                confirmButton.setClickable(false);
+                confirmButton.setFocusable(false);
             }
         });
         gotfab.setOnClickListener(v -> recyclerView.smoothScrollToPosition(0));
@@ -254,7 +256,7 @@ public class ItemsMenuActivity extends PortraitActivity {
             }
         });
         recyclerView.setLayoutManager(MyLayoutManager);
-        adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked);
+        adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked, key);
         recyclerView.setAdapter(adapter);
     }
 
@@ -273,6 +275,7 @@ public class ItemsMenuActivity extends PortraitActivity {
         refid = i.getStringExtra("refid");
         clientid = i.getStringExtra("clid");
         isChecked = i.getBooleanExtra("isChecked", false);
+        key = i.getStringExtra("key");
 
 
     }

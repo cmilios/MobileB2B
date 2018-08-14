@@ -48,6 +48,7 @@ public class ConfirmVoucher extends PortraitActivity {
     private Boolean isChecked;
     private TextInputEditText comms;
     private RelativeLayout rq;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class ConfirmVoucher extends PortraitActivity {
         if (mtrLines!=null) {
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
-                mtrLinesResponse = gsonWorker.calculatePrice(serCalcObj());
+                mtrLinesResponse = gsonWorker.calculatePrice(serializeCalculateRequest());
                 runOnUiThread(this::deserMtrLinesResponse);
                 runOnUiThread(this::initRecyclerView);
                 runOnUiThread(this::setSumAmnt);
@@ -98,6 +99,7 @@ public class ConfirmVoucher extends PortraitActivity {
         url = i.getStringExtra("url");
         refid = i.getStringExtra("refid");
         isChecked = i.getBooleanExtra("isChecked", false);
+        key = i.getStringExtra("key");
     }
 
     public void deserMtrLinesResponse(){
@@ -131,7 +133,7 @@ public class ConfirmVoucher extends PortraitActivity {
 
     }
 
-    public JSONObject serCalcObj(){
+    public JSONObject serializeCalculateRequest(){
         JSONArray sermtrlines = new JSONArray();
         for(MtrLine m:mtrLines){
             sermtrlines.put(m.serCalcLine());
@@ -181,11 +183,14 @@ public class ConfirmVoucher extends PortraitActivity {
     public void setFindoc(View view){
         pbar.setVisibility(View.VISIBLE);
         b.setVisibility(View.GONE);
-        serCalcObj();
-        JSONObject setDataJson = serSet();
+        serializeCalculateRequest();
+        JSONObject setDataJson = serializeSetDataRequest();
         GsonWorker gson = new GsonWorker(url);
         new Thread(()->{
             res = gson.setData(setDataJson);
+            if (key!=null){
+                res = gson.setData(setDataJson);
+            }
             if (res!=null){
                 setState = true;
             }
@@ -193,13 +198,18 @@ public class ConfirmVoucher extends PortraitActivity {
         }).start();
     }
 
-    public JSONObject serSet(){
+    public JSONObject serializeSetDataRequest(){
         JSONObject setData = new JSONObject();
+
         try {
             setData.put("service", "setData");
             setData.put("clientID", clid);
             setData.put("appID", "1100");
             setData.put("OBJECT", "SALDOC");
+            if (key!=null){
+                setData.put("KEY", key);
+            }
+
             setData.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();

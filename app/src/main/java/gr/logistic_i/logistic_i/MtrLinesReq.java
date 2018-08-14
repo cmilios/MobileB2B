@@ -58,7 +58,8 @@ public class MtrLinesReq {
                             resarray.getJSONObject(i).getString("axiafpa"),
                             resarray.getJSONObject(i).getInt("mtrunit"),
                             resarray.getJSONObject(i).getString("sUnit"),
-                            resarray.getJSONObject(i).getInt("untCode")
+                            resarray.getJSONObject(i).getInt("untCode"),
+                            resarray.getJSONObject(i).getInt("num02")
                     ));
                 }
             }
