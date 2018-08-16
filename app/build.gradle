@@ -68,6 +68,10 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 
 
+    //material ripple lib to animate buttons on pre api 21  phones
+    implementation 'com.balysv:material-ripple:1.0.2'
+
+
 
     implementation 'com.android.support:mediarouter-v7:27.1.1'
 }

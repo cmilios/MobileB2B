@@ -5,18 +5,22 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -147,12 +151,48 @@ public class MainMenuActivity extends PortraitActivity {
                 }
             }
         });
-        adapter = new MainMenuAdapter(this, orders, url, clientId, refid);
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent(getApplicationContext(), VoucherDetailsActivity.class);
+                i.putExtra("order", orders.get(position));
+                i.putExtra("url", url);
+                i.putExtra("clID", clientId);
+                i.putExtra("refid", refid);
+                startActivity(i);
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onLongItemClick(View view, int position) {
+                PopupMenu popup = new PopupMenu(getApplicationContext(),view);
+                popup.setGravity(Gravity.END);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.menu_details);
+                //adding click listener
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.edit:
+                            Toast.makeText(getApplicationContext(), "set", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.delete:
+                            Toast.makeText(getApplicationContext(), "log", Toast.LENGTH_SHORT).show();
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+
+            }
+        }));
+        adapter = new MainMenuAdapter(this, orders);
         recyclerView.setAdapter(adapter);
     }
 
     private void setUpDatePickers(){
-        fromCalendar.add(Calendar.MONTH, -3);
+        fromCalendar.add(Calendar.WEEK_OF_MONTH, -3);
 
         toDateString = dpformat.format(toCalendar.getTime());
         fromDateString = dpformat.format(fromCalendar.getTime());
@@ -230,6 +270,7 @@ public class MainMenuActivity extends PortraitActivity {
                 if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
@@ -257,12 +298,8 @@ public class MainMenuActivity extends PortraitActivity {
         // do something when the button is clicked
         new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
-                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
-                    //close();
-                    finish();
-                })
-                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
-                })
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> finish())
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {})
                 .show();
 
 
@@ -276,7 +313,6 @@ public class MainMenuActivity extends PortraitActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        String msg=" ";
         switch (item.getItemId()){
             case R.id.settings:
                 break;

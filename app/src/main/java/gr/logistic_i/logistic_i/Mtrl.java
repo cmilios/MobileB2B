@@ -136,7 +136,7 @@ public class Mtrl implements Parcelable {
         return mu21mode;
     }
 
-    public HashMap getUnitsMap() {
+    public HashMap<Integer,String> getUnitsMap() {
         return unitsMap;
     }
 

@@ -5,7 +5,7 @@
     <string name="password_hint">Password</string>
     <string name="password" translatable="false">1234</string>
     <string name="base_hint">Connect to base</string>
-    <string name="base" translatable="false">logisticidemo1.oncloud.gr</string>
+    <string name="base" translatable="false">logisticidemo1</string>
     <string name="softone_credentials">Softone Credentials</string>
     <string name="login_btn">log in</string>
 </resources>

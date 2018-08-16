@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.beardedhen.androidbootstrap.BootstrapButton;
 
 
 public class LoginActivity extends PortraitActivity {
@@ -42,16 +45,16 @@ public class LoginActivity extends PortraitActivity {
     }
 
     public void performLogin(View view){
-        Button button = findViewById(R.id.loginButton);
+        BootstrapButton button = findViewById(R.id.loginButton);
         RelativeLayout pbar = findViewById(R.id.loadingPanel);
         button.setVisibility(View.INVISIBLE);
 
         pbar.setVisibility(View.VISIBLE);
 
 
-        EditText n = findViewById(R.id.username);
-        EditText p = findViewById(R.id.password);
-        EditText c = findViewById(R.id.connectionurl);
+        TextInputEditText n = findViewById(R.id.usernametxt);
+        TextInputEditText p = findViewById(R.id.passwordtxt);
+        TextInputEditText c = findViewById(R.id.connectionurltxt);
         name = n.getText().toString();
         pass = p.getText().toString();
         curl = c.getText().toString();
@@ -64,7 +67,7 @@ public class LoginActivity extends PortraitActivity {
                     Toast.makeText(getApplicationContext(), "Λανθασμένο όνομα χρήστη ή συνθηματικό!", Toast.LENGTH_SHORT).show();
                 }
                 if (msg.what == 1){
-                    Toast.makeText(getApplicationContext(), "Δεν ανιχνεύτικε κάποια σύνδεση στο δίκτυο", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Δεν ανιχνεύτικε σύνδεση στο δίκτυο", Toast.LENGTH_SHORT).show();
 
                 }
                 if (msg.what==2){
@@ -118,7 +121,7 @@ public class LoginActivity extends PortraitActivity {
     }
 
     public void setAllToNormal(){
-        Button button = findViewById(R.id.loginButton);
+        BootstrapButton button = findViewById(R.id.loginButton);
         RelativeLayout pbar = findViewById(R.id.loadingPanel);
         pbar.setVisibility(View.INVISIBLE);
         button.setVisibility(View.VISIBLE);

@@ -216,7 +216,7 @@ public class GsonWorker {
     private String getData(String json) {
         OkHttpClient client = new OkHttpClient();
 
-        String finalURL = "https://" + url + "/s1services";
+        String finalURL = "https://" + url + ".oncloud.gr/s1services";
         validURL = Patterns.WEB_URL.matcher(finalURL).matches();
 
 
