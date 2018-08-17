@@ -3,27 +3,27 @@ package gr.logistic_i.logistic_i;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.PopupMenu;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,14 +48,32 @@ public class MainMenuActivity extends PortraitActivity {
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
     android.support.v7.widget.Toolbar toolbarmain;
+    private ImageButton sb;
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
     private FloatingActionButton fab;
-    RecyclerView rv;
 
+
+    private Handler inactivityHandler = new Handler(){
+        public void handleMessage(Message msg) {
+        }
+    };
+
+    private Runnable isInactive = () -> new AlertDialog.Builder(this)
+            .setMessage("Είστε ανενεργός αρκετη ώρα, θελετε να γίνει ανανέωση;")
+            .setNegativeButton("ΟΧΙ", (dialog, which) -> {})
+            .setPositiveButton("ΝΑΙ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    initSearch(sb);
+                }
+            })
+            .setIcon(R.drawable.ic_info_outline_black_24dp)
+            .setTitle("Ειδοποίηση.")
+            .show();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +83,7 @@ public class MainMenuActivity extends PortraitActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Οι Παραγγελίες μου");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
-        rv = findViewById(R.id.orderlist);
+        RecyclerView rv = findViewById(R.id.orderlist);
         fab = findViewById(R.id.additem);
         NestedScrollView nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
@@ -80,6 +98,7 @@ public class MainMenuActivity extends PortraitActivity {
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         results_section = findViewById(R.id.results_section);
+        sb = findViewById(R.id.search);
         storeParams();
         setUpDatePickers();
         RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
@@ -130,9 +149,13 @@ public class MainMenuActivity extends PortraitActivity {
         toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
                 .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
                 toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+
     }
 
     private void initRecyclerView(){
+
         RecyclerView recyclerView = findViewById(R.id.orderlist);
 
         recyclerView.setHasFixedSize(true);
@@ -162,43 +185,19 @@ public class MainMenuActivity extends PortraitActivity {
                 startActivity(i);
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
-            public void onLongItemClick(View view, int position) {
-                PopupMenu popup = new PopupMenu(getApplicationContext(),view);
-                popup.setGravity(Gravity.END);
-                //inflating menu from xml resource
-                popup.inflate(R.menu.menu_details);
-                //adding click listener
-                popup.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.edit:
-                            Toast.makeText(getApplicationContext(), "set", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.delete:
-                            Toast.makeText(getApplicationContext(), "log", Toast.LENGTH_SHORT).show();
-                            return true;
-                        default:
-                            return false;
-                    }
-                });
-                //displaying the popup
-                popup.show();
-
-            }
+            public void onLongItemClick(View view, int position) {}
         }));
         adapter = new MainMenuAdapter(this, orders);
         recyclerView.setAdapter(adapter);
     }
 
     private void setUpDatePickers(){
-        fromCalendar.add(Calendar.WEEK_OF_MONTH, -3);
-
-        toDateString = dpformat.format(toCalendar.getTime());
-        fromDateString = dpformat.format(fromCalendar.getTime());
-        fromDate.setText(fromDateString);
-        toDate.setText(toDateString);
-
+            fromCalendar.add(Calendar.WEEK_OF_MONTH, -3);
+            toDateString = dpformat.format(toCalendar.getTime());
+            fromDateString = dpformat.format(fromCalendar.getTime());
+            fromDate.setText(fromDateString);
+            toDate.setText(toDateString);
 
     }
 
@@ -219,9 +218,16 @@ public class MainMenuActivity extends PortraitActivity {
         startActivity(intent);
 
 
+
     }
 
     public void initSearch(View view){
+
+        RelativeLayout waitLay = findViewById(R.id.wait_lay_mm);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        waitLay.setVisibility(View.VISIBLE);
+
 
         fromDateString = fromDate.getText().toString();
         toDateString = toDate.getText().toString();
@@ -255,6 +261,11 @@ public class MainMenuActivity extends PortraitActivity {
             }
 
 
+            runOnUiThread(()-> {
+                waitLay.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            });
+
 
         }).start();
     }
@@ -281,7 +292,6 @@ public class MainMenuActivity extends PortraitActivity {
     private void updateFromLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
         fromDate.setText(sdf.format(fromCalendar.getTime()));
     }
 
@@ -326,4 +336,36 @@ public class MainMenuActivity extends PortraitActivity {
 
 
 
+    public static final long DISCONNECT_TIMEOUT = 600000; // 10 min = 10 * 60 * 1000 ms
+
+
+
+    public void resetDisconnectTimer(){
+        inactivityHandler.removeCallbacks(isInactive);
+        inactivityHandler.postDelayed(isInactive, DISCONNECT_TIMEOUT);
+    }
+
+    public void stopDisconnectTimer(){
+        inactivityHandler.removeCallbacks(isInactive);
+    }
+
+    @Override
+    public void onUserInteraction(){
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopDisconnectTimer();
+    }
 }
+
+
+
