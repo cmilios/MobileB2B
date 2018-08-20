@@ -37,7 +37,8 @@
             android:textColor="@color/colorTextBold"
             android:focusable="false"
             android:clickable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:longClickable="false"/>
 
     </android.support.design.widget.TextInputLayout>
 

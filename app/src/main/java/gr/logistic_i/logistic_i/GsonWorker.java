@@ -230,8 +230,6 @@ public class GsonWorker {
                     .build();
             try {
                 Response response = client.newCall(request).execute();
-                client.newCall(request).execute().close();
-
                 ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
                 response.close();
 

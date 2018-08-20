@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -66,8 +69,10 @@ public class ItemsMenuActivity extends PortraitActivity {
         BootstrapButton clearmtrlines = findViewById(R.id.clearall);
         BootstrapButton confirmButton = findViewById(R.id.confirm);
         refLayout = findViewById(R.id.refreshLayout);
-        refLayout.setRefreshHeader(new ClassicsHeader(this));
-        refLayout.setRefreshFooter(new ClassicsFooter(this));
+        new Thread(()->{
+            refLayout.setRefreshHeader(new ClassicsHeader(this));
+            refLayout.setRefreshFooter(new ClassicsFooter(this));
+        }).start();
         refLayout.setOnLoadMoreListener(refreshLayout -> {
             if (isChecked) {
                 counter+=50;
@@ -76,12 +81,10 @@ public class ItemsMenuActivity extends PortraitActivity {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     for (Mtrl m:results){
-                        new Thread(()-> {
-                                mtrList.add(m);
-                                adapter.replaceList(mtrList);
-                                runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
+                        mtrList.add(m);
                     }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread(adapter::notifyDataSetChanged);
 
                     if (results.size()<50){
                         runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
@@ -97,12 +100,10 @@ public class ItemsMenuActivity extends PortraitActivity {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", searchString,counterall, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     for (Mtrl m:results){
-                        new Thread(()-> {
-                            mtrList.add(m);
-                            adapter.replaceList(mtrList);
-                            runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
+                        mtrList.add(m);
                     }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread(adapter::notifyDataSetChanged);
                     if (results.size()<50){
                         runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
                     }
@@ -120,11 +121,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     mtrList.clear();
                     for (Mtrl m:results){
-                        new Thread(()-> {
-                            mtrList.add(m);
-                            adapter.replaceList(mtrList);
-                            runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
+                        mtrList.add(m);
                     }
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
@@ -137,12 +134,10 @@ public class ItemsMenuActivity extends PortraitActivity {
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     mtrList.clear();
                     for (Mtrl m:results){
-                        new Thread(()-> {
-                            mtrList.add(m);
-                            adapter.replaceList(mtrList);
-                            runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
+                        mtrList.add(m);
                     }
+                    adapter.replaceList(mtrList);
+                    runOnUiThread(adapter::notifyDataSetChanged);
 
                     runOnUiThread(refLayout::finishRefresh);
                 }).start();
@@ -256,6 +251,27 @@ public class ItemsMenuActivity extends PortraitActivity {
                 gotfab.setVisibility(visibility);
             }
         });
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent(getApplicationContext(), AddProductActivity.class);
+                i.putParcelableArrayListExtra("lines", mtrLines);
+                i.putExtra("mtrl",mtrList.get(position));
+                i.putExtra("id", ItemsMenuActivity.class.getSimpleName());
+                i.putExtra("url", url);
+                i.putExtra("refid", refid);
+                i.putExtra("clid", clientid);
+                i.putExtra("isChecked", isChecked);
+                i.putExtra("key", key);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
         recyclerView.setLayoutManager(MyLayoutManager);
         adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked, key);
         recyclerView.setAdapter(adapter);
@@ -347,10 +363,13 @@ public class ItemsMenuActivity extends PortraitActivity {
                 runOnUiThread((adapter::notifyDataSetChanged));
             }).start();
         }
-        s.setOnClickListener(v -> {
-            isChecked = !isChecked;
-            checkable.setChecked(isChecked);
-            s.setChecked(isChecked);
+
+
+        s.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            this.isChecked = isChecked;
+
+
             if (isChecked) {
                 counter=0;
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
@@ -359,11 +378,6 @@ public class ItemsMenuActivity extends PortraitActivity {
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
                     mtrList = gsonWorker.getFOI(mtrlReq);
-                        new Thread(() -> {
-                            ArrayList<Mtrl>buffer = mtrList;
-                            adapter.replaceList(buffer);
-                            runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
                 }).start();
@@ -375,16 +389,15 @@ public class ItemsMenuActivity extends PortraitActivity {
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",counterall, url);
                     mtrList = gsonWorker.getFOI(mtrlReq);
-                        new Thread(() -> {
-                            ArrayList<Mtrl> buffer = mtrList;
-                            adapter.replaceList(buffer);
-                            runOnUiThread((adapter::notifyDataSetChanged));
-                        }).start();
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
 
                 }).start();
+
+
             }
+
+
         });
         return true;
     }
@@ -402,16 +415,15 @@ public class ItemsMenuActivity extends PortraitActivity {
                         mtrList.clear();
                         adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
+                        ArrayList<Mtrl> sResults = new ArrayList<>();
                         for (Mtrl m:results){
-                            new Thread(()-> {
-                                mtrList.add(m);
-                                adapter.replaceList(mtrList);
-                                runOnUiThread((adapter::notifyDataSetChanged));
-                            }).start();
+                            if(m.getName().toLowerCase().contains(searchString.toLowerCase())){
+                                sResults.add(m);
+                            }
                         }
-                        adapter.replaceList(mtrList);
+
+                        adapter.replaceList(sResults);
                         runOnUiThread((adapter::notifyDataSetChanged));
-                        runOnUiThread(refLayout::finishRefresh);
                     }).start();
                 } else {
                     GsonWorker gson = new GsonWorker(url);
@@ -421,13 +433,11 @@ public class ItemsMenuActivity extends PortraitActivity {
                         mtrList.clear();
                         adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
-                        for (Mtrl m: results){
-                            new Thread(()-> {
-                                mtrList.add(m);
-                                adapter.replaceList(mtrList);
-                                runOnUiThread((adapter::notifyDataSetChanged));
-                            }).start();
+                        for (Mtrl m:results){
+                            mtrList.add(m);
                         }
+                        adapter.replaceList(mtrList);
+                        runOnUiThread(adapter::notifyDataSetChanged);
                     }).start();
                 }
 

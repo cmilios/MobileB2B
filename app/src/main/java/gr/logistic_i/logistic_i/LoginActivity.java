@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 
 public class LoginActivity extends PortraitActivity {
@@ -33,6 +34,7 @@ public class LoginActivity extends PortraitActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         setContentView(R.layout.activity_login);
         rq_fc = findViewById(R.id.rq_fc);

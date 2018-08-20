@@ -5,8 +5,11 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="101dp"
-    tools:layout_editor_absoluteY="25dp">
+    android:layout_height="100dp"
+    tools:layout_editor_absoluteY="25dp"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground"
+    android:focusable="true">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/my_image_view"
@@ -19,7 +22,9 @@
         android:layout_margin="8dp"
         android:adjustViewBounds="true"
         app:actualImageScaleType="focusCrop"
-        fresco:placeholderImage="@drawable/ic_baseline_image_24px" />
+        fresco:placeholderImage="@drawable/ic_baseline_image_24px"
+        fresco:failureImage="@drawable/ic_baseline_image_24px"
+        android:longClickable="false"/>
 
     <TextView
         android:id="@+id/item_name"
@@ -35,7 +40,11 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/my_image_view" />
+        android:layout_toEndOf="@id/my_image_view"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"/>
 
     <ImageView
         android:id="@+id/imageView3"
@@ -47,18 +56,26 @@
         android:layout_alignParentLeft="true"
         app:srcCompat="@drawable/divider"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="101dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" />
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"/>
+
+    <!--<Button-->
+        <!--android:id="@+id/button"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="101dp"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:clickable="false"-->
+        <!--android:focusable="false"-->
+        <!--android:focusableInTouchMode="false"-->
+        <!--android:longClickable="false"/>-->
 
 </RelativeLayout>

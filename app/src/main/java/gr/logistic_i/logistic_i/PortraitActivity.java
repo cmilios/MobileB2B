@@ -25,6 +25,7 @@ public abstract class PortraitActivity extends AppCompatActivity {
                 .penaltyLog()
                 .penaltyDeath()
                 .build());
+
         Fresco.initialize(this);
         TypefaceProvider.registerDefaultIconSets();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

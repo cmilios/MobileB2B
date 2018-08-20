@@ -55,30 +55,30 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
 
         if (mmtrList==null) throw new AssertionError("Object cannot be null");
         if(mmtrList.get(position).getName()!=null){
-            holder.itemName.setText(mmtrList.get(holder.getAdapterPosition()).getName());
+            holder.itemName.setText(mmtrList.get(position).getName());
         }
 
         if (mmtrList.get(position).getImgURL()!=null){
-            Uri uri = Uri.parse("https://"+mmtrList.get(holder.getAdapterPosition()).getCorrespondingBase()+"/s1services/?filename="+mmtrList.get(position).getImgURL());
+            Uri uri = Uri.parse("https://"+mmtrList.get(position).getCorrespondingBase()+".oncloud.gr/s1services/?filename="+mmtrList.get(position).getImgURL());
             holder.draweeView.setImageURI(uri);
         }
 
 
-        holder.btn.setOnClickListener(v -> {
-            Intent i = new Intent(mContext, AddProductActivity.class);
-            i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("mtrl",mmtrList.get(position));
-            i.putExtra("id", mContext.getClass().getSimpleName());
-            i.putExtra("url", url);
-            i.putExtra("refid", refid);
-            i.putExtra("clid", clientID);
-            i.putExtra("isChecked", isChecked);
-            i.putExtra("key", key);
-            mContext.startActivity(i);
-            ((Activity)mContext).finish();
-
-
-        });
+//        holder.btn.setOnClickListener(v -> {
+//            Intent i = new Intent(mContext, AddProductActivity.class);
+//            i.putParcelableArrayListExtra("lines", mtrLines);
+//            i.putExtra("mtrl",mmtrList.get(position));
+//            i.putExtra("id", mContext.getClass().getSimpleName());
+//            i.putExtra("url", url);
+//            i.putExtra("refid", refid);
+//            i.putExtra("clid", clientID);
+//            i.putExtra("isChecked", isChecked);
+//            i.putExtra("key", key);
+//            mContext.startActivity(i);
+//            ((Activity)mContext).finish();
+//
+//
+//        });
     }
 
 
@@ -98,13 +98,11 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemName;
-        Button btn;
         protected ConstraintLayout parent_layout;
         SimpleDraweeView draweeView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            btn = itemView.findViewById(R.id.button);
             itemName = itemView.findViewById(R.id.item_name);
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             draweeView = itemView.findViewById(R.id.my_image_view);

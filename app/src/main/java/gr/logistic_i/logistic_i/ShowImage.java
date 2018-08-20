@@ -3,6 +3,8 @@ package gr.logistic_i.logistic_i;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,15 +12,24 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ZoomButtonsController;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
+
+import java.net.URI;
+
+import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ShowImage extends PortraitActivity {
 
     private static final String TAG = "ImageViewShow";
 
-    private SimpleDraweeView image;
+    private PhotoDraweeView image;
     private ScaleGestureDetector mScaleGestureDetector;
     private float mScaleFactor = 1.0f;
 
@@ -78,6 +89,7 @@ public class ShowImage extends PortraitActivity {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
+
         mScaleGestureDetector.onTouchEvent(motionEvent);
         return true;
     }
@@ -85,6 +97,20 @@ public class ShowImage extends PortraitActivity {
     public void storeParams(){
         Intent i = getIntent();
         image.setImageURI(i.getStringExtra("uri"));
+        PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder();
+        controllerBuilder.setUri(i.getStringExtra("uri"));
+        controllerBuilder.setOldController(image.getController());
+        controllerBuilder.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || image == null) {
+                    return;
+                }
+                image.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        image.setController(controllerBuilder.build());
         fullScreen();
     }
 

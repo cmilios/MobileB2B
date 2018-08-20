@@ -3,6 +3,7 @@ package gr.logistic_i.logistic_i;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,16 +43,16 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
 
         switch (orderlist.get(position).getState()) {
             case "1":
-                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorWhite));
+                holder.mmparent.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorWhite));
                 break;
             case "2":
-                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentYellow));
+                holder.mmparent.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorTransparentYellow));
                 break;
             case "3":
-                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentGreen));
+                holder.mmparent.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorTransparentGreen));
                 break;
             default:
-                holder.mmparent.setBackgroundColor(mContext.getResources().getColor(R.color.colorTransparentRed));
+                holder.mmparent.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorTransparentRed));
                 break;
         }
 

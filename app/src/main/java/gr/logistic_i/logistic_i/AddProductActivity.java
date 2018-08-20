@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +33,7 @@ public class AddProductActivity extends PortraitActivity {
     private TextView code;
     private TextView manufacturer;
     private Spinner unitsp;
-    private EditText qty;
+    private TextInputEditText qty;
     private String cameFrom;
     private String url;
     private String refid;
@@ -53,7 +56,7 @@ public class AddProductActivity extends PortraitActivity {
         manufacturer = findViewById(R.id.manufacturer);
         code = findViewById(R.id.mtrlcode);
         mtrlIcon = findViewById(R.id.image_icon1);
-        qty = findViewById(R.id.selected_qty);
+        qty = findViewById(R.id.selected_qtytxt);
         unitsp = findViewById(R.id.unitspn);
         backimg = findViewById(R.id.back_img);
         rq = findViewById(R.id.rq_f);
@@ -89,8 +92,13 @@ public class AddProductActivity extends PortraitActivity {
             wayOfTransormation = deserWayOfTransformation(resWay);
         }).start();
 
-        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+"/s1services/?filename="+mtrl.getImgURL());
+        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+".oncloud.gr//s1services/?filename="+mtrl.getImgURL());
         mtrlIcon.setImageURI(uri);
+        mtrlIcon.setController(
+                Fresco.newDraweeControllerBuilder()
+                        .setTapToRetryEnabled(true)
+                        .setUri(uri)
+                        .build());
 
 
 

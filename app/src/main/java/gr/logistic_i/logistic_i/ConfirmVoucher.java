@@ -13,11 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class ConfirmVoucher extends PortraitActivity {
     private JSONObject data;
     boolean setState = false;
     private String res;
-    private Button b;
+    private BootstrapButton b;
     private ProgressBar pbar;
     private Boolean isChecked;
     private TextInputEditText comms;
@@ -70,6 +71,20 @@ public class ConfirmVoucher extends PortraitActivity {
         c = Calendar.getInstance().getTime();
         dt.setText(df.format(c));
         b = findViewById(R.id.setf);
+        b.setOnClickListener(v -> {
+            pbar.setVisibility(View.VISIBLE);
+            b.setVisibility(View.GONE);
+            serializeCalculateRequest();
+            JSONObject setDataJson = serializeSetDataRequest();
+            GsonWorker gson = new GsonWorker(url);
+            new Thread(()->{
+                res = gson.setData(setDataJson);
+                if (res!=null){
+                    setState = true;
+                }
+                runOnUiThread(this::goToOrders);
+            }).start();
+        });
 
         storeVars();
         if (mtrLines!=null) {
@@ -180,23 +195,6 @@ public class ConfirmVoucher extends PortraitActivity {
         finalp.setText(priceFormat.format(fp) + "€");
     }
 
-    public void setFindoc(View view){
-        pbar.setVisibility(View.VISIBLE);
-        b.setVisibility(View.GONE);
-        serializeCalculateRequest();
-        JSONObject setDataJson = serializeSetDataRequest();
-        GsonWorker gson = new GsonWorker(url);
-        new Thread(()->{
-            res = gson.setData(setDataJson);
-            if (key!=null){
-                res = gson.setData(setDataJson);
-            }
-            if (res!=null){
-                setState = true;
-            }
-            runOnUiThread(this::goToOrders);
-        }).start();
-    }
 
     public JSONObject serializeSetDataRequest(){
         JSONObject setData = new JSONObject();
