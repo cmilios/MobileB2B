@@ -10,9 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -23,23 +21,12 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
 
     private ArrayList<Mtrl> mmtrList;
     private Context mContext;
-    private String clientID;
-    private String url;
-    private ArrayList<MtrLine> mtrLines;
-    private String refid;
-    private Boolean isChecked;
-    private String key;
 
 
-    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList, String url, String clientId, String refid, ArrayList<MtrLine> mtrLines, Boolean isChecked,String key) {
+
+    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
-        this.url = url;
-        this.clientID = clientId;
-        this.mtrLines = mtrLines;
-        this.refid = refid;
-        this.isChecked = isChecked;
-        this.key = key;
 
     }
 
@@ -53,32 +40,17 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        if (mmtrList==null) throw new AssertionError("Object cannot be null");
-        if(mmtrList.get(position).getName()!=null){
-            holder.itemName.setText(mmtrList.get(position).getName());
+        Mtrl m = mmtrList.get(position);
+        if(m.getName()!=null){
+            holder.itemName.setText(m.getName());
         }
 
-        if (mmtrList.get(position).getImgURL()!=null){
-            Uri uri = Uri.parse("https://"+mmtrList.get(position).getCorrespondingBase()+".oncloud.gr/s1services/?filename="+mmtrList.get(position).getImgURL());
+        if (m.getImgURL()!=null){
+            Uri uri = Uri.parse("https://"+m.getCorrespondingBase()+".oncloud.gr/s1services/?filename="+m.getImgURL());
             holder.draweeView.setImageURI(uri);
         }
 
 
-//        holder.btn.setOnClickListener(v -> {
-//            Intent i = new Intent(mContext, AddProductActivity.class);
-//            i.putParcelableArrayListExtra("lines", mtrLines);
-//            i.putExtra("mtrl",mmtrList.get(position));
-//            i.putExtra("id", mContext.getClass().getSimpleName());
-//            i.putExtra("url", url);
-//            i.putExtra("refid", refid);
-//            i.putExtra("clid", clientID);
-//            i.putExtra("isChecked", isChecked);
-//            i.putExtra("key", key);
-//            mContext.startActivity(i);
-//            ((Activity)mContext).finish();
-//
-//
-//        });
     }
 
 
@@ -88,11 +60,23 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
         return mmtrList.size();
     }
 
+
+
     public void replaceList(ArrayList<Mtrl> mtrList) {
         ArrayList<Mtrl> ml = new ArrayList<>();
         ml.clear();
         ml.addAll(mtrList);
         mmtrList = ml;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -75,10 +75,6 @@ public class MtrLine implements Parcelable {
         this.price = price;
     }
 
-    public String getQty() {
-        return qty;
-    }
-
     public void setQty(String qty) {
         this.qty = qty;
     }

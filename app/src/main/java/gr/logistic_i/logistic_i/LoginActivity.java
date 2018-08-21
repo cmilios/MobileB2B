@@ -14,13 +14,10 @@ import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.facebook.drawee.backends.pipeline.Fresco;
 
 
 public class LoginActivity extends PortraitActivity {
@@ -141,6 +138,7 @@ public class LoginActivity extends PortraitActivity {
                     v.clearFocus();
                     rq_fc.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
@@ -151,13 +149,14 @@ public class LoginActivity extends PortraitActivity {
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
     public void onBackPressed() {
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setMessage("Η εφαρμογή θα τερματιστεί. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 

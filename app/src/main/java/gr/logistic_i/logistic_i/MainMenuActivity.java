@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -47,7 +48,7 @@ public class MainMenuActivity extends PortraitActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
-    android.support.v7.widget.Toolbar toolbarmain;
+    private android.support.v7.widget.Toolbar toolbarmain;
     private ImageButton sb;
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
@@ -101,8 +102,8 @@ public class MainMenuActivity extends PortraitActivity {
         sb = findViewById(R.id.search);
         storeParams();
         setUpDatePickers();
-        RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
-        focuslayout.requestFocus();
+        RelativeLayout focusLayout =  findViewById(R.id.RequestFocusLayout);
+        focusLayout.requestFocus();
 
 
 
@@ -128,27 +129,37 @@ public class MainMenuActivity extends PortraitActivity {
 
         }).start();
 
-        DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            fromCalendar.set(Calendar.YEAR, year);
-            fromCalendar.set(Calendar.MONTH, monthOfYear);
-            fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateFromLabel();
-        };
+        new Thread(()->{
+            DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+                new Thread(()->{
+                    fromCalendar.set(Calendar.YEAR, year);
+                    fromCalendar.set(Calendar.MONTH, monthOfYear);
+                    fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                }).start();
 
-        DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            toCalendar.set(Calendar.YEAR, year);
-            toCalendar.set(Calendar.MONTH, monthOfYear);
-            toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateToLabel();
-        };
+                updateFromLabel();
+            };
 
-        fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
-                .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
-                fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+                new Thread(()->{
+                    toCalendar.set(Calendar.YEAR, year);
+                    toCalendar.set(Calendar.MONTH, monthOfYear);
+                    toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                }).start();
+                updateToLabel();
+            };
 
-        toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
-                .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
-                toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
+                    .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                    fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+            toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                    toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+
+        }).start();
 
 
 
@@ -158,38 +169,42 @@ public class MainMenuActivity extends PortraitActivity {
 
         RecyclerView recyclerView = findViewById(R.id.orderlist);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState ==  SCROLL_STATE_IDLE){
-                    if (fab.getVisibility()!=View.VISIBLE){
-                        fab.show();
+        new Thread(()->{
+            recyclerView.setHasFixedSize(true);
+            runOnUiThread(()->recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)));
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState ==  SCROLL_STATE_IDLE){
+                        if (fab.getVisibility()!=View.VISIBLE){
+                            fab.show();
+                        }
+                    }
+                    else{
+                        fab.hide();
                     }
                 }
-                else{
-                    fab.hide();
+            });
+            Looper.prepare();
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(getApplicationContext(), VoucherDetailsActivity.class);
+                    i.putExtra("order", orders.get(position));
+                    i.putExtra("url", url);
+                    i.putExtra("clID", clientId);
+                    i.putExtra("refid", refid);
+                    startActivity(i);
                 }
-            }
-        });
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent i = new Intent(getApplicationContext(), VoucherDetailsActivity.class);
-                i.putExtra("order", orders.get(position));
-                i.putExtra("url", url);
-                i.putExtra("clID", clientId);
-                i.putExtra("refid", refid);
-                startActivity(i);
-            }
 
-            @Override
-            public void onLongItemClick(View view, int position) {}
-        }));
-        adapter = new MainMenuAdapter(this, orders);
-        recyclerView.setAdapter(adapter);
+                @Override
+                public void onLongItemClick(View view, int position) {}
+            }));
+            adapter = new MainMenuAdapter(this, orders);
+            runOnUiThread(()->recyclerView.setAdapter(adapter));
+        }).start();
+
     }
 
     private void setUpDatePickers(){
@@ -292,14 +307,17 @@ public class MainMenuActivity extends PortraitActivity {
     private void updateFromLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        fromDate.setText(sdf.format(fromCalendar.getTime()));
+        runOnUiThread(()->fromDate.setText(sdf.format(fromCalendar.getTime())));
+
+
     }
 
     private void updateToLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        toDate.setText(sdf.format(toCalendar.getTime()));
+        runOnUiThread(()->toDate.setText(sdf.format(toCalendar.getTime())));
+
     }
 
     @Override

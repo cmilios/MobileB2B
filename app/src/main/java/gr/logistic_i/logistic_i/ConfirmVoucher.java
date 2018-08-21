@@ -248,6 +248,7 @@ public class ConfirmVoucher extends PortraitActivity {
                     v.clearFocus();
                     rq.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }

@@ -1,10 +1,9 @@
 package gr.logistic_i.logistic_i;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,11 +12,8 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
-
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
@@ -49,7 +45,6 @@ public class ItemsMenuActivity extends PortraitActivity {
     private long counterall=0;
     private LinearLayoutManager MyLayoutManager;
     private String key;
-
     private String searchString = " ";
 
     private MaterialSearchView searchView;
@@ -80,9 +75,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
-                    for (Mtrl m:results){
-                        mtrList.add(m);
-                    }
+                    mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
 
@@ -99,9 +92,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", searchString,counterall, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
-                    for (Mtrl m:results){
-                        mtrList.add(m);
-                    }
+                    mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
                     if (results.size()<50){
@@ -120,9 +111,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,0, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     mtrList.clear();
-                    for (Mtrl m:results){
-                        mtrList.add(m);
-                    }
+                    mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
                     runOnUiThread(refLayout::finishRefresh);
@@ -133,9 +122,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                     ArrayList<Mtrl> results = gsonWorker.getFOI(mtrlReq);
                     mtrList.clear();
-                    for (Mtrl m:results){
-                        mtrList.add(m);
-                    }
+                    mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
 
@@ -148,8 +135,6 @@ public class ItemsMenuActivity extends PortraitActivity {
         });
         i = getIntent();
         storeParams();
-
-        initRecyclerView();
         clearmtrlines.setOnClickListener(v -> {
             if (mtrLines != null) {
                 mtrLines.clear();
@@ -229,7 +214,6 @@ public class ItemsMenuActivity extends PortraitActivity {
     private void initRecyclerView() {
         MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = findViewById(R.id.details_list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -272,9 +256,11 @@ public class ItemsMenuActivity extends PortraitActivity {
 
             }
         }));
-        recyclerView.setLayoutManager(MyLayoutManager);
-        adapter = new ItemsMenuAdapter(this, mtrList, url, clientid, refid, mtrLines, isChecked, key);
+
+        adapter = new ItemsMenuAdapter(this, mtrList);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(MyLayoutManager);
+
     }
 
     private void initBasketRV() {
@@ -344,6 +330,7 @@ public class ItemsMenuActivity extends PortraitActivity {
         checkable.setChecked(isChecked);
         s = (Switch) checkable.getActionView();
         s.setChecked(isChecked);
+        initRecyclerView();
         if (isChecked) {
             Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
             GsonWorker gsonWorker = new GsonWorker(url);
@@ -359,6 +346,7 @@ public class ItemsMenuActivity extends PortraitActivity {
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                 mtrList = gsonWorker.getFOI(mtrlReq);
+
                 adapter.replaceList(mtrList);
                 runOnUiThread((adapter::notifyDataSetChanged));
             }).start();
@@ -368,6 +356,12 @@ public class ItemsMenuActivity extends PortraitActivity {
         s.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
             this.isChecked = isChecked;
+
+
+            //reset adapter so all data clear
+            mtrList.clear();
+            adapter = new ItemsMenuAdapter(this, mtrList);
+            recyclerView.setAdapter(adapter);
 
 
             if (isChecked) {
@@ -433,9 +427,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                         mtrList.clear();
                         adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
-                        for (Mtrl m:results){
-                            mtrList.add(m);
-                        }
+                        mtrList.addAll(results);
                         adapter.replaceList(mtrList);
                         runOnUiThread(adapter::notifyDataSetChanged);
                     }).start();

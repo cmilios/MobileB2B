@@ -71,6 +71,17 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public void replaceList(ArrayList<Order> orders) {
         orderlist.clear();
         orderlist.addAll(orders);
+
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
 

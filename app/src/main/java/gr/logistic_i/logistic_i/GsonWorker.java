@@ -96,7 +96,7 @@ public class GsonWorker {
         return null;
     }
 
-    public ArrayList<MtrLine> getMtrLines(MtrLinesReq mtrLinesReq) {
+    public void getMtrLines(MtrLinesReq mtrLinesReq) {
         String resstr = getData(mtrLinesReq.serObj());
         try {
             JSONObject resObj = new JSONObject(resstr);
@@ -105,13 +105,11 @@ public class GsonWorker {
             }
             if (state) {
                 mtrLines = mtrLinesReq.parseResponse(resObj);
-                return mtrLines;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return null;
     }
 
     public ArrayList<Mtrl> getFOI(MtrlReq mtrlReq) {
