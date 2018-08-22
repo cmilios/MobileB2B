@@ -46,7 +46,6 @@ public class ConfirmVoucher extends PortraitActivity {
     private String res;
     private BootstrapButton b;
     private ProgressBar pbar;
-    private Boolean isChecked;
     private TextInputEditText comms;
     private RelativeLayout rq;
     private String key;
@@ -108,13 +107,11 @@ public class ConfirmVoucher extends PortraitActivity {
     }
 
     public void storeVars(){
-        Intent i = getIntent();
-        mtrLines = i.getParcelableArrayListExtra("lines");
-        clid = i.getStringExtra("clid");
-        url = i.getStringExtra("url");
-        refid = i.getStringExtra("refid");
-        isChecked = i.getBooleanExtra("isChecked", false);
-        key = i.getStringExtra("key");
+        mtrLines = ((App)this.getApplication()).getMtrLines();
+        clid = ((App)this.getApplication()).getClientID();
+        url = ((App)this.getApplication()).getUrl();
+        refid = ((App)this.getApplication()).getRefID();
+        key = ((App)this.getApplication()).getKey();
     }
 
     public void deserMtrLinesResponse(){
@@ -217,12 +214,8 @@ public class ConfirmVoucher extends PortraitActivity {
 
     public void goToOrders(){
         if (setState){
+            ((App)this.getApplication()).setMtrLines(new ArrayList<>());
             Intent i = new Intent(this, MainMenuActivity.class);
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putExtra("url", url);
-            i.putExtra("clID", clid);
-            i.putExtra("refid", refid);
-            i.putExtra("isChecked", isChecked);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(i);
         }

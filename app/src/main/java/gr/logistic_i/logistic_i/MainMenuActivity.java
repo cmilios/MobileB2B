@@ -1,5 +1,6 @@
 package gr.logistic_i.logistic_i;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -48,7 +49,6 @@ public class MainMenuActivity extends PortraitActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
-    private android.support.v7.widget.Toolbar toolbarmain;
     private ImageButton sb;
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
@@ -58,6 +58,7 @@ public class MainMenuActivity extends PortraitActivity {
     private FloatingActionButton fab;
 
 
+    @SuppressLint("HandlerLeak")
     private Handler inactivityHandler = new Handler(){
         public void handleMessage(Message msg) {
         }
@@ -79,7 +80,7 @@ public class MainMenuActivity extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        toolbarmain = findViewById(R.id.details_toolbar);
+        android.support.v7.widget.Toolbar toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Οι Παραγγελίες μου");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -192,9 +193,6 @@ public class MainMenuActivity extends PortraitActivity {
                 public void onItemClick(View view, int position) {
                     Intent i = new Intent(getApplicationContext(), VoucherDetailsActivity.class);
                     i.putExtra("order", orders.get(position));
-                    i.putExtra("url", url);
-                    i.putExtra("clID", clientId);
-                    i.putExtra("refid", refid);
                     startActivity(i);
                 }
 
@@ -217,19 +215,14 @@ public class MainMenuActivity extends PortraitActivity {
     }
 
     public void storeParams(){
-        Intent intent = getIntent();
-        url = intent.getStringExtra("url");
-        clientId = intent.getStringExtra("clID");
-        refid = intent.getStringExtra("refid");
+        url = ((App)this.getApplication()).getUrl();
+        clientId = ((App)this.getApplication()).getClientID();
+        refid =((App)this.getApplication()).getRefID();
 
     }
 
     public void initAddIntent(View view){
         Intent intent = new Intent(this, ItemsMenuActivity.class);
-        intent.putExtra("url", url);
-        intent.putExtra("refid", refid);
-        intent.putExtra("clid", clientId);
-
         startActivity(intent);
 
 

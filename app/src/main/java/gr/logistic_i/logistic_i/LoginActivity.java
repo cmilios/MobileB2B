@@ -2,6 +2,7 @@ package gr.logistic_i.logistic_i;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -31,15 +32,10 @@ public class LoginActivity extends PortraitActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_login);
         rq_fc = findViewById(R.id.rq_fc);
         rq_fc.requestFocus();
         setAllToNormal();
-
-
-
 
     }
 
@@ -81,11 +77,12 @@ public class LoginActivity extends PortraitActivity {
                 gson.makeLogin(c1);
                 if (gson.isValidURL()) {
                     if (gson.getAuthenticationFlag()) {
+                        ((App) this.getApplication()).setUrl(gson.getUrl());
+                        ((App) this.getApplication()).setClientID(gson.getAuthenticateClID());
+                        ((App) this.getApplication()).setRefID(gson.getRefID());
+                        ((App) this.getApplication()).setAppID("1100");
+
                         Intent i = new Intent(this, MainMenuActivity.class);
-                        i.putExtra("id", this.getClass().getSimpleName());
-                        i.putExtra("url", gson.getUrl());
-                        i.putExtra("clID", gson.getAuthenticateClID());
-                        i.putExtra("refid", gson.getRefID());
                         this.startActivity(i);
                         runOnUiThread(this::setAllToNormal);
                     } else {

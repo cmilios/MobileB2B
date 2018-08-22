@@ -77,9 +77,9 @@ public class VoucherDetailsActivity extends PortraitActivity {
     public void setTexts() {
         Intent i = getIntent();
         o = i.getParcelableExtra("order");
-        url = i.getStringExtra("url");
-        clientId = i.getStringExtra("clID");
-        refid = i.getStringExtra("refid");
+        url = ((App)this.getApplication()).getUrl();
+        clientId = ((App)this.getApplication()).getClientID();
+        refid = ((App)this.getApplication()).getRefID();
         dcode.setText(o.getCode());
         dfindoc.setText(o.getFindoc());
         dfincode.setText(o.getFincode());
@@ -227,9 +227,6 @@ public class VoucherDetailsActivity extends PortraitActivity {
                                 .setMessage("H παραγγελία σας ακυρώθηκε.")
                                 .setNeutralButton("OK", (dialog, which) -> {
                                     Intent i = new Intent(this, MainMenuActivity.class);
-                                    i.putExtra("url", url);
-                                    i.putExtra("clID", clientId);
-                                    i.putExtra("refid", refid);
                                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     this.startActivity(i);
                                     finish();
@@ -313,12 +310,11 @@ public class VoucherDetailsActivity extends PortraitActivity {
 
             switch (state) {
                 case "1|Σε αναμονή":
+
+                    ((App)this.getApplication()).setMtrLines(mtrLines);
+                    ((App)this.getApplication()).setKey(o.getFindoc());
+
                     Intent i = new Intent(this, ItemsMenuActivity.class);
-                    i.putExtra("clid", clientId);
-                    i.putExtra("url", url);
-                    i.putExtra("refid", refid);
-                    i.putExtra("lines", mtrLines);
-                    i.putExtra("key", o.getFindoc());
                     startActivity(i);
                     finish();
                     break;

@@ -34,9 +34,7 @@ public class AddProductActivity extends PortraitActivity {
     private TextView manufacturer;
     private Spinner unitsp;
     private TextInputEditText qty;
-    private String cameFrom;
     private String url;
-    private String refid;
     private String clientid;
     private HashMap<Integer, String> unitlist = new HashMap<>();
     private ArrayList<String> showList = new ArrayList<>();
@@ -45,7 +43,6 @@ public class AddProductActivity extends PortraitActivity {
     private String resWay;
     private Uri uri;
     private int unitCode;
-    private String key;
 
     private RelativeLayout rq;
     @Override
@@ -73,14 +70,10 @@ public class AddProductActivity extends PortraitActivity {
 
     private void storeVariables() {
         Intent i = getIntent();
-        cameFrom = i.getStringExtra("id");
-
         mtrl = i.getParcelableExtra("mtrl");
-        mtrLines = i.getParcelableArrayListExtra("lines");
-        url = i.getStringExtra("url");
-        refid = i.getStringExtra("refid");
-        clientid = i.getStringExtra("clid");
-        key = i.getStringExtra("key");
+        mtrLines = ((App)this.getApplication()).getMtrLines();
+        url = ((App)this.getApplication()).getUrl();
+        clientid = ((App)this.getApplication()).getClientID();
 
     }
 
@@ -212,30 +205,10 @@ public class AddProductActivity extends PortraitActivity {
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
             line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode, unitCode);
             line.setLinkedMtrl(mtrl);
-            mtrLines.add(line);
+            ((App)this.getApplication()).addLineToList(line);
 
         }
-
-
-
-
-
-
-
-        Intent i = null;
-        try {
-            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("url", url);
-            i.putExtra("refid", refid);
-            i.putExtra("clid", clientid);
-            i.putExtra("key", key);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        startActivity(i);
-        finish();
+        onBackPressed();
 
 
     }
@@ -261,21 +234,7 @@ public class AddProductActivity extends PortraitActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = null;
-        try {
-            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("url", url);
-            i.putExtra("refid", refid);
-            i.putExtra("clid", clientid);
-            i.putExtra("key", key);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        startActivity(i);
-        finish();
-
+        super.onBackPressed();
     }
 
     public void checkSpinnerView(){

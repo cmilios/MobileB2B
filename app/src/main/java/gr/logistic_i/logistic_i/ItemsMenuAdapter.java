@@ -1,8 +1,6 @@
 package gr.logistic_i.logistic_i;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -21,12 +19,14 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
 
     private ArrayList<Mtrl> mmtrList;
     private Context mContext;
+    private ArrayList<MtrLine> mtrLines;
 
 
 
-    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList) {
+    ItemsMenuAdapter(Context mContext, ArrayList<Mtrl> mtrList, ArrayList<MtrLine> mtrLines) {
         this.mmtrList = mtrList;
         this.mContext = mContext;
+        this.mtrLines = mtrLines;
 
     }
 
@@ -48,6 +48,14 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
         if (m.getImgURL()!=null){
             Uri uri = Uri.parse("https://"+m.getCorrespondingBase()+".oncloud.gr/s1services/?filename="+m.getImgURL());
             holder.draweeView.setImageURI(uri);
+        }
+
+        if (mtrLines!=null || mtrLines.size()!=0) {
+            for (MtrLine mt:mtrLines) {
+                if (mt.getDescription().equals(mmtrList.get(position).getName())) {
+                    holder.pos.setText("x"+mt.getQty1());
+                }
+            }
         }
 
 
@@ -84,6 +92,7 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
         TextView itemName;
         protected ConstraintLayout parent_layout;
         SimpleDraweeView draweeView;
+        TextView pos;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -91,6 +100,7 @@ public class ItemsMenuAdapter extends RecyclerView.Adapter<ItemsMenuAdapter.View
             parent_layout = itemView.findViewById(R.id.main_menu_parent);
             draweeView = itemView.findViewById(R.id.my_image_view);
 
+            pos = itemView.findViewById(R.id.pos);
 
 
         }

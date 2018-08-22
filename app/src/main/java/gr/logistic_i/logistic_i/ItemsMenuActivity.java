@@ -32,7 +32,6 @@ public class ItemsMenuActivity extends PortraitActivity {
     private String refid;
     private String clientid;
     private ArrayList<Mtrl> mtrList = new ArrayList<>();
-    private Intent i;
     private BasketAdapter ad;
     private boolean isChecked = true;
     private Switch s;
@@ -44,7 +43,6 @@ public class ItemsMenuActivity extends PortraitActivity {
     private long counter=0;
     private long counterall=0;
     private LinearLayoutManager MyLayoutManager;
-    private String key;
     private String searchString = " ";
 
     private MaterialSearchView searchView;
@@ -69,6 +67,8 @@ public class ItemsMenuActivity extends PortraitActivity {
             refLayout.setRefreshFooter(new ClassicsFooter(this));
         }).start();
         refLayout.setOnLoadMoreListener(refreshLayout -> {
+            s.setClickable(false);
+
             if (isChecked) {
                 counter+=50;
                 GsonWorker gsonWorker = new GsonWorker(url);
@@ -78,13 +78,13 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
-
                     if (results.size()<50){
                         runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
                     }
                     else{
                         runOnUiThread(refreshLayout::finishLoadMore);
                     }
+                    runOnUiThread(()->s.setClickable(true));
                 }).start();
             } else {
                 counterall+=50;
@@ -101,10 +101,12 @@ public class ItemsMenuActivity extends PortraitActivity {
                     else{
                         runOnUiThread(refreshLayout::finishLoadMore);
                     }
+                    runOnUiThread(()->s.setClickable(true));
                 }).start();
             }
         });
         refLayout.setOnRefreshListener(refreshlayout -> {
+            s.setClickable(false);
             if (isChecked) {
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
@@ -115,6 +117,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
                     runOnUiThread(refLayout::finishRefresh);
+                    runOnUiThread(()->s.setClickable(true));
                 }).start();
             } else {
                 GsonWorker gsonWorker = new GsonWorker(url);
@@ -125,19 +128,16 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
-
                     runOnUiThread(refLayout::finishRefresh);
+                    runOnUiThread(()->s.setClickable(true));
                 }).start();
             }
-
-
-
         });
-        i = getIntent();
         storeParams();
         clearmtrlines.setOnClickListener(v -> {
             if (mtrLines != null) {
                 mtrLines.clear();
+                ((App)this.getApplication()).setMtrLines(mtrLines);
                 ad.notifyDataSetChanged();
                 confirmButton.setEnabled(false);
                 confirmButton.setFocusable(false);
@@ -147,11 +147,6 @@ public class ItemsMenuActivity extends PortraitActivity {
         confirmButton.setOnClickListener(v -> {
             if (mtrLines != null && !(mtrLines.size() == 0)) {
                 Intent i = new Intent(ItemsMenuActivity.this, ConfirmVoucher.class);
-                i.putParcelableArrayListExtra("lines", mtrLines);
-                i.putExtra("url", url);
-                i.putExtra("refid", refid);
-                i.putExtra("clid", clientid);
-                i.putExtra("key", key);
                 startActivity(i);
 
             } else {
@@ -239,16 +234,8 @@ public class ItemsMenuActivity extends PortraitActivity {
             @Override
             public void onItemClick(View view, int position) {
                 Intent i = new Intent(getApplicationContext(), AddProductActivity.class);
-                i.putParcelableArrayListExtra("lines", mtrLines);
                 i.putExtra("mtrl",mtrList.get(position));
-                i.putExtra("id", ItemsMenuActivity.class.getSimpleName());
-                i.putExtra("url", url);
-                i.putExtra("refid", refid);
-                i.putExtra("clid", clientid);
-                i.putExtra("isChecked", isChecked);
-                i.putExtra("key", key);
                 startActivity(i);
-                finish();
             }
 
             @Override
@@ -257,7 +244,7 @@ public class ItemsMenuActivity extends PortraitActivity {
             }
         }));
 
-        adapter = new ItemsMenuAdapter(this, mtrList);
+        adapter = new ItemsMenuAdapter(this, mtrList, mtrLines);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(MyLayoutManager);
 
@@ -273,12 +260,10 @@ public class ItemsMenuActivity extends PortraitActivity {
 
     private void storeParams() {
 
-        mtrLines = i.getParcelableArrayListExtra("lines");
-        url = i.getStringExtra("url");
-        refid = i.getStringExtra("refid");
-        clientid = i.getStringExtra("clid");
-        isChecked = i.getBooleanExtra("isChecked", false);
-        key = i.getStringExtra("key");
+        mtrLines = ((App)this.getApplication()).getMtrLines();
+        url = ((App)this.getApplication()).getUrl();
+        refid = ((App)this.getApplication()).getRefID();
+        clientid = ((App)this.getApplication()).getClientID();
 
 
     }
@@ -295,14 +280,12 @@ public class ItemsMenuActivity extends PortraitActivity {
 
                     if (mtrLines != null) {
                         mtrLines.clear();
+                        ((App)this.getApplication()).setMtrLines(mtrLines);
 
 
                     }
                     Intent i = new Intent(this, MainMenuActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.putExtra("clID", clientid);
-                    i.putExtra("url", url);
-                    i.putExtra("refid", refid);
                     this.startActivity(i);
                     finish();
 
@@ -356,18 +339,18 @@ public class ItemsMenuActivity extends PortraitActivity {
         s.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
             this.isChecked = isChecked;
+            refLayout.setNoMoreData(false);
 
 
             //reset adapter so all data clear
             mtrList.clear();
-            adapter = new ItemsMenuAdapter(this, mtrList);
+            adapter = new ItemsMenuAdapter(this, mtrList, mtrLines);
             recyclerView.setAdapter(adapter);
 
 
             if (isChecked) {
                 counter=0;
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Τα είδη μου");
-                refLayout.setNoMoreData(false);
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "GetCustomerFrequentlyOrderedItems", refid,counter, url);
@@ -378,7 +361,6 @@ public class ItemsMenuActivity extends PortraitActivity {
             } else {
                 counterall=0;
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Είδη αποθήκης");
-                refLayout.setNoMoreData(false);
                 GsonWorker gsonWorker = new GsonWorker(url);
                 new Thread(() -> {
                     MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",counterall, url);
@@ -400,6 +382,10 @@ public class ItemsMenuActivity extends PortraitActivity {
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mtrList.clear();
+                adapter = new ItemsMenuAdapter(getApplicationContext(), mtrList, mtrLines);
+                recyclerView.setAdapter(adapter);
+                refLayout.setNoMoreData(false);
                 searchString = query;
                 if (isChecked) {
                     GsonWorker gson = new GsonWorker(url);
@@ -415,8 +401,9 @@ public class ItemsMenuActivity extends PortraitActivity {
                                 sResults.add(m);
                             }
                         }
+                        mtrList = sResults;
 
-                        adapter.replaceList(sResults);
+                        adapter.replaceList(mtrList);
                         runOnUiThread((adapter::notifyDataSetChanged));
                     }).start();
                 } else {
@@ -472,5 +459,11 @@ public class ItemsMenuActivity extends PortraitActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        adapter.notifyDataSetChanged();
+    }
 }
 
