@@ -1,9 +1,8 @@
 package gr.logistic_i.logistic_i;
 
-import android.app.Application;
+
 import android.content.res.Configuration;
 import android.os.StrictMode;
-
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -47,6 +46,7 @@ public class App extends android.app.Application {
 
         Fresco.initialize(this);
         TypefaceProvider.registerDefaultIconSets();
+
     }
 
     // Called by the system when the device configuration changes while your component is running.

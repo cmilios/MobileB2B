@@ -5,10 +5,11 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     tools:layout_editor_absoluteY="25dp"
+    android:paddingBottom="4dp"
     android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
+    android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true">
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -19,49 +20,36 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
         android:adjustViewBounds="true"
+        android:longClickable="false"
+        android:scaleType="fitXY"
         app:actualImageScaleType="focusCrop"
-        fresco:placeholderImage="@drawable/ic_baseline_image_24px"
         fresco:failureImage="@drawable/ic_baseline_image_24px"
-        android:longClickable="false"/>
+        fresco:placeholderImage="@drawable/ic_baseline_image_24px" />
 
     <TextView
         android:id="@+id/item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:text="item name"
-        android:textSize="18sp"
-        android:layout_toRightOf="@id/my_image_view"
-
-        android:layout_toLeftOf="@id/pos"
-        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
+
         android:layout_toEndOf="@id/my_image_view"
+        android:layout_toLeftOf="@id/pos"
+        android:layout_toRightOf="@id/my_image_view"
+        android:layout_toStartOf="@id/pos"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:longClickable="false"
-        android:layout_toStartOf="@id/pos" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTextBold"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        app:srcCompat="@drawable/divider"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:longClickable="false"/>
+        android:text="item name"
+        android:textSize="18sp" />
 
 
     <TextView
@@ -72,6 +60,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
+        android:ems="2"
+        android:gravity="end"
         android:layout_marginRight="16dp"
         android:textColor="@android:color/holo_green_light"
         android:textSize="18sp" />

@@ -6,16 +6,19 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorHeader</item>
-        <item name="colorAccent">@color/colorGrey</item>
+        <item name="colorAccent">#bdbdbd</item>
     </style>
 
     <style name= "ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#bdbdbd</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:thumb">@drawable/ic_stars_white_24dp</item>
+        <item name="trackTint">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -44,6 +47,7 @@
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="android:textColorHint">@color/colorGrey</item>
     </style>
+
 
 
 </resources>

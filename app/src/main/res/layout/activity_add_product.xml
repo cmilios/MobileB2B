@@ -20,12 +20,13 @@
         android:adjustViewBounds="true"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@+id/mtrlcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        fresco:placeholderImage="@drawable/ic_baseline_image_24px"
-        fresco:failureImage="@drawable/ic_baseline_image_24px"/>
+        fresco:failureImage="@drawable/ic_baseline_image_24px"
+        fresco:placeholderImage="@drawable/ic_baseline_image_24px" />
 
 
     <TextView
@@ -180,13 +181,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:adjustViewBounds="true"
+        android:rotation="270"
+        android:scaleType="center"
         android:tint="@color/colorTextBold"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toStartOf="@+id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/title"
-        app:srcCompat="@drawable/ic_baseline_arrow_upward_24px"
-        android:rotation="270"/>
+        app:srcCompat="@drawable/arrow_left_36dp" />
 
     <RelativeLayout
         android:layout_width="0px"

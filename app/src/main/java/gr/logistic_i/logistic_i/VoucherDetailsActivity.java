@@ -37,7 +37,6 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private EditText dsumamnt;
     private VoucherDetailsAdapter adapter;
     private RelativeLayout waitlay;
-    private String refid;
     private Boolean b = false;
 
     @Override
@@ -79,7 +78,6 @@ public class VoucherDetailsActivity extends PortraitActivity {
         o = i.getParcelableExtra("order");
         url = ((App)this.getApplication()).getUrl();
         clientId = ((App)this.getApplication()).getClientID();
-        refid = ((App)this.getApplication()).getRefID();
         dcode.setText(o.getCode());
         dfindoc.setText(o.getFindoc());
         dfincode.setText(o.getFincode());

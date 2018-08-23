@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -44,7 +45,6 @@ public class ItemsMenuActivity extends PortraitActivity {
     private long counterall=0;
     private LinearLayoutManager MyLayoutManager;
     private String searchString = " ";
-
     private MaterialSearchView searchView;
 
 
@@ -62,10 +62,10 @@ public class ItemsMenuActivity extends PortraitActivity {
         BootstrapButton clearmtrlines = findViewById(R.id.clearall);
         BootstrapButton confirmButton = findViewById(R.id.confirm);
         refLayout = findViewById(R.id.refreshLayout);
-        new Thread(()->{
-            refLayout.setRefreshHeader(new ClassicsHeader(this));
-            refLayout.setRefreshFooter(new ClassicsFooter(this));
-        }).start();
+
+
+        refLayout.setRefreshHeader(new ClassicsHeader(this));
+        refLayout.setRefreshFooter(new ClassicsFooter(this));
         refLayout.setOnLoadMoreListener(refreshLayout -> {
             s.setClickable(false);
 
@@ -82,7 +82,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                         runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
                     }
                     else{
-                        runOnUiThread(refreshLayout::finishLoadMore);
+                        runOnUiThread(()->refreshLayout.finishLoadMore(1000));
                     }
                     runOnUiThread(()->s.setClickable(true));
                 }).start();
@@ -99,7 +99,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                         runOnUiThread(refreshLayout::finishLoadMoreWithNoMoreData);
                     }
                     else{
-                        runOnUiThread(refreshLayout::finishLoadMore);
+                        runOnUiThread(()->refreshLayout.finishLoadMore(1000));
                     }
                     runOnUiThread(()->s.setClickable(true));
                 }).start();
@@ -116,7 +116,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread((adapter::notifyDataSetChanged));
-                    runOnUiThread(refLayout::finishRefresh);
+                    runOnUiThread(()->refLayout.finishRefresh(1000));
                     runOnUiThread(()->s.setClickable(true));
                 }).start();
             } else {
@@ -128,7 +128,7 @@ public class ItemsMenuActivity extends PortraitActivity {
                     mtrList.addAll(results);
                     adapter.replaceList(mtrList);
                     runOnUiThread(adapter::notifyDataSetChanged);
-                    runOnUiThread(refLayout::finishRefresh);
+                    runOnUiThread(()->refLayout.finishRefresh(2000));
                     runOnUiThread(()->s.setClickable(true));
                 }).start();
             }
@@ -139,6 +139,9 @@ public class ItemsMenuActivity extends PortraitActivity {
                 mtrLines.clear();
                 ((App)this.getApplication()).setMtrLines(mtrLines);
                 ad.notifyDataSetChanged();
+                RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                recyclerView.setAdapter(null);
+                recyclerView.setAdapter(adapter);
                 confirmButton.setEnabled(false);
                 confirmButton.setFocusable(false);
                 confirmButton.setClickable(false);
@@ -246,6 +249,7 @@ public class ItemsMenuActivity extends PortraitActivity {
 
         adapter = new ItemsMenuAdapter(this, mtrList, mtrLines);
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(MyLayoutManager);
 
     }
@@ -254,6 +258,7 @@ public class ItemsMenuActivity extends PortraitActivity {
         RecyclerView rv = findViewById(R.id.basket_rview);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         ad = new BasketAdapter(mtrLines, this);
         rv.setAdapter(ad);
     }

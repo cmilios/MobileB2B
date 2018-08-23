@@ -16,14 +16,11 @@ import java.util.Date;
 
 public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHolder> {
 
-
-
     private ArrayList<Order> orderlist;
     private Context mContext;
     private SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat sqlResFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Date formattedDate = new Date();
-
 
     MainMenuAdapter(Context mContext, ArrayList<Order> orderlist) {
         this.mContext = mContext;
@@ -70,7 +67,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public void replaceList(ArrayList<Order> orders) {
         orderlist.clear();
         orderlist.addAll(orders);
-
     }
 
     @Override
@@ -82,8 +78,6 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
     public int getItemViewType(int position) {
         return position;
     }
-
-
 
     @Override
     public int getItemCount() {

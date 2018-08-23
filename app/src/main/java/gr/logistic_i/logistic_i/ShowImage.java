@@ -12,7 +12,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
-
 import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ShowImage extends PortraitActivity {

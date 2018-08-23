@@ -8,8 +8,6 @@ import org.json.JSONObject;
 
 public class MtrLine implements Parcelable {
 
-
-
     private String mtrl;
     private String code;
     private String description;
@@ -23,7 +21,6 @@ public class MtrLine implements Parcelable {
     private String unitSelectedName;
     private int unitSelectedCode;
     private Mtrl linkedMtrl;
-
     private int num02;
 
     MtrLine(String mtrl,String code, String description, String qty, String qty1, String price, String discount, String cleanValue, String fpaValue, int mUnit, String sUnit,int unitSelectedCode, int num02) {

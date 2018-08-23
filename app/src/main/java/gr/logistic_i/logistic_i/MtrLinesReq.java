@@ -32,8 +32,6 @@ public class MtrLinesReq {
             e.printStackTrace();
         }
         return jsonData.toString();
-
-
     }
 
     public ArrayList<MtrLine> parseResponse(JSONObject jsonRes) {

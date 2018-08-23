@@ -50,7 +50,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
     implementation files('libs/commons-codec-1.11')
     implementation 'com.jcodecraeer:xrecyclerview:1.5.9'
-    //refresh arraylist lib
+    //refresh Recyclerview lib
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     //image retriver lib
     implementation 'com.facebook.fresco:fresco:1.10.0'
