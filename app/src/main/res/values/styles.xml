@@ -16,9 +16,6 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
-        <item name="android:thumb">@drawable/ic_stars_white_24dp</item>
-        <item name="trackTint">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

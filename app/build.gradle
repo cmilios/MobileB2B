@@ -82,4 +82,6 @@ dependencies {
 
     implementation 'com.android.support:mediarouter-v7:27.1.1'
     implementation 'org.jetbrains:annotations:15.0'
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 }
