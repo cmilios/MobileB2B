@@ -2,6 +2,7 @@ package gr.logistic_i.logistic_i;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -10,13 +11,14 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.beardedhen.androidbootstrap.BootstrapButton;
 
 
 public class LoginActivity extends PortraitActivity {
@@ -30,28 +32,24 @@ public class LoginActivity extends PortraitActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
         rq_fc = findViewById(R.id.rq_fc);
         rq_fc.requestFocus();
         setAllToNormal();
 
-
-
-
     }
 
     public void performLogin(View view){
-        Button button = findViewById(R.id.loginButton);
+        BootstrapButton button = findViewById(R.id.loginButton);
         RelativeLayout pbar = findViewById(R.id.loadingPanel);
         button.setVisibility(View.INVISIBLE);
 
         pbar.setVisibility(View.VISIBLE);
 
 
-        EditText n = findViewById(R.id.username);
-        EditText p = findViewById(R.id.password);
-        EditText c = findViewById(R.id.connectionurl);
+        TextInputEditText n = findViewById(R.id.usernametxt);
+        TextInputEditText p = findViewById(R.id.passwordtxt);
+        TextInputEditText c = findViewById(R.id.connectionurltxt);
         name = n.getText().toString();
         pass = p.getText().toString();
         curl = c.getText().toString();
@@ -64,7 +62,7 @@ public class LoginActivity extends PortraitActivity {
                     Toast.makeText(getApplicationContext(), "Λανθασμένο όνομα χρήστη ή συνθηματικό!", Toast.LENGTH_SHORT).show();
                 }
                 if (msg.what == 1){
-                    Toast.makeText(getApplicationContext(), "Δεν ανιχνεύτικε κάποια σύνδεση στο δίκτυο", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Δεν ανιχνεύτικε σύνδεση στο δίκτυο", Toast.LENGTH_SHORT).show();
 
                 }
                 if (msg.what==2){
@@ -79,11 +77,12 @@ public class LoginActivity extends PortraitActivity {
                 gson.makeLogin(c1);
                 if (gson.isValidURL()) {
                     if (gson.getAuthenticationFlag()) {
+                        ((App) this.getApplication()).setUrl(gson.getUrl());
+                        ((App) this.getApplication()).setClientID(gson.getAuthenticateClID());
+                        ((App) this.getApplication()).setRefID(gson.getRefID());
+                        ((App) this.getApplication()).setAppID("1100");
+
                         Intent i = new Intent(this, MainMenuActivity.class);
-                        i.putExtra("id", this.getClass().getSimpleName());
-                        i.putExtra("url", gson.getUrl());
-                        i.putExtra("clID", gson.getAuthenticateClID());
-                        i.putExtra("refid", gson.getRefID());
                         this.startActivity(i);
                         runOnUiThread(this::setAllToNormal);
                     } else {
@@ -118,7 +117,7 @@ public class LoginActivity extends PortraitActivity {
     }
 
     public void setAllToNormal(){
-        Button button = findViewById(R.id.loginButton);
+        BootstrapButton button = findViewById(R.id.loginButton);
         RelativeLayout pbar = findViewById(R.id.loadingPanel);
         pbar.setVisibility(View.INVISIBLE);
         button.setVisibility(View.VISIBLE);
@@ -136,6 +135,7 @@ public class LoginActivity extends PortraitActivity {
                     v.clearFocus();
                     rq_fc.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
@@ -146,13 +146,14 @@ public class LoginActivity extends PortraitActivity {
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
     public void onBackPressed() {
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setMessage("Η εφαρμογή θα τερματιστεί. Θέλετε να συνεχίσετε;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 

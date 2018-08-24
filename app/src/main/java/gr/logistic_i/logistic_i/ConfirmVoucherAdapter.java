@@ -15,7 +15,7 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
 
     private ArrayList<MtrLine> mtrLines;
     private Context mContext;
-    DecimalFormat priceFormat = new DecimalFormat("#.##");
+    private DecimalFormat priceFormat = new DecimalFormat("#.##");
 
     ConfirmVoucherAdapter(Context mContext, ArrayList<MtrLine> mtrLines){
         this.mContext = mContext;
@@ -37,6 +37,16 @@ public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAd
         holder.price.setText(String.valueOf(priceFormat.format(Double.parseDouble(mtrLines.get(position).getPrice())))+"€");
         holder.qty.setText(mtrLines.get(position).getQty1());
 
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override

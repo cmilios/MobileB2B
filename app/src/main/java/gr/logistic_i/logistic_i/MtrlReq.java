@@ -35,7 +35,7 @@ public class MtrlReq {
             jsonData.put("clientID", clientID);
             jsonData.put("appId", appID);
             jsonData.put( "SqlName", sqlName);
-            jsonData.put("param1", param1 /*"2243"*/);
+            jsonData.put("param1", param1 );
             jsonData.put("param2", param2);
 
         } catch (JSONException e) {

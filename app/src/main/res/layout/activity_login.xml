@@ -27,10 +27,10 @@
 
     <TextView
         android:id="@+id/softone_label"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:clickable="false"
         android:cursorVisible="false"
         android:ems="10"
@@ -40,6 +40,7 @@
         android:inputType="none"
         android:singleLine="true"
         android:text="@string/softone_credentials"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.493"
@@ -47,59 +48,82 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/username"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:focusable="true"
-        android:hint="@string/username_hint"
-        android:inputType="textPersonName"
-        android:text="@string/username"
-        app:layout_constraintBottom_toTopOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="@+id/softone_label"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/softone_label"
-        app:layout_constraintTop_toBottomOf="@+id/softone_label"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/softone_label">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText
+
+            android:id="@+id/usernametxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="13"
+            android:focusable="true"
+            android:hint="@string/username_hint"
+            android:inputType="textPersonName"
+            android:text="@string/username" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/password"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:ems="10"
-        android:focusable="true"
-        android:hint="@string/password_hint"
-        android:inputType="textPassword"
-        android:text="@string/password"
-        app:layout_constraintEnd_toEndOf="@+id/softone_label"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/softone_label"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText
+
+            android:id="@+id/passwordtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="13"
+            android:focusable="true"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:text="@string/password" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/connectionurl"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/base_hint"
-        android:inputType="textPersonName"
-        android:text="@string/base"
-        app:layout_constraintEnd_toEndOf="@+id/softone_label"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/softone_label"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password">
+
+        <android.support.design.widget.TextInputEditText
+
+            android:id="@+id/connectionurltxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="13"
+            android:hint="@string/base_hint"
+            android:inputType="textPersonName"
+            android:text="@string/base" />
+
+    </android.support.design.widget.TextInputLayout>
 
 
-    <Button
+    <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -108,35 +132,33 @@
         android:onClick="performLogin"
         android:text="@string/login_btn"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/softone_label"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="@+id/softone_label"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.821" />
+        app:bootstrapBrand="primary"
+        app:bootstrapSize="lg"
+        app:buttonMode="regular"
+        app:layout_constraintBottom_toBottomOf="@+id/loadingPanel"
+        app:layout_constraintEnd_toEndOf="@+id/loadingPanel"
+        app:layout_constraintStart_toStartOf="@+id/loadingPanel"
+        app:layout_constraintTop_toTopOf="@+id/loadingPanel"
+        app:roundedCorners="true"
+        app:showOutline="false" />
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
-        android:layout_width="300dp"
-        android:layout_height="88dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionurl"
-        app:layout_constraintVertical_bias="0.828">
+        app:layout_constraintTop_toBottomOf="@id/connectionurl"
+        app:layout_constraintVertical_bias="0.5">
 
         <ProgressBar
             android:id="@+id/pbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:indeterminate="true" />
     </RelativeLayout>
     <RelativeLayout

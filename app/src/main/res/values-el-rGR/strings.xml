@@ -5,5 +5,5 @@
     <string name="password_hint">Συνθηματικό</string>
     <string name="base_hint">URL Βάσης</string>
     <string name="softone_credentials">Στοιχεία Πρόσβασης</string>
-    <string name="login_btn">συνδεση</string>
+    <string name="login_btn">ΣΥΝΔΕΣΗ</string>
 </resources>

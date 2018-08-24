@@ -1,11 +1,16 @@
 package gr.logistic_i.logistic_i;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -15,11 +20,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,25 +49,43 @@ public class MainMenuActivity extends PortraitActivity {
     private TextView results_section;
     private Calendar fromCalendar = Calendar.getInstance();
     private Calendar toCalendar = Calendar.getInstance();
-    android.support.v7.widget.Toolbar toolbarmain;
+    private ImageButton sb;
     SimpleDateFormat sqlformat = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat dpformat = new SimpleDateFormat("dd/MM/yyyy");
     private GsonWorker gson = new GsonWorker(null);
     private MainMenuAdapter adapter;
     private ArrayList<Order> orders = new ArrayList<>();
     private FloatingActionButton fab;
-    RecyclerView rv;
 
+
+    @SuppressLint("HandlerLeak")
+    private Handler inactivityHandler = new Handler(){
+        public void handleMessage(Message msg) {
+        }
+    };
+
+    private Runnable isInactive = () -> new AlertDialog.Builder(this)
+            .setMessage("Είστε ανενεργός αρκετη ώρα, θελετε να γίνει ανανέωση;")
+            .setNegativeButton("ΟΧΙ", (dialog, which) -> {})
+            .setPositiveButton("ΝΑΙ", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    initSearch(sb);
+                }
+            })
+            .setIcon(R.drawable.ic_info_outline_black_24dp)
+            .setTitle("Ειδοποίηση.")
+            .show();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        toolbarmain = findViewById(R.id.details_toolbar);
+        android.support.v7.widget.Toolbar toolbarmain = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbarmain);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Οι Παραγγελίες μου");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbarmain.setNavigationOnClickListener(v -> onBackPressed());
-        rv = findViewById(R.id.orderlist);
+        RecyclerView rv = findViewById(R.id.orderlist);
         fab = findViewById(R.id.additem);
         NestedScrollView nv = findViewById(R.id.nestedscrollview);
         ViewCompat.setNestedScrollingEnabled(rv, false);
@@ -76,10 +100,11 @@ public class MainMenuActivity extends PortraitActivity {
         fromDate = findViewById(R.id.fromDate);
         toDate = findViewById(R.id.toDate);
         results_section = findViewById(R.id.results_section);
+        sb = findViewById(R.id.search);
         storeParams();
         setUpDatePickers();
-        RelativeLayout focuslayout =  findViewById(R.id.RequestFocusLayout);
-        focuslayout.requestFocus();
+        RelativeLayout focusLayout =  findViewById(R.id.RequestFocusLayout);
+        focusLayout.requestFocus();
 
 
 
@@ -105,83 +130,112 @@ public class MainMenuActivity extends PortraitActivity {
 
         }).start();
 
-        DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            fromCalendar.set(Calendar.YEAR, year);
-            fromCalendar.set(Calendar.MONTH, monthOfYear);
-            fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateFromLabel();
-        };
+        new Thread(()->{
+            DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+                new Thread(()->{
+                    fromCalendar.set(Calendar.YEAR, year);
+                    fromCalendar.set(Calendar.MONTH, monthOfYear);
+                    fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                }).start();
 
-        DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-            toCalendar.set(Calendar.YEAR, year);
-            toCalendar.set(Calendar.MONTH, monthOfYear);
-            toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateToLabel();
-        };
+                updateFromLabel();
+            };
 
-        fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
-                .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
-                fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
+                new Thread(()->{
+                    toCalendar.set(Calendar.YEAR, year);
+                    toCalendar.set(Calendar.MONTH, monthOfYear);
+                    toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                }).start();
+                updateToLabel();
+            };
 
-        toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
-                .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
-                toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
+                    .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                    fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+            toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                    toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+
+        }).start();
+
+
+
     }
 
     private void initRecyclerView(){
+
         RecyclerView recyclerView = findViewById(R.id.orderlist);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState ==  SCROLL_STATE_IDLE){
-                    if (fab.getVisibility()!=View.VISIBLE){
-                        fab.show();
+        new Thread(()->{
+            recyclerView.setHasFixedSize(true);
+            runOnUiThread(()->recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)));
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState ==  SCROLL_STATE_IDLE){
+                        if (fab.getVisibility()!=View.VISIBLE){
+                            fab.show();
+                        }
+                    }
+                    else{
+                        fab.hide();
                     }
                 }
-                else{
-                    fab.hide();
+            });
+            Looper.prepare();
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent i = new Intent(getApplicationContext(), VoucherDetailsActivity.class);
+                    i.putExtra("order", orders.get(position));
+                    startActivity(i);
                 }
-            }
-        });
-        adapter = new MainMenuAdapter(this, orders, url, clientId, refid);
-        recyclerView.setAdapter(adapter);
+
+                @Override
+                public void onLongItemClick(View view, int position) {}
+            }));
+            adapter = new MainMenuAdapter(this, orders);
+            runOnUiThread(()->recyclerView.setAdapter(adapter));
+        }).start();
+
     }
 
     private void setUpDatePickers(){
-        fromCalendar.add(Calendar.MONTH, -3);
-
-        toDateString = dpformat.format(toCalendar.getTime());
-        fromDateString = dpformat.format(fromCalendar.getTime());
-        fromDate.setText(fromDateString);
-        toDate.setText(toDateString);
-
+            fromCalendar.add(Calendar.WEEK_OF_MONTH, -3);
+            toDateString = dpformat.format(toCalendar.getTime());
+            fromDateString = dpformat.format(fromCalendar.getTime());
+            fromDate.setText(fromDateString);
+            toDate.setText(toDateString);
 
     }
 
     public void storeParams(){
-        Intent intent = getIntent();
-        url = intent.getStringExtra("url");
-        clientId = intent.getStringExtra("clID");
-        refid = intent.getStringExtra("refid");
+        url = ((App)this.getApplication()).getUrl();
+        clientId = ((App)this.getApplication()).getClientID();
+        refid =((App)this.getApplication()).getRefID();
 
     }
 
     public void initAddIntent(View view){
         Intent intent = new Intent(this, ItemsMenuActivity.class);
-        intent.putExtra("url", url);
-        intent.putExtra("refid", refid);
-        intent.putExtra("clid", clientId);
-
         startActivity(intent);
+
 
 
     }
 
     public void initSearch(View view){
+
+        RelativeLayout waitLay = findViewById(R.id.wait_lay_mm);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        waitLay.setVisibility(View.VISIBLE);
+
 
         fromDateString = fromDate.getText().toString();
         toDateString = toDate.getText().toString();
@@ -215,6 +269,11 @@ public class MainMenuActivity extends PortraitActivity {
             }
 
 
+            runOnUiThread(()-> {
+                waitLay.setVisibility(View.GONE);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            });
+
 
         }).start();
     }
@@ -230,6 +289,7 @@ public class MainMenuActivity extends PortraitActivity {
                 if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
@@ -240,15 +300,17 @@ public class MainMenuActivity extends PortraitActivity {
     private void updateFromLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        runOnUiThread(()->fromDate.setText(sdf.format(fromCalendar.getTime())));
 
-        fromDate.setText(sdf.format(fromCalendar.getTime()));
+
     }
 
     private void updateToLabel() {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        toDate.setText(sdf.format(toCalendar.getTime()));
+        runOnUiThread(()->toDate.setText(sdf.format(toCalendar.getTime())));
+
     }
 
     @Override
@@ -257,12 +319,8 @@ public class MainMenuActivity extends PortraitActivity {
         // do something when the button is clicked
         new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
-                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
-                    //close();
-                    finish();
-                })
-                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {
-                })
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> finish())
+                .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {})
                 .show();
 
 
@@ -276,7 +334,6 @@ public class MainMenuActivity extends PortraitActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        String msg=" ";
         switch (item.getItemId()){
             case R.id.settings:
                 break;
@@ -290,4 +347,36 @@ public class MainMenuActivity extends PortraitActivity {
 
 
 
+    public static final long DISCONNECT_TIMEOUT = 600000; // 10 min = 10 * 60 * 1000 ms
+
+
+
+    public void resetDisconnectTimer(){
+        inactivityHandler.removeCallbacks(isInactive);
+        inactivityHandler.postDelayed(isInactive, DISCONNECT_TIMEOUT);
+    }
+
+    public void stopDisconnectTimer(){
+        inactivityHandler.removeCallbacks(isInactive);
+    }
+
+    @Override
+    public void onUserInteraction(){
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopDisconnectTimer();
+    }
 }
+
+
+
