@@ -27,7 +27,7 @@ public class AddProductActivity extends PortraitActivity {
 
 
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    private Mtrl mtrl = new Mtrl(null,null, null, null, null, null, null, null, null, null, null, null, null);
+    private Mtrl mtrl = null;
     private TextView title;
     private SimpleDraweeView mtrlIcon;
     private TextView code;

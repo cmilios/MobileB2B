@@ -10,15 +10,22 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.design.widget.TextInputEditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.beardedhen.androidbootstrap.BootstrapButton;
+
+import java.util.List;
 
 
 public class LoginActivity extends PortraitActivity {
@@ -27,15 +34,26 @@ public class LoginActivity extends PortraitActivity {
     String pass;
     String curl;
     RelativeLayout rq_fc;
+    AutoCompleteTextView n;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        n = findViewById(R.id.usernametxt);
+        new Thread(()->{
+            List<Creds>  stored= ((App)this.getApplication()).getAppDB().daoAccess().loadAllUsers();
+            ArrayAdapter<Creds> adapter = new ArrayAdapter<Creds>(this,
+                    android.R.layout.simple_dropdown_item_1line, stored);
+            Looper.prepare();
+            n.setThreshold(1);
+            n.setAdapter(adapter);
+        }).start();
         rq_fc = findViewById(R.id.rq_fc);
         rq_fc.requestFocus();
         setAllToNormal();
+
 
     }
 
@@ -47,7 +65,12 @@ public class LoginActivity extends PortraitActivity {
         pbar.setVisibility(View.VISIBLE);
 
 
-        TextInputEditText n = findViewById(R.id.usernametxt);
+
+
+
+
+
+
         TextInputEditText p = findViewById(R.id.passwordtxt);
         TextInputEditText c = findViewById(R.id.connectionurltxt);
         name = n.getText().toString();
@@ -85,6 +108,16 @@ public class LoginActivity extends PortraitActivity {
                         Intent i = new Intent(this, MainMenuActivity.class);
                         this.startActivity(i);
                         runOnUiThread(this::setAllToNormal);
+                        new Thread(()->{
+                            Creds res = ((App)this.getApplication()).getAppDB().daoAccess().fetchOneCredTokenbyName(c1.getName());
+                            if (res==null){
+                                ((App)this.getApplication()).getAppDB().daoAccess().insertOnlySingleCreds(c1);
+                            }
+                            else{
+                                ((App)this.getApplication()).getAppDB().daoAccess().updateCreds(c1);
+                            }
+
+                        }).start();
                     } else {
                         h.sendEmptyMessage(0);
                         runOnUiThread(this::setAllToNormal);

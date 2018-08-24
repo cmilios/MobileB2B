@@ -1,6 +1,7 @@
 package gr.logistic_i.logistic_i;
 
 
+import android.arch.persistence.room.Room;
 import android.content.res.Configuration;
 import android.os.StrictMode;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
@@ -9,6 +10,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import java.util.ArrayList;
 
 public class App extends android.app.Application {
+
+    private static final String DATABASE_NAME = "APPDB";
+    private AppDB appDB;
 
 
     //Basic log in variables used in every network request
@@ -46,6 +50,13 @@ public class App extends android.app.Application {
 
         Fresco.initialize(this);
         TypefaceProvider.registerDefaultIconSets();
+
+
+
+        appDB = Room.databaseBuilder(getApplicationContext(),
+                AppDB.class, DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
 
     }
 
@@ -123,5 +134,13 @@ public class App extends android.app.Application {
 
     public void setCameFrom(String cameFrom) {
         this.cameFrom = cameFrom;
+    }
+
+    public AppDB getAppDB() {
+        return appDB;
+    }
+
+    public void setMtrldb(AppDB appDB) {
+        this.appDB = appDB;
     }
 }

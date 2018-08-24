@@ -28,6 +28,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 public class ItemsMenuActivity extends PortraitActivity {
 
+
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     private String url;
     private String refid;
@@ -334,7 +335,6 @@ public class ItemsMenuActivity extends PortraitActivity {
             new Thread(() -> {
                 MtrlReq mtrlReq = new MtrlReq("SqlData", clientid, "1100", "FindProductsByName", " ",0, url);
                 mtrList = gsonWorker.getFOI(mtrlReq);
-
                 adapter.replaceList(mtrList);
                 runOnUiThread((adapter::notifyDataSetChanged));
             }).start();

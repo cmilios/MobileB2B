@@ -3,9 +3,12 @@ package gr.logistic_i.logistic_i;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Mtrl implements Parcelable {
 
@@ -27,7 +30,7 @@ public class Mtrl implements Parcelable {
     private String mu41mode;
 
     private HashMap<Integer, String> unitsMap;
-    private DecimalFormat qtyformat = new DecimalFormat("#.##");
+
 
 
 
@@ -69,6 +72,7 @@ public class Mtrl implements Parcelable {
     }
 
     public String getQuantityToFirstMtrUnit(int index, String qty, String wayOfTransformation){
+        DecimalFormat qtyformat = new DecimalFormat("#.##");
         String qtyToFirstMtrUnit;
 
             if (index == 0) {
@@ -149,6 +153,57 @@ public class Mtrl implements Parcelable {
         this.manufacturer = manufacturer;
     }
 
+    public void setMtrl(@NonNull String mtrl) {
+        this.mtrl = mtrl;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
+
+    public String getSales() {
+        return sales;
+    }
+
+    public void setSales(String sales) {
+        this.sales = sales;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setCorrespondingBase(String correspondingBase) {
+        this.correspondingBase = correspondingBase;
+    }
+
+    public void setUnitList(ArrayList<String> unitList) {
+        this.unitList = unitList;
+    }
+
+    public void setMu21(String mu21) {
+        this.mu21 = mu21;
+    }
+
+    public void setMu41(String mu41) {
+        this.mu41 = mu41;
+    }
+
+    public void setMu21mode(String mu21mode) {
+        this.mu21mode = mu21mode;
+    }
+
+    public void setMu41mode(String mu41mode) {
+        this.mu41mode = mu41mode;
+    }
+
+    public void setUnitsMap(HashMap<Integer, String> unitsMap) {
+        this.unitsMap = unitsMap;
+    }
 
 
     private Mtrl(Parcel in) {
@@ -221,3 +276,4 @@ public class Mtrl implements Parcelable {
         }
     };
 }
+
