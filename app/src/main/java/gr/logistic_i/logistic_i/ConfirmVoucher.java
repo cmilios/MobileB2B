@@ -13,11 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,11 +44,11 @@ public class ConfirmVoucher extends PortraitActivity {
     private JSONObject data;
     boolean setState = false;
     private String res;
-    private Button b;
+    private BootstrapButton b;
     private ProgressBar pbar;
-    private Boolean isChecked;
     private TextInputEditText comms;
     private RelativeLayout rq;
+    private String key;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +70,26 @@ public class ConfirmVoucher extends PortraitActivity {
         c = Calendar.getInstance().getTime();
         dt.setText(df.format(c));
         b = findViewById(R.id.setf);
+        b.setOnClickListener(v -> {
+            pbar.setVisibility(View.VISIBLE);
+            b.setVisibility(View.GONE);
+            serializeCalculateRequest();
+            JSONObject setDataJson = serializeSetDataRequest();
+            GsonWorker gson = new GsonWorker(url);
+            new Thread(()->{
+                res = gson.setData(setDataJson);
+                if (res!=null){
+                    setState = true;
+                }
+                runOnUiThread(this::goToOrders);
+            }).start();
+        });
 
         storeVars();
         if (mtrLines!=null) {
             GsonWorker gsonWorker = new GsonWorker(url);
             new Thread(() -> {
-                mtrLinesResponse = gsonWorker.calculatePrice(serCalcObj());
+                mtrLinesResponse = gsonWorker.calculatePrice(serializeCalculateRequest());
                 runOnUiThread(this::deserMtrLinesResponse);
                 runOnUiThread(this::initRecyclerView);
                 runOnUiThread(this::setSumAmnt);
@@ -92,12 +107,11 @@ public class ConfirmVoucher extends PortraitActivity {
     }
 
     public void storeVars(){
-        Intent i = getIntent();
-        mtrLines = i.getParcelableArrayListExtra("lines");
-        clid = i.getStringExtra("clid");
-        url = i.getStringExtra("url");
-        refid = i.getStringExtra("refid");
-        isChecked = i.getBooleanExtra("isChecked", false);
+        mtrLines = ((App)this.getApplication()).getMtrLines();
+        clid = ((App)this.getApplication()).getClientID();
+        url = ((App)this.getApplication()).getUrl();
+        refid = ((App)this.getApplication()).getRefID();
+        key = ((App)this.getApplication()).getKey();
     }
 
     public void deserMtrLinesResponse(){
@@ -131,7 +145,7 @@ public class ConfirmVoucher extends PortraitActivity {
 
     }
 
-    public JSONObject serCalcObj(){
+    public JSONObject serializeCalculateRequest(){
         JSONArray sermtrlines = new JSONArray();
         for(MtrLine m:mtrLines){
             sermtrlines.put(m.serCalcLine());
@@ -178,28 +192,19 @@ public class ConfirmVoucher extends PortraitActivity {
         finalp.setText(priceFormat.format(fp) + "€");
     }
 
-    public void setFindoc(View view){
-        pbar.setVisibility(View.VISIBLE);
-        b.setVisibility(View.GONE);
-        serCalcObj();
-        JSONObject setDataJson = serSet();
-        GsonWorker gson = new GsonWorker(url);
-        new Thread(()->{
-            res = gson.setData(setDataJson);
-            if (res!=null){
-                setState = true;
-            }
-            runOnUiThread(this::goToOrders);
-        }).start();
-    }
 
-    public JSONObject serSet(){
+    public JSONObject serializeSetDataRequest(){
         JSONObject setData = new JSONObject();
+
         try {
             setData.put("service", "setData");
             setData.put("clientID", clid);
             setData.put("appID", "1100");
             setData.put("OBJECT", "SALDOC");
+            if (key!=null){
+                setData.put("KEY", key);
+            }
+
             setData.put("data", data);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -209,12 +214,8 @@ public class ConfirmVoucher extends PortraitActivity {
 
     public void goToOrders(){
         if (setState){
+            ((App)this.getApplication()).setMtrLines(new ArrayList<>());
             Intent i = new Intent(this, MainMenuActivity.class);
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putExtra("url", url);
-            i.putExtra("clID", clid);
-            i.putExtra("refid", refid);
-            i.putExtra("isChecked", isChecked);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             this.startActivity(i);
         }
@@ -240,6 +241,7 @@ public class ConfirmVoucher extends PortraitActivity {
                     v.clearFocus();
                     rq.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    assert imm != null;
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }

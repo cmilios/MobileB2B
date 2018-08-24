@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ToolbarTheme" />
 
     <RelativeLayout
@@ -125,13 +125,13 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/finalprice"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/comm_section"
-                android:hint="Comments" />
+                android:hint="Σχόλια" />
         </android.support.design.widget.TextInputLayout>
     </RelativeLayout>
 
@@ -226,16 +226,19 @@
             android:layout_alignParentStart="true" />
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/setf"
+        <com.beardedhen.androidbootstrap.BootstrapButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:roundedCorners="true"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="16dp"
-            android:onClick="setFindoc"
-            android:text="Καταχώρηση" />
+            android:text="Καταχώρηση"
+            android:id="@+id/setf"/>
+
 
 
         <ProgressBar

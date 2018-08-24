@@ -9,7 +9,7 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_icon1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
@@ -20,11 +20,13 @@
         android:adjustViewBounds="true"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@+id/mtrlcode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        fresco:placeholderImage="@drawable/ic_baseline_image_24px"/>
+        fresco:failureImage="@drawable/ic_baseline_image_24px"
+        fresco:placeholderImage="@drawable/ic_baseline_image_24px" />
 
 
     <TextView
@@ -39,7 +41,8 @@
         android:gravity="left"
         android:text="Title"
         android:textAllCaps="true"
-        android:textSize="18sp"
+        android:textColor="@color/colorTextBold"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:fontFamily="@font/roboto"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,9 +76,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:text="manufacturer"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/textView10"
+        android:text="manufacturer"
+        app:layout_constraintBottom_toTopOf="@+id/selected_qty"
         app:layout_constraintEnd_toEndOf="@+id/mtrlcode"
         app:layout_constraintStart_toStartOf="@+id/mtrlcode"
         app:layout_constraintTop_toBottomOf="@+id/mtrlcode" />
@@ -107,51 +110,51 @@
         android:layout_marginStart="8dp"
         android:gravity="center"
         android:text="Κατασκευαστής:"
-        app:layout_constraintBottom_toTopOf="@+id/textView10"
+        app:layout_constraintBottom_toTopOf="@+id/selected_qty"
         app:layout_constraintEnd_toEndOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-    <TextView
-        android:id="@+id/textView10"
+    <com.beardedhen.androidbootstrap.BootstrapButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:text="Ποσότητα:"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/selected_qty"
-        app:layout_constraintStart_toStartOf="@+id/selected_qty"
-        app:layout_constraintTop_toBottomOf="@+id/image_icon1"
-        app:layout_constraintVertical_bias="0.35000002" />
-
-    <Button
-        android:id="@+id/accept_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:onClick="addMtrline"
-        android:text="προσθηκη"
+        app:bootstrapBrand="primary"
+        app:bootstrapSize="lg"
+        app:buttonMode="regular"
+        app:roundedCorners="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/selected_qty"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/selected_qty" />
+        app:layout_constraintStart_toStartOf="@+id/selected_qty"
+        android:id="@+id/accept_button"
+        android:onClick="addMtrline"
+        android:text="Προσθήκη"
+        android:layout_marginBottom="24dp"/>
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/selected_qty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Εισάγετε ποσότητα"
-        android:gravity="center"
-        android:inputType="number|numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        app:layout_constraintVertical_bias="0.0" />
+        android:gravity="start"
+        app:layout_constraintTop_toBottomOf="@+id/image_icon1">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/selected_qtytxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="Ποσότητα"
+            android:inputType="number|numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
 
     <Spinner
         android:id="@+id/unitspn"
@@ -178,12 +181,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="16dp"
         android:adjustViewBounds="true"
+        android:rotation="270"
+        android:scaleType="center"
         android:tint="@color/colorTextBold"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toStartOf="@+id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/title"
-        app:srcCompat="@drawable/leftarrow" />
+        app:srcCompat="@drawable/arrow_left_36dp" />
 
     <RelativeLayout
         android:layout_width="0px"

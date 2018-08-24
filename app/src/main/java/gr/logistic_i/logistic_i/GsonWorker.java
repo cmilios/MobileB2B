@@ -96,7 +96,7 @@ public class GsonWorker {
         return null;
     }
 
-    public ArrayList<MtrLine> getMtrLines(MtrLinesReq mtrLinesReq) {
+    public void getMtrLines(MtrLinesReq mtrLinesReq) {
         String resstr = getData(mtrLinesReq.serObj());
         try {
             JSONObject resObj = new JSONObject(resstr);
@@ -110,7 +110,6 @@ public class GsonWorker {
             e.printStackTrace();
         }
 
-        return null;
     }
 
     public ArrayList<Mtrl> getFOI(MtrlReq mtrlReq) {
@@ -215,7 +214,7 @@ public class GsonWorker {
     private String getData(String json) {
         OkHttpClient client = new OkHttpClient();
 
-        String finalURL = "https://" + url + "/s1services";
+        String finalURL = "https://" + url + ".oncloud.gr/s1services";
         validURL = Patterns.WEB_URL.matcher(finalURL).matches();
 
 
@@ -230,6 +229,7 @@ public class GsonWorker {
             try {
                 Response response = client.newCall(request).execute();
                 ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+                response.close();
 
                 return responseBodyCopy.string();
 

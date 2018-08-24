@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,11 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,10 +33,8 @@ public class AddProductActivity extends PortraitActivity {
     private TextView code;
     private TextView manufacturer;
     private Spinner unitsp;
-    private EditText qty;
-    private String cameFrom;
+    private TextInputEditText qty;
     private String url;
-    private String refid;
     private String clientid;
     private HashMap<Integer, String> unitlist = new HashMap<>();
     private ArrayList<String> showList = new ArrayList<>();
@@ -55,7 +53,7 @@ public class AddProductActivity extends PortraitActivity {
         manufacturer = findViewById(R.id.manufacturer);
         code = findViewById(R.id.mtrlcode);
         mtrlIcon = findViewById(R.id.image_icon1);
-        qty = findViewById(R.id.selected_qty);
+        qty = findViewById(R.id.selected_qtytxt);
         unitsp = findViewById(R.id.unitspn);
         backimg = findViewById(R.id.back_img);
         rq = findViewById(R.id.rq_f);
@@ -72,13 +70,10 @@ public class AddProductActivity extends PortraitActivity {
 
     private void storeVariables() {
         Intent i = getIntent();
-        cameFrom = i.getStringExtra("id");
-
         mtrl = i.getParcelableExtra("mtrl");
-        mtrLines = i.getParcelableArrayListExtra("lines");
-        url = i.getStringExtra("url");
-        refid = i.getStringExtra("refid");
-        clientid = i.getStringExtra("clid");
+        mtrLines = ((App)this.getApplication()).getMtrLines();
+        url = ((App)this.getApplication()).getUrl();
+        clientid = ((App)this.getApplication()).getClientID();
 
     }
 
@@ -90,8 +85,13 @@ public class AddProductActivity extends PortraitActivity {
             wayOfTransormation = deserWayOfTransformation(resWay);
         }).start();
 
-        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+"/s1services/?filename="+mtrl.getImgURL());
+        uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+".oncloud.gr//s1services/?filename="+mtrl.getImgURL());
         mtrlIcon.setImageURI(uri);
+        mtrlIcon.setController(
+                Fresco.newDraweeControllerBuilder()
+                        .setTapToRetryEnabled(true)
+                        .setUri(uri)
+                        .build());
 
 
 
@@ -158,19 +158,34 @@ public class AddProductActivity extends PortraitActivity {
 
         }
         for (MtrLine m :mtrLines){
-            if (m.getCode().equals(mtrl.getCode())){
-                itemExistsFlag = true;
-                if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")){
-                    indexOfItemToDelete = mtrLines.indexOf(m);
-                    toDeleteFlag=true;
-                }
-                else{
-                    m.setQty(mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation));
-                    m.setQty1(qty.getText().toString());
-                    m.setUnitSelectedName(unitsp.getSelectedItem().toString());
-                    m.setUnitSpinnerPosition(index);
-                }
+            if (m.getMtrl()!=null) {
+                if (m.getMtrl().equals(mtrl.getMtrl())) {
+                    itemExistsFlag = true;
+                    if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")) {
+                        indexOfItemToDelete = mtrLines.indexOf(m);
+                        toDeleteFlag = true;
+                    } else {
+                        m.setQty(mtrl.getQuantityToFirstMtrUnit(index, qty.getText().toString(), wayOfTransormation));
+                        m.setQty1(qty.getText().toString());
+                        m.setUnitSelectedName(unitsp.getSelectedItem().toString());
+                        m.setUnitSpinnerPosition(index);
+                    }
 
+                }
+            }
+            else{
+                if (m.getMtrl().equals(mtrl.getMtrl())) {
+                    itemExistsFlag = true;
+                    if (qty.getText().toString().equals("0") || qty.getText().toString().equals("")) {
+                        indexOfItemToDelete = mtrLines.indexOf(m);
+                        toDeleteFlag = true;
+                    } else {
+                        m.setQty(mtrl.getQuantityToFirstMtrUnit(index, qty.getText().toString(), wayOfTransormation));
+                        m.setQty1(qty.getText().toString());
+                        m.setUnitSelectedName(unitsp.getSelectedItem().toString());
+                        m.setUnitSpinnerPosition(index);
+                    }
+                }
             }
         }
         if(toDeleteFlag){
@@ -188,31 +203,12 @@ public class AddProductActivity extends PortraitActivity {
 
 
         if (!qty.getText().toString().equals("") && !qty.getText().toString().equals("0") && !itemExistsFlag) {
-            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode);
+            line = new MtrLine(mtrl.getMtrl(), mtrl.getCode(),mtrl.getName(),mtrl.getQuantityToFirstMtrUnit(index,qty.getText().toString(),wayOfTransormation),qty.getText().toString(), null,null,null,null, index, unit, unitCode, unitCode);
             line.setLinkedMtrl(mtrl);
-            mtrLines.add(line);
+            ((App)this.getApplication()).addLineToList(line);
 
         }
-
-
-
-
-
-
-
-        Intent i = null;
-        try {
-            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("url", url);
-            i.putExtra("refid", refid);
-            i.putExtra("clid", clientid);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        startActivity(i);
-        finish();
+        onBackPressed();
 
 
     }
@@ -238,20 +234,7 @@ public class AddProductActivity extends PortraitActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = null;
-        try {
-            i = new Intent(this, Class.forName("gr.logistic_i.logistic_i." + cameFrom));
-            i.putExtra("id", this.getClass().getSimpleName());
-            i.putParcelableArrayListExtra("lines", mtrLines);
-            i.putExtra("url", url);
-            i.putExtra("refid", refid);
-            i.putExtra("clid", clientid);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        startActivity(i);
-        finish();
-
+        super.onBackPressed();
     }
 
     public void checkSpinnerView(){

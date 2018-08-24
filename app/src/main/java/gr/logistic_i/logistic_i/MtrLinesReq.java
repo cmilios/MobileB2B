@@ -3,7 +3,6 @@ package gr.logistic_i.logistic_i;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class MtrLinesReq {
@@ -33,8 +32,6 @@ public class MtrLinesReq {
             e.printStackTrace();
         }
         return jsonData.toString();
-
-
     }
 
     public ArrayList<MtrLine> parseResponse(JSONObject jsonRes) {
@@ -58,7 +55,8 @@ public class MtrLinesReq {
                             resarray.getJSONObject(i).getString("axiafpa"),
                             resarray.getJSONObject(i).getInt("mtrunit"),
                             resarray.getJSONObject(i).getString("sUnit"),
-                            resarray.getJSONObject(i).getInt("untCode")
+                            resarray.getJSONObject(i).getInt("untCode"),
+                            resarray.getJSONObject(i).getInt("num02")
                     ));
                 }
             }
