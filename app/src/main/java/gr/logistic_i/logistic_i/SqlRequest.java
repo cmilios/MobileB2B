@@ -50,7 +50,7 @@ public class SqlRequest {
 
                 JSONArray resarray = jsonRes.getJSONArray("rows");
                 for(int i=0; i<resarray.length();i++){
-                    orderlist.add(new Order(resarray.getJSONObject(i).getString("code"),
+                    orderlist.add(new Order(resarray.getJSONObject(i).getString("TRDR"),
                             resarray.getJSONObject(i).getString("FINDOC"),
                             resarray.getJSONObject(i).getString("fincode"),
                             resarray.getJSONObject(i).getString("TRNDATE"),

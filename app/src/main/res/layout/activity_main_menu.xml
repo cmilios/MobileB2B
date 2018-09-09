@@ -146,14 +146,14 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedscrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="fill_vertical"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -182,8 +182,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/orderlist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:paddingBottom="20dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/divider"
                 android:scrollbars="vertical" />
@@ -210,8 +211,8 @@
         android:layout_gravity="center"
         android:background="@drawable/layout_bg"
         android:gravity="center"
-        android:visibility="invisible"
-        >
+        android:visibility="invisible">
+
         <ProgressBar
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"

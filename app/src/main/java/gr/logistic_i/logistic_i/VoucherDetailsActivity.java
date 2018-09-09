@@ -22,6 +22,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import fr.nelaupe.spreadsheetlib.AnnotationFields;
+import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
+import fr.nelaupe.spreadsheetlib.SpreadSheetView;
+import fr.nelaupe.spreadsheetlib.view.ArrowButton;
+
 public class VoucherDetailsActivity extends PortraitActivity {
 
 
@@ -107,12 +112,31 @@ public class VoucherDetailsActivity extends PortraitActivity {
     }
 
     public void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.mtrdetails);
+        SpreadSheetAdaptor adapter = new SpreadSheetAdaptor(this, mtrLines) {
+            @Override
+            public View getCellView(AnnotationFields cell, Object object) {
+                return null;
+            }
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new VoucherDetailsAdapter(this, mtrLines);
-        recyclerView.setAdapter(adapter);
+            @Override
+            public ArrowButton getHeaderCellView(AnnotationFields cell) {
+                return null;
+            }
+
+            @Override
+            public View getFixedHeaderView(String name) {
+                return null;
+            }
+
+            @Override
+            public View getFixedCellView(String name, int position) {
+                return null;
+            }
+        };
+        SpreadSheetView spreadSheetView =(SpreadSheetView)findViewById(R.id.mtrdetails);
+        spreadSheetView.setAdaptor(adapter);
+        spreadSheetView.invalidate();
+
     }
 
     @Override
