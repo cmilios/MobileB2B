@@ -7,5 +7,5 @@
     <string name="base_hint">Connect to base</string>
     <string name="base" translatable="false">logisticidemo1</string>
     <string name="softone_credentials">Softone Credentials</string>
-    <string name="login_btn">log in</string>
+    <string name="login_btn">Log In</string>
 </resources>

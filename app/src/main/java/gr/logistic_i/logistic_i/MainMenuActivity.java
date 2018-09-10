@@ -14,6 +14,7 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -169,6 +170,8 @@ public class MainMenuActivity extends PortraitActivity {
     private void initRecyclerView(){
 
         RecyclerView recyclerView = findViewById(R.id.orderlist);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
 
         new Thread(()->{
             recyclerView.setHasFixedSize(true);
@@ -200,6 +203,8 @@ public class MainMenuActivity extends PortraitActivity {
                 public void onLongItemClick(View view, int position) {}
             }));
             adapter = new MainMenuAdapter(this, orders);
+            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
             runOnUiThread(()->recyclerView.setAdapter(adapter));
         }).start();
 
@@ -347,7 +352,7 @@ public class MainMenuActivity extends PortraitActivity {
 
 
 
-    public static final long DISCONNECT_TIMEOUT = 600000; // 10 min = 10 * 60 * 1000 ms
+    public static final long DISCONNECT_TIMEOUT = 300000; // 10 min = 5 * 60 * 1000 ms
 
 
 

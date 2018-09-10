@@ -6,7 +6,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorHeader</item>
-        <item name="colorAccent">#bdbdbd</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name= "ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
