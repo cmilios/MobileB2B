@@ -15,10 +15,12 @@
         android:id="@+id/fincode2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
         android:layout_above="@id/trndate2"
-        android:layout_alignTop="@id/textView3"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="-8dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignBottom="@id/textView3"
         android:layout_toLeftOf="@id/imageView5"
         android:layout_toStartOf="@id/imageView5"
         android:layout_marginStart="12dp"
@@ -52,6 +54,7 @@
         android:layout_below="@id/textView3"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
+        android:gravity="center"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_toLeftOf="@id/textInputLayout"
@@ -86,7 +89,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:layout_toLeftOf="@id/imageView5"
         android:layout_toStartOf="@id/imageView5"
         android:focusable="false"
@@ -113,19 +116,6 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/trndate2"
-        android:background="@color/colorGrey"
-        android:scaleType="center"
-        app:srcCompat="@drawable/divider"
-        android:focusable="false"
-        android:clickable="false"
-        android:focusableInTouchMode="false"
-        android:longClickable="false"/>
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -137,7 +127,8 @@
         android:layout_toLeftOf="@id/fincode2"
         android:layout_alignParentLeft="true"
 
-        android:text="Παραστατικό: "
+
+        android:text="Παραγγελία: "
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorTextBold"
         android:layout_toStartOf="@id/fincode2"
@@ -151,7 +142,8 @@
         android:id="@+id/imageView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/imageView4"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"

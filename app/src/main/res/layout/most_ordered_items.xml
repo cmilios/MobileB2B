@@ -50,9 +50,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
+        android:background="@color/colorLightGrey"
         android:layout_below="@id/toolbar_container">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/details_list"
+            android:background="@color/colorWhite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"

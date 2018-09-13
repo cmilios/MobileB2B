@@ -6,16 +6,24 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
+
 public class MtrLine implements Parcelable {
 
     private String mtrl;
     private String code;
+    @SpreadSheetCell(name = "Περιγραφή", size = 65,position = 1)
     private String description;
+    @SpreadSheetCell(name = "Ποσότητα", size = 20,position = 3)
     private String qty;
     private String qty1;
+    @SpreadSheetCell(name = "Τιμή", size = 20, position = 2)
     private String price;
+    @SpreadSheetCell(name = "Έκπτωση",size = 20,position = 4)
     private String discount;
+    @SpreadSheetCell(name = "Καθαρή Αξία",size = 20,position = 5)
     private String cleanValue;
+    @SpreadSheetCell(name = "Αξία με ΦΠΑ", size = 20,position = 6)
     private String fpaValue;
     private int unitSpinnerPosition;
     private String unitSelectedName;
