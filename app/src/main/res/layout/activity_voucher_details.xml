@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".VoucherDetailsActivity">
 
+
     <RelativeLayout
         android:id="@+id/RequestFocusLayout"
         android:layout_width="0px"
@@ -15,156 +16,205 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/details_toolbar"
-        android:layout_width="0dp"
-        android:layout_height="62dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?android:attr/actionBarSize"
-        android:theme="@style/ToolbarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:theme="@style/ToolbarTheme"/>
 
-    <EditText
-        android:id="@+id/dcode"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dcode2"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:inputType="textPersonName"
-        android:longClickable="false"
-        android:text="dCode"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_below="@+id/details_toolbar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_toolbar">
+
+        <EditText
+            android:id="@+id/dcode"
+            android:layout_width="197dp"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Κωδικός 1"
+            android:inputType="textPersonName"
+            android:longClickable="false"
+            android:text="dCode" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dfindoc2"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.829"
+        app:layout_constraintStart_toEndOf="@+id/dcode2"
         app:layout_constraintTop_toBottomOf="@+id/details_toolbar"
-        app:layout_constraintVertical_bias="0.004" />
+        tools:ignore="RtlCompat">
 
-    <EditText
-        android:id="@+id/dfindoc"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/dfindoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Κωδικός 2"
+            android:inputType="textPersonName"
+            android:longClickable="false"
+            android:text="dfinddoc" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dfincode2"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="dfindoc"
-        android:focusableInTouchMode="false"
-        android:longClickable="false"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dcode"
-        app:layout_constraintStart_toStartOf="@+id/dcode"
-        app:layout_constraintTop_toBottomOf="@+id/dcode"
-        app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/dfincode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="dfincode"
-        android:longClickable="false"
-        android:focusableInTouchMode="false"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dfindoc"
-        app:layout_constraintStart_toStartOf="@+id/dfindoc"
-        app:layout_constraintTop_toBottomOf="@+id/dfindoc"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/dtrdrname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="dtrdrname"
-        android:longClickable="false"
-        android:focusableInTouchMode="false"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dfincode"
-        app:layout_constraintStart_toStartOf="@+id/dfincode"
-        app:layout_constraintTop_toBottomOf="@+id/dfincode"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/dtrndate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="date"
-        android:text="dtrndate"
-        android:longClickable="false"
-        android:focusableInTouchMode="false"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dtrdrname"
-        app:layout_constraintStart_toStartOf="@+id/dtrdrname"
-        app:layout_constraintTop_toBottomOf="@+id/dtrdrname"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/dsumamnt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="dsumamnt"
-        android:longClickable="false"
-        android:focusableInTouchMode="false"
-        android:textIsSelectable="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dtrndate"
-        app:layout_constraintStart_toStartOf="@+id/dtrndate"
-        app:layout_constraintTop_toBottomOf="@+id/dtrndate"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mtrdetails"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintTop_toBottomOf="@+id/dcode2"
+        tools:ignore="RtlCompat">
+
+        <EditText
+            android:id="@+id/dfincode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Κωδικός 3"
+            android:inputType="textPersonName"
+            android:longClickable="false"
+            android:text="dfincode" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dtrdrname2"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.794"
+        app:layout_constraintStart_toEndOf="@+id/dfincode2"
+        app:layout_constraintTop_toBottomOf="@+id/dfindoc2"
+        tools:ignore="RtlCompat">
+
+        <EditText
+            android:id="@+id/dtrdrname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Περιγραφή"
+            android:inputType="textPersonName"
+            android:longClickable="false"
+            android:text="dtrdrname" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dtrndate2"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dfincode2"
+        android:layout_alignParentRight="true">
+
+
+        <EditText
+            android:id="@+id/dtrndate"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Ημερομηνία Παραγγελλίας"
+            android:inputType="textPersonName|textMultiLine"
+            android:longClickable="false"
+            android:text="dtrndate" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dsumamnt2"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.794"
+        app:layout_constraintStart_toEndOf="@+id/dtrndate2"
+        app:layout_constraintTop_toBottomOf="@+id/dtrdrname2">
+
+
+        <EditText
+            android:id="@+id/dsumamnt"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:hint="Ποσότητα"
+            android:inputType="textPersonName|textMultiLine"
+            android:longClickable="false"
+            android:text="dsuamnt" />
+    </android.support.design.widget.TextInputLayout>
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="64dp"
         android:background="@color/colorGrey"
+        app:layout_constraintTop_toBottomOf="@+id/dsumamnt2"
+        app:srcCompat="@drawable/divider"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <fr.nelaupe.spreadsheetlib.SpreadSheetView
+        android:id="@+id/mtrdetails"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dsumamnt"
-        app:srcCompat="@drawable/divider" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        />
+
 
 
     <RelativeLayout
         android:id="@+id/wait_lay"
         android:layout_width="160dp"
         android:layout_height="160dp"
+        android:layout_centerInParent="true"
         android:background="@drawable/layout_bg"
+        android:gravity="center"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -172,18 +222,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/onemom"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            />
+            android:layout_alignParentTop="true" />
 
         <TextView
             android:id="@+id/onemom"
@@ -199,6 +243,8 @@
             android:gravity="center"
             android:text="Μία στιγμή παρακαλώ"
             android:textColor="@color/colorWhite" />
+
+
     </RelativeLayout>
 
 
