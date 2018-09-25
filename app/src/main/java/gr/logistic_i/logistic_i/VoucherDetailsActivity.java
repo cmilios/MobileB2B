@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -15,17 +13,19 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
-import fr.nelaupe.spreadsheetlib.AnnotationFields;
-import fr.nelaupe.spreadsheetlib.SpreadSheetAdaptor;
-import fr.nelaupe.spreadsheetlib.SpreadSheetView;
-import fr.nelaupe.spreadsheetlib.view.ArrowButton;
+
 
 public class VoucherDetailsActivity extends PortraitActivity {
 
@@ -34,13 +34,14 @@ public class VoucherDetailsActivity extends PortraitActivity {
     private String clientId;
     private Order o;
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
-    private EditText dcode;
-    private EditText dfindoc;
+    private EditText comms;
     private EditText dfincode;
     private EditText dtrndate;
     private EditText dtrdrName;
-    private EditText dsumamnt;
-    private VoucherDetailsAdapter adapter;
+    private RecordAdapter adapter;
+    ListView recordsView;
+
+    SimpleDateFormat viewFormat = new SimpleDateFormat("dd/MM/yyyy");
     private RelativeLayout waitlay;
     private Boolean b = false;
 
@@ -48,13 +49,12 @@ public class VoucherDetailsActivity extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voucher_details);
-        dcode = findViewById(R.id.dcode);
-        dfindoc = findViewById(R.id.dfindoc);
+
         dfincode = findViewById(R.id.dfincode);
+        comms = findViewById(R.id.csection2);
         dtrndate = findViewById(R.id.dtrndate);
-        dtrdrName = findViewById(R.id.dtrdrname);
-        dsumamnt = findViewById(R.id.dsumamnt);
         waitlay = findViewById(R.id.wait_lay);
+        dtrdrName = findViewById(R.id.dtrdrname);
         android.support.v7.widget.Toolbar dtoolbar = findViewById(R.id.details_toolbar);
         dtoolbar.setTitle("Λεπτομέρειες Παραστατικού");
         dtoolbar.setTitleTextColor(Color.WHITE);
@@ -64,13 +64,22 @@ public class VoucherDetailsActivity extends PortraitActivity {
         setTexts();
         GsonWorker gsonWorker = new GsonWorker(url);
 
+
         initRecyclerView();
         new Thread(() -> {
             MtrLinesReq mtrLinesReq = new MtrLinesReq("SqlData", clientId, "1100", "GetMtrLines", o.getFindoc());
             gsonWorker.getMtrLines(mtrLinesReq);
             mtrLines = gsonWorker.getMtrLines();
-            adapter.replaceList(mtrLines);
-            runOnUiThread(adapter::notifyDataSetChanged);
+            runOnUiThread(()->{
+                if (!mtrLines.isEmpty()){
+                    for (MtrLine m :mtrLines){
+                        adapter.add(m);
+                    }
+                }
+            });
+
+
+
 
 
         }).start();
@@ -83,12 +92,18 @@ public class VoucherDetailsActivity extends PortraitActivity {
         o = i.getParcelableExtra("order");
         url = ((App)this.getApplication()).getUrl();
         clientId = ((App)this.getApplication()).getClientID();
-        dcode.setText(o.getCode());
-        dfindoc.setText(o.getFindoc());
+        comms.setText(o.getComms());
         dfincode.setText(o.getFincode());
-        dtrndate.setText(o.getTrndate());
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            Date date = format.parse(o.getTrndate());
+            dtrndate.setText(viewFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         dtrdrName.setText(o.getTrdrName());
-        dsumamnt.setText(o.getSumamnt());
 
 
     }
@@ -112,31 +127,9 @@ public class VoucherDetailsActivity extends PortraitActivity {
     }
 
     public void initRecyclerView() {
-        SpreadSheetAdaptor adapter = new SpreadSheetAdaptor(this, mtrLines) {
-            @Override
-            public View getCellView(AnnotationFields cell, Object object) {
-                return null;
-            }
-
-            @Override
-            public ArrowButton getHeaderCellView(AnnotationFields cell) {
-                return null;
-            }
-
-            @Override
-            public View getFixedHeaderView(String name) {
-                return null;
-            }
-
-            @Override
-            public View getFixedCellView(String name, int position) {
-                return null;
-            }
-        };
-        SpreadSheetView spreadSheetView =(SpreadSheetView)findViewById(R.id.mtrdetails);
-        spreadSheetView.setAdaptor(adapter);
-        spreadSheetView.invalidate();
-
+        adapter = new RecordAdapter(this, mtrLines);
+        recordsView =  findViewById(R.id.records_view);
+        recordsView.setAdapter(adapter);
     }
 
     @Override

@@ -66,7 +66,7 @@ public class MainMenuActivity extends PortraitActivity {
     };
 
     private Runnable isInactive = () -> new AlertDialog.Builder(this)
-            .setMessage("Είστε ανενεργός αρκετη ώρα, θελετε να γίνει ανανέωση;")
+            .setMessage("Είστε ανενεργός αρκετή ώρα, θελετε να γίνει ανανέωση;")
             .setNegativeButton("ΟΧΙ", (dialog, which) -> {})
             .setPositiveButton("ΝΑΙ", new DialogInterface.OnClickListener() {
                 @Override
@@ -131,37 +131,47 @@ public class MainMenuActivity extends PortraitActivity {
 
         }).start();
 
-        new Thread(()->{
             DatePickerDialog.OnDateSetListener fDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-                new Thread(()->{
                     fromCalendar.set(Calendar.YEAR, year);
                     fromCalendar.set(Calendar.MONTH, monthOfYear);
                     fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                }).start();
 
                 updateFromLabel();
+
             };
 
             DatePickerDialog.OnDateSetListener tDateListener = (view, year, monthOfYear, dayOfMonth) -> {
-                new Thread(()->{
                     toCalendar.set(Calendar.YEAR, year);
                     toCalendar.set(Calendar.MONTH, monthOfYear);
                     toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                }).start();
                 updateToLabel();
             };
 
-            fromDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
-                    .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
-                    fromCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            fromDate.setOnClickListener(v -> {
+                fromDate.setEnabled(false);
+                DatePickerDialog dp = new DatePickerDialog(MainMenuActivity.this, fDateListener, fromCalendar
+                        .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                        fromCalendar.get(Calendar.DAY_OF_MONTH));
+                dp.show();
+                if(dp.isShowing()) {
+                    fromDate.setEnabled(true);
+                }
+            });
 
-            toDate.setOnClickListener(v -> new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
-                    .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
-                    toCalendar.get(Calendar.DAY_OF_MONTH)).show());
+            toDate.setOnClickListener(v -> {
+                toDate.setEnabled(false);
+                DatePickerDialog dp = new DatePickerDialog(MainMenuActivity.this, tDateListener, toCalendar
+                        .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                        toCalendar.get(Calendar.DAY_OF_MONTH));
+                dp.show();
+                if (dp.isShowing()){
+                    toDate.setEnabled(true);
+                }
+
+            });
 
 
 
-        }).start();
 
 
 
@@ -170,7 +180,6 @@ public class MainMenuActivity extends PortraitActivity {
     private void initRecyclerView(){
 
         RecyclerView recyclerView = findViewById(R.id.orderlist);
-        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
 
         new Thread(()->{
@@ -203,7 +212,7 @@ public class MainMenuActivity extends PortraitActivity {
                 public void onLongItemClick(View view, int position) {}
             }));
             adapter = new MainMenuAdapter(this, orders);
-            recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+            runOnUiThread(()->recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)));
 
             runOnUiThread(()->recyclerView.setAdapter(adapter));
         }).start();
@@ -324,7 +333,10 @@ public class MainMenuActivity extends PortraitActivity {
         // do something when the button is clicked
         new AlertDialog.Builder(this)
                 .setMessage("Θα γίνει αποσύνδεση. Θέλετε να συνεχίσετε;")
-                .setPositiveButton("ΝΑΙ", (arg0, arg1) -> finish())
+                .setPositiveButton("ΝΑΙ", (arg0, arg1) ->{
+                    finish();
+
+                } )
                 .setNegativeButton("ΟΧΙ", (arg0, arg1) -> {})
                 .show();
 
@@ -340,8 +352,6 @@ public class MainMenuActivity extends PortraitActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.settings:
-                break;
             case R.id.logout:
                 onBackPressed();
                 break;
@@ -352,7 +362,7 @@ public class MainMenuActivity extends PortraitActivity {
 
 
 
-    public static final long DISCONNECT_TIMEOUT = 300000; // 10 min = 5 * 60 * 1000 ms
+    public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
 
 
 

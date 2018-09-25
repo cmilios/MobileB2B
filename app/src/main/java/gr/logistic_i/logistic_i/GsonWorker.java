@@ -29,8 +29,7 @@ public class GsonWorker {
         this.url = url;
     }
 
-    public void makeLogin(Creds creds) {
-
+    void makeLogin(Creds creds) {
         String jsonData = creds.serObjLogin();
         String resstr = getData(jsonData);
         try {
@@ -47,13 +46,9 @@ public class GsonWorker {
                 us = us.desirializeJsonStr(resObj.toString());
                 makeAuthenticate(us);
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void makeAuthenticate(UserData us) {
@@ -210,7 +205,6 @@ public class GsonWorker {
         return state;
     }
 
-
     private String getData(String json) {
         OkHttpClient client = new OkHttpClient();
 
@@ -243,20 +237,19 @@ public class GsonWorker {
 
     }
 
-
-        public String getAuthenticateClID () {
+        String getAuthenticateClID() {
             return authenticateClID;
         }
 
-        public String getRefID () {
+        String getRefID() {
             return refID;
         }
 
-        public Boolean getAuthenticationFlag () {
+        Boolean getAuthenticationFlag() {
             return authenticationFlag;
         }
 
-        public ArrayList<Order> getSqlResponse () {
+        ArrayList<Order> getSqlResponse() {
             return sqlResponse;
         }
 
@@ -264,11 +257,11 @@ public class GsonWorker {
             return url;
         }
 
-        public ArrayList<MtrLine> getMtrLines () {
+        ArrayList<MtrLine> getMtrLines() {
             return mtrLines;
         }
 
-    public boolean isValidURL() {
+        boolean isValidURL() {
         return validURL;
     }
 }

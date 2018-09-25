@@ -13,8 +13,9 @@ public class Order implements Parcelable {
     private String trdrName;
     private String sumamnt;
     private String state;
+    private String comms;
 
-    Order(String code, String findoc, String fincode, String trndate, String trdrName, String sumamnt, String state) {
+    Order(String code, String findoc, String fincode, String trndate, String trdrName, String sumamnt, String state, String comms) {
         this.code = code;
         this.findoc = findoc;
         this.fincode = fincode;
@@ -22,6 +23,7 @@ public class Order implements Parcelable {
         this.trdrName = trdrName;
         this.sumamnt = sumamnt;
         this.state = state;
+        this.comms = comms;
     }
 
     public String getCode() {
@@ -64,6 +66,14 @@ public class Order implements Parcelable {
         this.sumamnt = sumamnt;
     }
 
+    public String getComms() {
+        return comms;
+    }
+
+    public void setComms(String comms) {
+        this.comms = comms;
+    }
+
     public String getState() {
         return state;
     }
@@ -80,6 +90,7 @@ public class Order implements Parcelable {
         trdrName = in.readString();
         sumamnt = in.readString();
         state = in.readString();
+        comms = in.readString();
     }
 
     @Override
@@ -96,6 +107,7 @@ public class Order implements Parcelable {
         dest.writeString(trdrName);
         dest.writeString(sumamnt);
         dest.writeString(state);
+        dest.writeString(comms);
     }
 
     @SuppressWarnings("unused")

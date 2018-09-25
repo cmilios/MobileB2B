@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+//unused
 public class ConfirmVoucherAdapter extends RecyclerView.Adapter<ConfirmVoucherAdapter.ViewHolder> {
 
     private ArrayList<MtrLine> mtrLines;

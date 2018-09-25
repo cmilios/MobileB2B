@@ -60,7 +60,21 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
             e.printStackTrace();
         }
         holder.dt.setText(dpformat.format(formattedDate));
-        holder.sumamnt.setText(orderlist.get(position).getSumamnt()+ "€");
+        switch (orderlist.get(position).getState()) {
+            case "1":
+                holder.state.setText("Σε αναμονή");
+                break;
+            case "2":
+                holder.state.setText("Σε εξέλιξη");
+                break;
+            case "3":
+                holder.state.setText("Ολοκληρώθηκε");
+                break;
+            default:
+                holder.state.setText("Ακυρωμένη");
+                break;
+        }
+
 
     }
 
@@ -89,14 +103,14 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.ViewHo
         TextInputEditText parnum;
         TextInputEditText dt;
         RelativeLayout mmparent;
-        protected TextInputEditText sumamnt;
+        protected TextInputEditText state;
 
         ViewHolder(View itemView) {
             super(itemView);
             mmparent = itemView.findViewById(R.id.mm_parent);
             parnum = itemView.findViewById(R.id.fincode);
             dt = itemView.findViewById(R.id.trndate);
-            sumamnt = itemView.findViewById(R.id.sumamnt);
+            state = itemView.findViewById(R.id.sstate);
 
 
         }

@@ -6,25 +6,23 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.nelaupe.spreadsheetlib.SpreadSheetCell;
 
 public class MtrLine implements Parcelable {
 
     private String mtrl;
     private String code;
-    @SpreadSheetCell(name = "Περιγραφή", size = 65,position = 1)
-    private String description;
-    @SpreadSheetCell(name = "Ποσότητα", size = 20,position = 3)
-    private String qty;
+    public String description;
+
+    public String qty;
     private String qty1;
-    @SpreadSheetCell(name = "Τιμή", size = 20, position = 2)
-    private String price;
-    @SpreadSheetCell(name = "Έκπτωση",size = 20,position = 4)
-    private String discount;
-    @SpreadSheetCell(name = "Καθαρή Αξία",size = 20,position = 5)
-    private String cleanValue;
-    @SpreadSheetCell(name = "Αξία με ΦΠΑ", size = 20,position = 6)
-    private String fpaValue;
+
+    public String price;
+
+    public String discount;
+
+    public String cleanValue;
+
+    public String fpaValue;
     private int unitSpinnerPosition;
     private String unitSelectedName;
     private int unitSelectedCode;
@@ -92,6 +90,30 @@ public class MtrLine implements Parcelable {
         return qty1;
     }
 
+    public void setMtrl(String mtrl) {
+        this.mtrl = mtrl;
+    }
+
+    public String getQty() {
+        return qty;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
+    public int getUnitSelectedCode() {
+        return unitSelectedCode;
+    }
+
+    public void setUnitSelectedCode(int unitSelectedCode) {
+        this.unitSelectedCode = unitSelectedCode;
+    }
+
     public int getUnitSpinnerPosition() {
         return unitSpinnerPosition;
     }
@@ -100,39 +122,40 @@ public class MtrLine implements Parcelable {
         this.unitSpinnerPosition = unitSpinnerPosition;
     }
 
-    public JSONObject serCalcLine(){
+    public JSONObject serCalcLine(int counter){
         JSONObject json = new JSONObject();
         try {
+            json.put("LINENUM", counter);
             if (linkedMtrl==null){
-            json.put("MTRL", mtrl);
-            json.put("QTY1", qty1.replace(",", "."));
+                json.put("MTRL", mtrl);
+                json.put("QTY1", qty1.replace(",", "."));
             }
             else {
                 json.put("MTRL", mtrl);
             if (unitSpinnerPosition == 0) {
+                json.put("QTY1", qty.replace(",", "."));
+            }
+            if (unitSpinnerPosition == 1) {
+                if (linkedMtrl.getMu21mode().equals("1")) {
+                    json.put("QTY2", qty1.replace(",", "."));
+                } else {
                     json.put("QTY1", qty.replace(",", "."));
                 }
-                if (unitSpinnerPosition == 1) {
-                    if (linkedMtrl.getMu21mode().equals("1")) {
-                        json.put("QTY2", qty1.replace(",", "."));
-                    } else {
-                        json.put("QTY1", qty.replace(",", "."));
-                    }
+            }
+            if (unitSpinnerPosition == 2) {
+                if (linkedMtrl.getMu41mode().equals("1")) {
+                    json.put("QTY", qty1.replace(",", "."));
+                } else {
+                    json.put("QTY1", qty.replace(",", "."));
                 }
-                if (unitSpinnerPosition == 2) {
-                    if (linkedMtrl.getMu41mode().equals("1")) {
-                        json.put("QTY", qty1.replace(",", "."));
-                    } else {
-                        json.put("QTY1", qty.replace(",", "."));
-                    }
-                }
+            }
 
             }
             if (linkedMtrl==null){
                 json.put("NUM02", num02);
             }
             else {
-                json.put("NUM02", unitSelectedCode);
+                json.put("NUM02", num02);
             }
 
         } catch (JSONException e) {

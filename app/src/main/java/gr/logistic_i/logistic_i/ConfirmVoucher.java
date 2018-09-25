@@ -7,12 +7,15 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -31,20 +34,20 @@ import java.util.Objects;
 
 public class ConfirmVoucher extends PortraitActivity {
 
+    private RelativeLayout onemom;
+
     private ArrayList<MtrLine> mtrLines = new ArrayList<>();
     private String refid;
     private String url;
     private String clid;
     private String mtrLinesResponse;
-    private TextView finalp;
     private Date c;
     private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat sqlformat = new SimpleDateFormat("yyyy-MM-dd");
-    private DecimalFormat priceFormat = new DecimalFormat("#.##");
     private JSONObject data;
     boolean setState = false;
     private String res;
-    private BootstrapButton b;
+    private BootstrapButton setFindocButton;
     private ProgressBar pbar;
     private TextInputEditText comms;
     private RelativeLayout rq;
@@ -54,9 +57,12 @@ public class ConfirmVoucher extends PortraitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_voucher);
+        onemom = findViewById(R.id.momentlay);
+        onemom.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         rq = findViewById(R.id.rq);
         rq.requestFocus();
-        finalp = findViewById(R.id.f_price);
         TextView dt = findViewById(R.id.current_date);
         Toolbar tool = findViewById(R.id.confirm_voucher_toolbar);
         pbar = findViewById(R.id.setBar);
@@ -69,10 +75,10 @@ public class ConfirmVoucher extends PortraitActivity {
         tool.setNavigationOnClickListener(v -> onBackPressed());
         c = Calendar.getInstance().getTime();
         dt.setText(df.format(c));
-        b = findViewById(R.id.setf);
-        b.setOnClickListener(v -> {
+        setFindocButton = findViewById(R.id.setf);
+        setFindocButton.setOnClickListener(v -> {
             pbar.setVisibility(View.VISIBLE);
-            b.setVisibility(View.GONE);
+            setFindocButton.setVisibility(View.GONE);
             serializeCalculateRequest();
             JSONObject setDataJson = serializeSetDataRequest();
             GsonWorker gson = new GsonWorker(url);
@@ -92,7 +98,10 @@ public class ConfirmVoucher extends PortraitActivity {
                 mtrLinesResponse = gsonWorker.calculatePrice(serializeCalculateRequest());
                 runOnUiThread(this::deserMtrLinesResponse);
                 runOnUiThread(this::initRecyclerView);
-                runOnUiThread(this::setSumAmnt);
+                runOnUiThread(()-> {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    onemom.setVisibility(View.GONE);
+                });
             }).start();
         }
     }
@@ -102,7 +111,8 @@ public class ConfirmVoucher extends PortraitActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        ConfirmVoucherAdapter adapter = new ConfirmVoucherAdapter(this, mtrLines);
+        BasketAdapter adapter = new BasketAdapter( mtrLines,this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
     }
 
@@ -148,7 +158,7 @@ public class ConfirmVoucher extends PortraitActivity {
     public JSONObject serializeCalculateRequest(){
         JSONArray sermtrlines = new JSONArray();
         for(MtrLine m:mtrLines){
-            sermtrlines.put(m.serCalcLine());
+            sermtrlines.put(m.serCalcLine(mtrLines.indexOf(m)+1));
         }
         JSONObject ss = new JSONObject();
         try {
@@ -184,13 +194,6 @@ public class ConfirmVoucher extends PortraitActivity {
         return json;
     }
 
-    public  void setSumAmnt(){
-        Double fp = 0.0;
-        for (MtrLine m:mtrLines){
-            fp = fp+Double.parseDouble(m.getPrice());
-        }
-        finalp.setText(priceFormat.format(fp) + "€");
-    }
 
 
     public JSONObject serializeSetDataRequest(){
@@ -221,7 +224,7 @@ public class ConfirmVoucher extends PortraitActivity {
         }
         else{
             pbar.setVisibility(View.GONE);
-            b.setVisibility(View.VISIBLE);
+            setFindocButton.setVisibility(View.VISIBLE);
             new AlertDialog.Builder(this)
                     .setMessage("Υπήρξε πρόβλημα κατα την καταχώρηση")
                     .setNeutralButton("OK", (dialog, which) -> {

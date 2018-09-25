@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -80,9 +81,12 @@ public class AddProductActivity extends PortraitActivity {
     public void setViews() {
         JSONObject jsonObject = serWayOfTransformation();
         new Thread(() -> {
+            runOnUiThread(()-> getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE));
             GsonWorker gsonWorker = new GsonWorker(url);
             resWay = gsonWorker.getWayOfTransformation(jsonObject);
             wayOfTransormation = deserWayOfTransformation(resWay);
+            runOnUiThread(()-> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE));
         }).start();
 
         uri = Uri.parse("https://"+mtrl.getCorrespondingBase()+".oncloud.gr//s1services/?filename="+mtrl.getImgURL());
@@ -196,6 +200,7 @@ public class AddProductActivity extends PortraitActivity {
        for(Integer i:unitsMap.keySet()){
            if (unitsMap.get(i).equals(unit)){
                unitCode = i;
+
            }
        }
 

@@ -8,7 +8,7 @@
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    android:paddingTop="57dp"
+    android:paddingTop="56dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ItemsMenuActivity"
     tools:showIn="@layout/most_ordered_items">

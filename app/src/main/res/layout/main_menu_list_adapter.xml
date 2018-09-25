@@ -98,15 +98,17 @@
         android:longClickable="false">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/sumamnt"
+            android:id="@+id/sstate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTransparent"
             android:gravity="end"
-            android:hint="Συνολική Αξία"
+            android:hint="Κατάσταση παραγγελιας"
             android:textColor="#000"
             android:textColorHint="#000"
-            android:ems="5"
+            android:ems="7"
+            android:maxLines="1"
+
             app:fontFamily="@font/roboto"
             android:focusable="false"
             android:clickable="false"

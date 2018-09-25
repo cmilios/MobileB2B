@@ -279,13 +279,14 @@ public class ItemsMenuActivity extends PortraitActivity {
             searchView.closeSearch();
         }
         new AlertDialog.Builder(this)
-                .setMessage("Θέλετε να ακυρώσετε την καταχώρηση νέου παραστατικού")
+                .setMessage("Θέλετε να ακυρώσετε την καταχώρηση παραστατικού;")
                 .setPositiveButton("ΝΑΙ", (arg0, arg1) -> {
 
 
                     if (mtrLines != null) {
                         mtrLines.clear();
                         ((App)this.getApplication()).setMtrLines(mtrLines);
+                        ((App)this.getApplication()).setKey(null);
 
 
                     }
@@ -468,7 +469,8 @@ public class ItemsMenuActivity extends PortraitActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
     }
+
 }
 
